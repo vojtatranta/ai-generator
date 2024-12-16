@@ -25,6 +25,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const t = useTranslations("promptTemplates");
+  const commontT = useTranslations();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   // const supabase = useSupabase();
@@ -61,7 +62,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>{commontT("common.actions")}</DropdownMenuLabel>
 
           <DropdownMenuItem
             onClick={() => router.push(`/prompt/${data.prompt}/`)}

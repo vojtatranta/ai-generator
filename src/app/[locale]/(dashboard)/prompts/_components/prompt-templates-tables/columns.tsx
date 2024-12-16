@@ -6,6 +6,9 @@ import { CopyableText } from "@/web/components/CopyableText";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
 import { UsedPromptType } from "@/constants/data";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Icons } from "@/components/icons";
 
 export const usePromptTemplatesColumns = () => {
   const t = useTranslations();
@@ -29,6 +32,18 @@ export const usePromptTemplatesColumns = () => {
       ),
       enableSorting: false,
       enableHiding: false,
+    },
+    {
+      accessorKey: "try",
+      header: "",
+      cell: ({ row }) => (
+        <Link href={`/prompt/${row.original.id}`}>
+          <Button type="button" size="sm" className="mx-4">
+            <Icons.wandSparkles className="h-4 w-4 mr-2" />
+            {t("promptTemplates.tryPrompt")}
+          </Button>
+        </Link>
+      ),
     },
     {
       accessorKey: "title",

@@ -232,8 +232,12 @@
       "overview": "Přehled",
       "users": "Uživatelé",
       "subscription": "Předplatné",
-      "paymentSuccess": "Úspěšná platba",
+      "paymentSuccess": "Platba úspěšná",
       "profile": "Profil"
+    },
+    "auth": {
+      "signIn": "Přihlášení",
+      "signInDescription": "Přihlašovací stránka pro autentizaci."
     },
     "promptTemplates": {
       "promptTemplatesMetaTitle": "AIstein - Šablony"
@@ -268,7 +272,8 @@
   "breadCrumbs": {
     "profile": "Profil",
     "overview": "Přehled",
-    "prompt": "Prompt",
+    "prompt": "AI Prompt",
+    "prompts": "AI Prompty",
     "post-generator": "Generování obsah",
     "image-social-post-generator": "Generování obsahu z obrázku"
   },
@@ -304,6 +309,14 @@
       "namePlaceholder": "Zadejte vaše jméno",
       "emailPlaceholder": "Zadejte váš email",
       "contactnoPlaceholder": "Zadejte vaše kontaktní číslo"
+    }
+  },
+  "graphs": {
+    "areaChart": {
+      "title": "Plošný graf - Vrstvený",
+      "description": "Zobrazení celkového počtu návštěvníků za posledních 6 měsíců",
+      "trendingUp": "Trend roste o {value}% tento měsíc",
+      "dateRange": "Leden - Červen 2024"
     }
   }
 }

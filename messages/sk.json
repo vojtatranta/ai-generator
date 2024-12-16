@@ -65,12 +65,17 @@
       "overview": "Prehľad",
       "users": "Používatelia",
       "subscription": "Predplatné",
-      "paymentSuccess": "Úspešná platba",
+      "paymentSuccess": "Platba úspešná",
       "profile": "Profil"
+    },
+    "auth": {
+      "signIn": "Prihlásenie",
+      "signInDescription": "Prihlasovacia stránka pre autentizáciu."
     },
     "promptTemplates": {
       "promptTemplatesMetaTitle": "AIstein - Šablóny"
-    }
+    },
+    "promptMetadataTitle": "AIstein - Generovanie obsahu"
   },
   "breadCrumbs": {
     "profile": "Profil",
@@ -129,5 +134,13 @@
   "generateSocialPostContentPromptTitle": "Vytvorte si obsah pre vaše sociálne siete",
   "generateSocialPostContentPromptDescription": "Napíšte nápad na obsah pre vaše sociálne siete a náš systém vám pomôže s jeho vygenerovaním. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
   "generateSocialPostImageContentPromptTitle": "Použite obrázky pre vytvorenie obsahu pre vaše sociálne siete",
-  "generateSocialPostImageContentPromptDescription": "Nahrajte obrázok, ku ktorému chcete vygenerovať text. Prípadne môžete nechať AI upraviť obrázok alebo si môžete kompletne z textu nechať vygenerovať obrázok. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje."
+  "generateSocialPostImageContentPromptDescription": "Nahrajte obrázok, ku ktorému chcete vygenerovať text. Prípadne môžete nechať AI upraviť obrázok alebo si môžete kompletne z textu nechať vygenerovať obrázok. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
+  "graphs": {
+    "areaChart": {
+      "title": "Plošný graf - Vrstvený",
+      "description": "Zobrazenie celkového počtu návštevníkov za posledných 6 mesiacov",
+      "trendingUp": "Trend rastie o {value}% tento mesiac",
+      "dateRange": "Január - Jún 2024"
+    }
+  }
 }

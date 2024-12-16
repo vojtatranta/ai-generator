@@ -37,6 +37,7 @@ import { Input } from "@/components/ui/input";
 import { Maybe } from "actual-maybe";
 import { CopyableText } from "@/components/CopyableText";
 import { CopyButton } from "@/components/CopyButton";
+import { AIResult } from "@/lib/supabase-server";
 
 const DEFAULT_LENGTH = 200;
 
@@ -46,11 +47,16 @@ const QueryFormSchema = z.object({
 });
 
 type QueryFormType = z.infer<typeof QueryFormSchema>;
+type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
+type StateType = {
+  result: InvokeOutput | null;
+  prompt: string;
+};
 
-const getPromptResultData = (
-  result: RouterOutput["langtail"]["invokePrompt"],
-) => {
-  return result.choices.map((choice) => choice.message.content).join("");
+const getPromptResultData = (result: InvokeOutput | null) => {
+  return (
+    result?.choices?.map((choice) => choice.message.content).join("") ?? null
+  );
 };
 
 const getDefaultValues = (
@@ -65,14 +71,16 @@ const getDefaultValues = (
 };
 
 export const PromptQueryPage = memo(function PromptQueryPage({
+  aiResults,
   prompt,
   randomNumberFromTopics = 0,
 }: {
+  aiResults: AIResult[];
   prompt: UsedPromptType;
   randomNumberFromTopics: number;
 }) {
   const t = useTranslations();
-  const [promptResults, setPromptResults] = useState<string[]>([]);
+  const [promptResults, setPromptResults] = useState<StateType[]>([]);
   const form = useForm<QueryFormType>({
     resolver: zodResolver(QueryFormSchema),
     defaultValues: getDefaultValues(t, randomNumberFromTopics, prompt),
@@ -80,12 +88,20 @@ export const PromptQueryPage = memo(function PromptQueryPage({
 
   const invokeMutation = trpcApi.langtail.invokePrompt.useMutation({
     onSuccess: (data) => {
-      setPromptResults((prev) => [...prev, getPromptResultData(data)]);
+      setPromptResults((prev) => {
+        const last = prev[prev.length - 1];
+
+        return [...prev, { ...(last ?? {}), result: data }];
+      });
       toast.success(t("prompt.success"));
     },
   });
 
   const onSubmit = async (data: QueryFormType) => {
+    setPromptResults((prev) => [
+      ...prev,
+      { prompt: data.message, result: null },
+    ]);
     // await invokeQuery.refetch();
     invokeMutation.mutateAsync({
       prompt: prompt.prompt,
@@ -93,6 +109,26 @@ export const PromptQueryPage = memo(function PromptQueryPage({
       length: Number(data.length || DEFAULT_LENGTH),
     });
   };
+
+  const allResults = [
+    ...promptResults.reverse().filter((result) => result.result),
+    ...aiResults.map((result) => ({
+      result: result.ai_result as InvokeOutput,
+      prompt: result.prompt ?? "",
+    })),
+  ];
+
+  const lastPromptResult = Maybe.fromLast(
+    promptResults.filter(
+      (
+        result,
+      ): result is StateType & {
+        result: InvokeOutput;
+      } => Boolean(result.result),
+    ),
+  )
+    .andThen((result: StateType) => getPromptResultData(result.result))
+    .getValue("");
 
   return (
     <PageContainer>
@@ -190,30 +226,30 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                             className="ml-2 max-h-[23px]"
                             variant="outline"
                             size="xs"
-                            value={Maybe.fromLast(promptResults).getValue("")}
+                            value={lastPromptResult}
                           />
                         </div>
                         <FormControl>
                           <Textarea
-                            defaultValue={Maybe.fromLast(
-                              promptResults,
-                            ).getValue("")}
+                            defaultValue={lastPromptResult}
                             placeholder={t("prompt.result")}
                             className="min-h-[250px]"
                             onClick={(
                               event: React.MouseEvent<HTMLTextAreaElement>,
                             ) =>
-                              Maybe.fromLast(promptResults).andThen(
-                                async (result) => {
-                                  try {
-                                    await navigator.clipboard.writeText(result);
-                                    toast.success(t("prompt.resultCopied"));
-                                  } catch (error) {
-                                    toast.error(`
+                              Maybe.fromLast(
+                                promptResults.filter((result) => result.result),
+                              ).andThen(async (result) => {
+                                try {
+                                  await navigator.clipboard.writeText(
+                                    getPromptResultData(result) ?? "",
+                                  );
+                                  toast.success(t("prompt.resultCopied"));
+                                } catch (error) {
+                                  toast.error(`
                                   ${t("prompt.resultCopyFailed")}, ${String(error)}`);
-                                  }
-                                },
-                              )
+                                }
+                              })
                             }
                           />
                         </FormControl>
@@ -227,28 +263,34 @@ export const PromptQueryPage = memo(function PromptQueryPage({
           </Card>
           <Card className="max-w-[500px]">
             <CardContent className="py-6">
-              {Maybe.fromFirst(promptResults)
+              {Maybe.fromFirst(allResults)
                 .andThen(() => (
                   <div>
                     <div className="text-sm text-gray-500 mb-2">
                       {t("prompt.olderResults")}
                     </div>
 
-                    {promptResults.reverse().map((result, index) => (
+                    {allResults.map((result, index) => (
                       <div
-                        key={`${result.substring(0, 10)}-${index}`}
+                        key={`${result}-${index}`}
                         className="flex items-center space-x-2"
                       >
                         <div>
                           <div className="flex items-center justify-center w-6 h-6 mr-2 bg-primary-foreground text-primary rounded-full">
                             {index + 1}
                           </div>
-
+                          {Maybe.of(result.prompt)
+                            .andThen((userPrompt) => (
+                              <span className="text-sm text-gray-400">
+                                {userPrompt}
+                              </span>
+                            ))
+                            .orNull()}
                           <CopyableText
-                            copyValue={result}
+                            copyValue={getPromptResultData(result.result) ?? ""}
                             className="w-full flex-1"
                           >
-                            {result}
+                            {getPromptResultData(result.result)}
                           </CopyableText>
                         </div>
                       </div>

@@ -65,6 +65,7 @@ export default async function Page({ searchParams, params }: pageProps) {
 
   return (
     <PromptQueryPage
+      aiResults={lastResults ?? []}
       prompt={usedPrompt}
       randomNumberFromTopics={randomNumberFromTopics}
     />
