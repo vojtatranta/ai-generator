@@ -3,8 +3,10 @@ import { Input } from "@/web/components/ui/input";
 import { useKBar } from "kbar";
 import { ArrowRight, Search } from "lucide-react";
 import { Button } from "./ui/button";
+import { useTranslations } from "next-intl";
 
 export default function SearchInput() {
+  const t = useTranslations();
   const { query } = useKBar();
   return (
     <div className="w-full space-y-2">
@@ -14,7 +16,7 @@ export default function SearchInput() {
         onClick={query.toggle}
       >
         <Search className="mr-2 h-4 w-4" />
-        Search...
+        {t("common.search")}
         <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>

@@ -85,6 +85,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.54.1",
+    "react-image-file-resizer": "^0.4.8",
     "react-responsive": "^10.0.0",
     "react-simple-wysiwyg": "^3.2.0",
     "recharts": "^2.15.0",

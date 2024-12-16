@@ -1,133 +1,57 @@
 import { NavItem } from "@/web/types";
 
 export const POST_GENERATOR = "post-generator" as const;
+export const POST_IMAGE_GENERATOR = "image-social-post-generator" as const;
 
 export const PROMPTS = {
   POST_GENERATOR,
+  POST_IMAGE_GENERATOR,
 } as const;
 
 export type PROMPTS_UNION = typeof POST_GENERATOR;
 
-export type User = {
-  id: number;
-  name: string;
-  company: string;
-  role: string;
-  verified: boolean;
-  status: string;
-};
-export const users: User[] = [
+export const USED_PROMPTS = [
   {
-    id: 1,
-    name: "Candice Schiner",
-    company: "Dell",
-    role: "Frontend Developer",
-    verified: false,
-    status: "Active",
+    id: POST_GENERATOR,
+    prompt: POST_GENERATOR,
+    title: "generateSocialPostContentPromptTitle",
+    description: "generateSocialPostContentPromptDescription",
+    defaultLength: 200,
+    image: false,
   },
   {
-    id: 2,
-    name: "John Doe",
-    company: "TechCorp",
-    role: "Backend Developer",
-    verified: true,
-    status: "Active",
+    id: POST_IMAGE_GENERATOR,
+    prompt: POST_IMAGE_GENERATOR,
+    title: "generateSocialPostImageContentPromptTitle",
+    description: "generateSocialPostImageContentPromptDescription",
+    defaultLength: 200,
+    image: true,
   },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    company: "WebTech",
-    role: "UI Designer",
-    verified: true,
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "David Smith",
-    company: "Innovate Inc.",
-    role: "Fullstack Developer",
-    verified: false,
-    status: "Inactive",
-  },
-  {
-    id: 5,
-    name: "Emma Wilson",
-    company: "TechGuru",
-    role: "Product Manager",
-    verified: true,
-    status: "Active",
-  },
-  {
-    id: 6,
-    name: "James Brown",
-    company: "CodeGenius",
-    role: "QA Engineer",
-    verified: false,
-    status: "Active",
-  },
-  {
-    id: 7,
-    name: "Laura White",
-    company: "SoftWorks",
-    role: "UX Designer",
-    verified: true,
-    status: "Active",
-  },
-  {
-    id: 8,
-    name: "Michael Lee",
-    company: "DevCraft",
-    role: "DevOps Engineer",
-    verified: false,
-    status: "Active",
-  },
-  {
-    id: 9,
-    name: "Olivia Green",
-    company: "WebSolutions",
-    role: "Frontend Developer",
-    verified: true,
-    status: "Active",
-  },
-  {
-    id: 10,
-    name: "Robert Taylor",
-    company: "DataTech",
-    role: "Data Analyst",
-    verified: false,
-    status: "Active",
-  },
+] as const;
+
+export type UsedPromptType = (typeof USED_PROMPTS)[number];
+
+export const RANDOM_TOPICS = (t: (key: string) => string) => [
+  t("prompt.randomTopic.POLITICS"),
+  t("prompt.randomTopic.LOCAL_SINGER"),
+  t("prompt.randomTopic.LOCAL_ACTOR"),
+  t("prompt.randomTopic.LOCAL_ACTRESS"),
+  t("prompt.randomTopic.LOCAL_MUSICIAN"),
+  t("prompt.randomTopic.LOCAL_CHEF"),
+  t("prompt.randomTopic.LOCAL_CHEF"),
+  t("prompt.randomTopic.LOCAL_WRITER"),
+  t("prompt.randomTopic.LOCAL_AUTHOR"),
+  t("prompt.randomTopic.RAPPER"),
+  t("prompt.randomTopic.ARTIST"),
+  t("prompt.randomTopic.SCANDALOUS_CELEBRITY"),
+  t("prompt.randomTopic.CURRENT_LOCAL_REALITY_SHOW"),
+  t("prompt.randomTopic.CURRENT_LOCAL_REALITY_SHOW_HOST"),
 ];
 
-export type Employee = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  gender: string;
-  date_of_birth: string; // Consider using a proper date type if possible
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-  zipcode: string;
-  longitude?: number; // Optional field
-  latitude?: number; // Optional field
-  job: string;
-  profile_picture?: string | null; // Profile picture can be a string (URL) or null (if no picture)
-};
-
-export type Product = {
-  photo_url: string;
-  name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
-  category: string;
-  updated_at: string;
-};
+export const RANDOM_IMAGE_TOPICS = (t: (key: string) => string) => [
+  t("prompt.randomTopic.describeImage"),
+  t("prompt.randomTopic.createSocialPostFromImage"),
+];
 
 export const getNavItems = (t: (key: string) => string): NavItem[] => [
   {
@@ -139,10 +63,10 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     items: [],
   },
   {
-    title: t("menu.quizes"),
-    url: "/quizes",
+    title: t("menu.promptTemplates"),
+    url: "/prompts",
     icon: "fileQuestion",
-    shortcut: ["s", "s"],
+    shortcut: ["t", "t"],
     isActive: false,
     items: [],
   },
@@ -154,38 +78,38 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
   //   isActive: false,
   //   items: [],
   // },
-  {
-    title: t("menu.categories"),
-    url: "/product-categories",
-    icon: "shoppingBasket",
-    shortcut: ["x", "x"],
-    isActive: false,
-    items: [],
-  },
-  {
-    title: t("menu.products"),
-    url: "/products",
-    icon: "package",
-    shortcut: ["p", "p"],
-    isActive: false,
-    items: [],
-  },
-  {
-    title: t("menu.answers"),
-    url: "/answers",
-    icon: "notebookPen",
-    shortcut: ["a", "a"],
-    isActive: false,
-    items: [],
-  },
-  {
-    title: t("menu.productAttributes"),
-    url: "/product-attributes ",
-    icon: "tag",
-    shortcut: ["t", "t"],
-    isActive: false,
-    items: [],
-  },
+  // {
+  //   title: t("menu.categories"),
+  //   url: "/product-categories",
+  //   icon: "shoppingBasket",
+  //   shortcut: ["x", "x"],
+  //   isActive: false,
+  //   items: [],
+  // },
+  // {
+  //   title: t("menu.products"),
+  //   url: "/products",
+  //   icon: "package",
+  //   shortcut: ["p", "p"],
+  //   isActive: false,
+  //   items: [],
+  // },
+  // {
+  //   title: t("menu.answers"),
+  //   url: "/answers",
+  //   icon: "notebookPen",
+  //   shortcut: ["a", "a"],
+  //   isActive: false,
+  //   items: [],
+  // },
+  // {
+  //   title: t("menu.productAttributes"),
+  //   url: "/product-attributes ",
+  //   icon: "tag",
+  //   shortcut: ["t", "t"],
+  //   isActive: false,
+  //   items: [],
+  // },
   {
     title: t("menu.users"),
     url: "/users",

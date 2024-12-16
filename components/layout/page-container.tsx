@@ -20,7 +20,9 @@ export default function PageContainer({
           </div>
         </ScrollArea>
       ) : (
-        <div className={cn("h-full p-2 md:px-6", stretch && "h-full")}>
+        <div
+          className={cn("h-full p-2 md:px-6", stretch && "max-h-full h-full")}
+        >
           {children}
         </div>
       )}

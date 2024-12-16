@@ -10,9 +10,11 @@ import {
 import { useBreadcrumbs } from "@/hooks/use-breadcrumbs";
 import { Slash } from "lucide-react";
 import { Fragment } from "react";
+import { useTranslations } from "next-intl";
 
 export function Breadcrumbs() {
   const items = useBreadcrumbs();
+  const t = useTranslations("breadCrumbs");
   if (items.length === 0) return null;
 
   return (
@@ -31,7 +33,9 @@ export function Breadcrumbs() {
               </BreadcrumbSeparator>
             )}
             {index === items.length - 1 && (
-              <BreadcrumbPage>{item.title}</BreadcrumbPage>
+              <BreadcrumbPage>
+                {t(item.title.toLocaleLowerCase())}
+              </BreadcrumbPage>
             )}
           </Fragment>
         ))}

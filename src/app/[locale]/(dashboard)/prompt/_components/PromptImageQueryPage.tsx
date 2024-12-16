@@ -11,9 +11,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import Resizer from "react-image-file-resizer";
 import {
   PROMPTS,
   PROMPTS_UNION,
+  RANDOM_IMAGE_TOPICS,
   RANDOM_TOPICS,
   UsedPromptType,
 } from "@/constants/data";
@@ -37,21 +39,19 @@ import { Input } from "@/components/ui/input";
 import { Maybe } from "actual-maybe";
 import { CopyableText } from "@/components/CopyableText";
 import { CopyButton } from "@/components/CopyButton";
+import { FileInput } from "@/components/ui/fileinput";
 
 const DEFAULT_LENGTH = 200;
 
 const QueryFormSchema = z.object({
   message: z.string(),
+  image: z.string().nullable().optional(),
   length: z.number().default(DEFAULT_LENGTH),
 });
 
 type QueryFormType = z.infer<typeof QueryFormSchema>;
 
-const getPromptResultData = (
-  result: RouterOutput["langtail"]["invokePrompt"],
-) => {
-  return result.choices.map((choice) => choice.message.content).join("");
-};
+type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
 
 const getDefaultValues = (
   t: (key: string) => string,
@@ -59,28 +59,61 @@ const getDefaultValues = (
   prompt: UsedPromptType,
 ): QueryFormType => {
   return {
-    message: RANDOM_TOPICS(t)[randomNumberFromTopics] ?? "",
+    message: RANDOM_IMAGE_TOPICS(t)[randomNumberFromTopics] ?? "",
     length: prompt.defaultLength ?? DEFAULT_LENGTH,
+    image: null,
   };
 };
 
-export const PromptQueryPage = memo(function PromptQueryPage({
+const renderResult = (result: InvokeOutput) => {
+  return result.choices.flatMap((choice, choiceIndex) => {
+    if (Array.isArray(choice.message.content)) {
+      return choice.message.content.map((content, index) => {
+        return (
+          <div
+            key={`${choiceIndex}-${index}`}
+            className="flex flex-col items-center"
+          >
+            <img
+              className="w-full h-auto mb-4"
+              src={`data:image/png;base64,${choice.message.image}`}
+              alt={choice.message.content}
+            />
+            <CopyableText className="text-center">{content}</CopyableText>
+          </div>
+        );
+      });
+    }
+
+    return (
+      <div key={`${choice.index}`} className="flex flex-col items-center">
+        <CopyableText className="text-center">
+          {choice.message.content}
+        </CopyableText>
+      </div>
+    );
+  });
+};
+
+export const PromptImageQueryPage = memo(function PromptQueryPage({
   prompt,
-  randomNumberFromTopics = 0,
+  randomNumberFromImageTopics = 0,
 }: {
   prompt: UsedPromptType;
-  randomNumberFromTopics: number;
+  randomNumberFromImageTopics: number;
 }) {
   const t = useTranslations();
-  const [promptResults, setPromptResults] = useState<string[]>([]);
+  const [promptResults, setPromptResults] = useState<
+    RouterOutput["langtail"]["invokePrompt"][]
+  >([]);
   const form = useForm<QueryFormType>({
     resolver: zodResolver(QueryFormSchema),
-    defaultValues: getDefaultValues(t, randomNumberFromTopics, prompt),
+    defaultValues: getDefaultValues(t, randomNumberFromImageTopics, prompt),
   });
 
   const invokeMutation = trpcApi.langtail.invokePrompt.useMutation({
     onSuccess: (data) => {
-      setPromptResults((prev) => [...prev, getPromptResultData(data)]);
+      setPromptResults((prev) => [...prev, data]);
       toast.success(t("prompt.success"));
     },
   });
@@ -90,6 +123,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
     invokeMutation.mutateAsync({
       prompt: prompt.prompt,
       message: data.message,
+      image: data.image ?? undefined,
       length: Number(data.length || DEFAULT_LENGTH),
     });
   };
@@ -113,6 +147,45 @@ export const PromptQueryPage = memo(function PromptQueryPage({
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
                 <div className="w-full space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("prompt.image")}</FormLabel>
+                        <FileInput
+                          placeholder={t("image.placeholder")}
+                          {...field}
+                          currentImageUrl={field.value ?? ""}
+                          onFileSelect={(maybeFile, base64) => {
+                            Maybe.of(maybeFile).andThen((file) => {
+                              Resizer.imageFileResizer(
+                                file,
+                                1024,
+                                1024,
+                                "JPEG",
+                                70,
+                                0,
+                                (uri) => {
+                                  field.onChange(uri);
+                                },
+                              );
+                            });
+                          }}
+                        >
+                          <Input
+                            placeholder={t("image.urlPlaceholder")}
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => {
+                              field.onChange(e.target.value);
+                            }}
+                          />
+                        </FileInput>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="message"
@@ -193,30 +266,21 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                             value={Maybe.fromLast(promptResults).getValue("")}
                           />
                         </div>
-                        <FormControl>
-                          <Textarea
-                            defaultValue={Maybe.fromLast(
-                              promptResults,
-                            ).getValue("")}
-                            placeholder={t("prompt.result")}
-                            className="min-h-[250px]"
-                            onClick={(
-                              event: React.MouseEvent<HTMLTextAreaElement>,
-                            ) =>
-                              Maybe.fromLast(promptResults).andThen(
-                                async (result) => {
-                                  try {
-                                    await navigator.clipboard.writeText(result);
-                                    toast.success(t("prompt.resultCopied"));
-                                  } catch (error) {
-                                    toast.error(`
-                                  ${t("prompt.resultCopyFailed")}, ${String(error)}`);
-                                  }
-                                },
-                              )
-                            }
-                          />
-                        </FormControl>
+                        <div>
+                          {Maybe.fromFirst(promptResults)
+                            .andThen((lastResult) => (
+                              <div>{renderResult(lastResult)}</div>
+                            ))
+                            .getValue(
+                              <div className="flex flex-col items-center justify-center">
+                                <div className="text-center text-sm text-gray-500">
+                                  {t(
+                                    "prompt.postGenerationResultsEmptyStateText",
+                                  )}
+                                </div>
+                              </div>,
+                            )}
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -236,7 +300,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
 
                     {promptResults.map((result, index) => (
                       <div
-                        key={`${result.substring(0, 10)}-${index}`}
+                        key={`${index}-${result.id}`}
                         className="flex items-center space-x-2"
                       >
                         <div>
@@ -244,12 +308,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                             {index + 1}
                           </div>
 
-                          <CopyableText
-                            copyValue={result}
-                            className="w-full flex-1"
-                          >
-                            {result}
-                          </CopyableText>
+                          {renderResult(result)}
                         </div>
                       </div>
                     ))}

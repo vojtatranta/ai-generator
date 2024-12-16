@@ -41,12 +41,12 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? "Edit profile" : "Create Your Profile";
+  const title = initialData ? t("editProfile") : t("createProfile");
   const description = initialData
-    ? "Edit a profile."
-    : "To create your resume, we first need some basic information about you.";
-  const toastMessage = initialData ? "Profile updated." : "Profile created.";
-  const action = initialData ? "Save changes" : "Create";
+    ? t("editProfileDescription")
+    : t("createProfileDescription");
+  const toastMessage = initialData ? t("profileUpdated") : t("profileCreated");
+  const action = initialData ? t("saveChanges") : t("create");
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [data, setData] = useState({});
@@ -202,15 +202,15 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
             {currentStep === 0 && (
               <>
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                      <FormLabel>{t("fields.name")}</FormLabel>
                       <FormControl>
                         <Input
                           disabled={loading}
-                          placeholder="John"
+                          placeholder={t("fields.namePlaceholder")}
                           {...field}
                         />
                       </FormControl>
@@ -219,15 +219,15 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                   )}
                 />
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{t("fields.email")}</FormLabel>
                       <FormControl>
                         <Input
-                          disabled
-                          placeholder="johndoe@gmail.com"
+                          disabled={loading}
+                          placeholder={t("fields.emailPlaceholder")}
                           {...field}
                         />
                       </FormControl>
@@ -236,16 +236,15 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                   )}
                 />
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="contactno"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("contactNumber")}</FormLabel>
+                      <FormLabel>{t("fields.contactno")}</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          placeholder={t("contactNumber")}
                           disabled={loading}
+                          placeholder={t("fields.contactnoPlaceholder")}
                           {...field}
                         />
                       </FormControl>

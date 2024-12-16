@@ -41,6 +41,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   GalleryVerticalEnd,
+  icons,
   LogOut,
 } from "lucide-react";
 import Link from "next/link";
@@ -52,8 +53,8 @@ import { User } from "@/lib/supabase-server";
 import { useTranslations } from "next-intl";
 
 export const company = {
-  name: "Acme Inc",
-  logo: GalleryVerticalEnd,
+  name: "AIstein",
+  logo: icons.Atom,
   plan: "Enterprise",
 };
 
@@ -73,7 +74,7 @@ export default function AppSidebar({ user }: { user: User }) {
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{company.name}</span>
-            <span className="truncate text-xs">{company.plan}</span>
+            <span className="truncate text-xs">{t("appSidebar.motto")}</span>
           </div>
         </div>
       </SidebarHeader>

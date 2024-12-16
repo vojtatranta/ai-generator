@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/web/components/ui/card";
+import Image from "next/image";
 import {
   Tabs,
   TabsContent,
@@ -68,11 +69,13 @@ export default async function OverViewPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      {t("overview.totalAnswers")}
+                      {t("overview.mainHeadingText")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{numberOfAnswers}</div>
+                    <CardDescription>
+                      {t("overview.mainDescriptionText")}
+                    </CardDescription>
                   </CardContent>
                 </Card>
                 <Card>
@@ -95,35 +98,6 @@ export default async function OverViewPage() {
                     )}
                   </CardContent>
                 </Card>
-                {planRange && (
-                  <Card>
-                    <CardHeader className="flex flex-col  justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        {t("overview.remainingAnswers")}
-                      </CardTitle>
-                      <p className="text-xs text-muted-foreground">
-                        {t("overview.remainingAnswersDescription")}
-                      </p>
-                    </CardHeader>
-                    <CardContent>
-                      <div
-                        className={cn(
-                          "text-2xl font-bold",
-                          planExhausted && "text-destructive",
-                        )}
-                      >
-                        {remainingAnswers}
-                      </div>
-                      {planExhausted && (
-                        <p className="text-xs text-destructive">
-                          <Link href="/subscription">
-                            {t("overview.subscriptionNotPaid")}
-                          </Link>
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
                 {/* <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
@@ -150,23 +124,57 @@ export default async function OverViewPage() {
                 </CardContent>
               </Card> */}
               </div>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                 <Card>
                   <Link href={getPromptLink(PROMPTS.POST_GENERATOR)}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">
-                        {t("generateSocialMediaPost")}
+                        {t("generateSocialPostContentPromptTitle")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">
-                        <Icons.keyboard />
+                      <div className="flex flex-row items-center justify-between gap-4">
+                        <div className="max-w-[180px]">
+                          <Image
+                            src={require("../../../../../../public/aistein-posting.webp")}
+                            alt="Aistein posting"
+                            className="rounded-lg"
+                            height="700"
+                          />
+                        </div>
+                        <div className="text-muted-foreground">
+                          {t("generateSocialPostContentPromptDescription")}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Link>
+                </Card>
+                <Card>
+                  <Link href={getPromptLink(PROMPTS.POST_IMAGE_GENERATOR)}>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        {t("generateSocialPostImageContentPromptTitle")}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-row items-center justify-between gap-4">
+                        <div className="max-w-[180px]">
+                          <Image
+                            src={require("../../../../../../public/ai-stein-drawinig.webp")}
+                            alt="Aistein posting"
+                            className="rounded-lg"
+                            height="700"
+                          />
+                        </div>
+                        <div className="text-muted-foreground">
+                          {t("generateSocialPostImageContentPromptDescription")}
+                        </div>
                       </div>
                     </CardContent>
                   </Link>
                 </Card>
               </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+              {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <div className="col-span-4">
                   <BarGraph userId={userData.user.id} />
                 </div>
@@ -181,13 +189,13 @@ export default async function OverViewPage() {
                     <RecentSales userId={userData.user.id} />
                   </CardContent>
                 </Card>
-                {/* <div className="col-span-4">
+                <div className="col-span-4">
                 <AreaGraph />
               </div>
               <div className="col-span-4 md:col-span-3">
                 <PieGraph />
-              </div> */}
               </div>
+              </div> */}
             </TabsContent>
           </Tabs>
         </div>

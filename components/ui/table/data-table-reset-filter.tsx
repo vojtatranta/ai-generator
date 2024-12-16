@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Button } from "../button";
 
 type DataTableResetFilterProps = {
@@ -10,11 +11,12 @@ export function DataTableResetFilter({
   isFilterActive,
   onReset,
 }: DataTableResetFilterProps) {
+  const t = useTranslations("common");
   return (
     <>
       {isFilterActive ? (
         <Button variant="outline" onClick={onReset}>
-          Reset Filters
+          {t("resetFilters")}
         </Button>
       ) : null}
     </>

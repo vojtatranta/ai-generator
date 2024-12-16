@@ -3,8 +3,13 @@ import React from "react";
 import { getTranslations } from "next-intl/server";
 import { SearchParams } from "nuqs";
 import { PromptQueryPage } from "../_components/PromptQueryPage";
-import { PROMPTS, PROMPTS_UNION } from "@/constants/data";
 import { notFound } from "next/navigation";
+import {
+  RANDOM_IMAGE_TOPICS,
+  RANDOM_TOPICS,
+  USED_PROMPTS,
+} from "@/constants/data";
+import { PromptImageQueryPage } from "../_components/PromptImageQueryPage";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -14,18 +19,42 @@ type pageProps = {
 export async function generateMetadata() {
   const t = await getTranslations("metadata.dashboard");
   return {
-    title: t("quizes"),
+    title: t("promptMetadataTitle"),
   };
 }
 
 export default async function Page({ searchParams, params }: pageProps) {
   // Allow nested RSCs to access the search params (in a type-safe way)
   searchParamsCache.parse(await searchParams);
+  const t = await getTranslations();
 
   const slug = (await params).promptSlug;
-  if (!slug || !Object.entries(PROMPTS).some(([_, value]) => value === slug)) {
+  const usedPrompt = USED_PROMPTS.find((p) => p.prompt === slug);
+  if (!slug || !usedPrompt) {
     notFound();
   }
 
-  return <PromptQueryPage promptSlug={slug as PROMPTS_UNION} />;
+  const randomNumberFromImageTopics = Math.floor(
+    Math.random() * RANDOM_IMAGE_TOPICS(t).length,
+  );
+
+  if (usedPrompt.image) {
+    return (
+      <PromptImageQueryPage
+        prompt={usedPrompt}
+        randomNumberFromImageTopics={randomNumberFromImageTopics}
+      />
+    );
+  }
+
+  const randomNumberFromTopics = Math.floor(
+    Math.random() * RANDOM_TOPICS(t).length,
+  );
+
+  return (
+    <PromptQueryPage
+      prompt={usedPrompt}
+      randomNumberFromTopics={randomNumberFromTopics}
+    />
+  );
 }
