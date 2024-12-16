@@ -1,0 +1,491 @@
+{
+  "appSidebar": {
+    "overview": "Přehled"
+  },
+  "menu": {
+    "dashboard": "Přehled",
+    "quizes": "Kvízy",
+    "questions": "Otázky",
+    "categories": "Kategorie",
+    "products": "Produkty",
+    "productAttributes": "Atributy produktů",
+    "answers": "Odpovědi",
+    "users": "Uživatelé",
+    "account": {
+      "title": "Účet",
+      "profile": "Profil",
+      "login": "Přihlášení",
+      "logout": "Odhlásit se",
+      "subscription": "Předplatné"
+    }
+  },
+  "common": {
+    "name": "jméno",
+    "searchPlaceholder": "Hledat podle {searchKey}...",
+    "loading": "Načítání...",
+    "error": "Došlo k chybě",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "edit": "Upravit",
+    "create": "Vytvořit",
+    "search": "Hledat",
+    "filter": "Filtrovat",
+    "noResults": "Nenalezeny žádné výsledky",
+    "selectAll": "Vybrat vše",
+    "selectRow": "Vybrat řádek",
+    "actions": "Akce",
+    "description": "Popis",
+    "descriptionPlaceholder": "Zadejte popis",
+    "name": "Název",
+    "namePlaceholder": "Zadejte název",
+    "submit": "Uložit",
+    "submitting": "Ukládám...",
+    "table": {
+      "id": "ID",
+      "name": "JMÉNO",
+      "title": "NÁZEV",
+      "description": "POPIS",
+      "createdAt": "VYTVOŘENO",
+      "updatedAt": "AKTUALIZOVÁNO",
+      "status": "STAV",
+      "actions": "AKCE",
+      "price": "CENA",
+      "link": "ODKAZ",
+      "category": "KATEGORIE",
+      "options": "MOŽNOSTI",
+      "text": "TEXT",
+      "type": "TYP",
+      "question": "OTÁZKA",
+      "answer": "ODPOVĚĎ",
+      "correct": "SPRÁVNĚ",
+      "published": "PUBLIKOVÁNO",
+      "yes": "Ano",
+      "no": "Ne",
+      "uuid": "UUID",
+      "email": "EMAIL",
+      "role": "ROLE",
+      "xmlId": "XML ID",
+      "showing": "Zobrazuji",
+      "to": "až",
+      "of": "z",
+      "entries": "záznamů",
+      "noEntries": "Žádné záznamy nenalezeny",
+      "rowsPerPage": "Řádků na stránku",
+      "page": "Stránka",
+      "noPages": "Žádné stránky",
+      "goToFirstPage": "Přejít na první stránku",
+      "goToPreviousPage": "Přejít na předchozí stránku",
+      "goToNextPage": "Přejít na další stránku",
+      "goToLastPage": "Přejít na poslední stránku"
+    }
+  },
+  "questions": {
+    "listing": {
+      "title": "Otázky",
+      "description": "Správa otázek",
+      "addNew": "Přidat novou otázku",
+      "columns": {
+        "id": "ID",
+        "createdAt": "VYTVOŘENO",
+        "text": "TEXT",
+        "type": "TYP",
+        "quizId": "ID KVÍZU",
+        "options": "MOŽNOSTI",
+        "question": "OTÁZKA"
+      }
+    }
+  },
+  "products": {
+    "listing": {
+      "title": "Produkty",
+      "description": "Správa produktů",
+      "addNew": "Přidat nový produkt",
+      "columns": {
+        "id": "ID",
+        "createdAt": "VYTVOŘENO",
+        "name": "JMÉNO",
+        "title": "NÁZEV",
+        "description": "POPIS",
+        "price": "CENA",
+        "category": "KATEGORIE",
+        "link": "ODKAZ"
+      }
+    }
+  },
+  "categories": {
+    "listing": {
+      "title": "Kategorie",
+      "description": "Správa kategorií",
+      "addNew": "Přidat novou kategorii",
+      "columns": {
+        "id": "ID",
+        "createdAt": "VYTVOŘENO",
+        "name": "JMÉNO",
+        "description": "POPIS"
+      }
+    }
+  },
+  "answers": {
+    "listing": {
+      "title": "Odpovědi",
+      "viewResultPage": "Zobrazit stránku s výsledkem",
+      "answersInLastMonth": "Odpovědi za poslední měsíc",
+      "answersRemainingInPlan": "Zbývající odpovědi v tomto měsíci ve vašem plánu",
+      "description": "Zobrazit a spravovat odpovědi z kvízů",
+      "addNew": "Přidat novou odpověď",
+      "limitReached": "Dosažen limit odpovědí",
+      "limitReachedDescription": "Dosáhli jste měsíčního limitu odpovědí. Aktuální využití:",
+      "upgradePlan": "Upgradovat plán",
+      "columns": {
+        "id": "ID",
+        "createdAt": "VYTVOŘENO",
+        "text": "TEXT",
+        "questionId": "ID OTÁZKY",
+        "correct": "SPRÁVNĚ"
+      }
+    },
+    "quizFilterTitle": "Quizzes"
+  },
+  "users": {
+    "listing": {
+      "title": "Uživatelé",
+      "description": "Správa uživatelů",
+      "addNew": "Přidat nového uživatele",
+      "columns": {
+        "id": "ID",
+        "name": "JMÉNO",
+        "email": "EMAIL",
+        "role": "ROLE",
+        "createdAt": "VYTVOŘENO",
+        "status": "STAV"
+      }
+    }
+  },
+  "quiz": {
+    "result": {
+      "defaultHeadline": "Tyto produkty byste si měli koupit",
+      "productsDefaultToPickHeadline": "Další produkty s podobnými vlastnostmi",
+      "defaultDescription": "Vybrali jsme produkty, které nejlépe odpovídají vašim potřebám na základě vašich odpovědí",
+      "noImage": "Bez obrázku",
+      "addToBasket": "Přidat do košíku",
+      "goToProduct": "Přejít na produkt",
+      "planRestriction": "Doporučení nelze zobrazit, protože jste již dosáhli limitu zobrazených doporučení pro tento měsíc.",
+      "category": "Produkty z vybraných kategorií",
+      "attribute": "Produkty s vybranými vlastnostmi"
+    },
+    "answer": {
+      "successMessage": "Děkujeme! Vaše odpovědi byly uloženy.",
+      "previousQuestion": "Předchozí",
+      "nextQuestion": "Další",
+      "finish": "Dokončit",
+      "finishQuiz": "Dokončit kvíz",
+      "startOver": "Začít znovu",
+      "goToFinish": "Přejít na konec",
+      "emailLabel": "Váš e-mail",
+      "emailPlaceholder": "Zadejte svůj e-mail",
+      "gatherEmailDescription": "Pro získání výsledku e-mailem prosím zadejte svou e-mailovou adresu.",
+      "gatherEmailLabel": "Získat e-mail klienta",
+      "errors": {
+        "invalidEmail": "Zadaný text nevypadá jako e-mail. Příklad: standa.hlozek@hudba.cz"
+      }
+    },
+    "listing": {
+      "title": "Kvízy",
+      "description": "Správa kvízů",
+      "addNew": "Přidat nový",
+      "selectAll": "Vybrat vše",
+      "selectRow": "Vybrat řádek",
+      "columns": {
+        "id": "ID",
+        "createdAt": "VYTVOŘENO",
+        "published": "PUBLIKOVÁNO",
+        "yes": "Ano",
+        "no": "Ne",
+        "uuid": "UUID",
+        "name": "JMÉNO",
+        "description": "POPIS"
+      }
+    },
+    "create": {
+      "title": "Vytvořit kvíz",
+      "description": "Vytvořte a nakonfigurujte svůj kvíz",
+      "publish": "Publikovat",
+      "maxNumberOfProducts": {
+        "title": "Maximalní počet produktů",
+        "label": "Maximalní počet produktů",
+        "placeholder": "Zadejte maximalní počet produktů"
+      },
+      "unpublish": "Zrušit publikování",
+      "share": "Sdílet",
+      "formTabTitle": "Formulář",
+      "resultTabTitle": "Stránka s výsledkem",
+      "optionHeadline": "Možnost",
+      "gatherEmail": {
+        "label": "Získat e-mail klienta"
+      },
+      "published": {
+        "label": "Publikováno",
+        "description": "Zpřístupnit tento kvíz veřejnosti",
+        "shareLink": "Sdílet tento odkaz:"
+      },
+      "name": {
+        "label": "Název"
+      },
+      "description": {
+        "label": "Popis"
+      },
+      "resultPage": "Stránka s výsledky",
+      "resultHeadline": {
+        "label": "Nadpis výsledku",
+        "placeholder": "Zadejte nadpis výsledku"
+      },
+      "resultDescription": {
+        "label": "Popis výsledku",
+        "placeholder": "Zadejte popis výsledku"
+      },
+      "backgroundImage": {
+        "label": "Obrázek na pozadí",
+        "placeholder": "Přetáhněte sem soubor nebo klikněte pro nahrání"
+      },
+      "questions": {
+        "label": "Otázky",
+        "question": "Otázka",
+        "Question": "Otázka",
+        "isMultiChoice": "Umožňuje více odpovědí",
+        "removeQuestion": "Odstranit otázku",
+        "addQuestion": "Přidat otázku",
+        "of": "z"
+      },
+      "options": {
+        "label": "Možnosti",
+        "addOption": "Přidat možnost"
+      },
+      "questionName": {
+        "label": "Název otázky",
+        "placeholder": "Zadejte název otázky"
+      },
+      "questionDescription": {
+        "label": "Popis otázky",
+        "placeholder": "Zadejte popis otázky"
+      },
+      "optionText": {
+        "label": "Text možnosti",
+        "placeholder": "Zadejte text pro možnost {optionKey}"
+      },
+      "productCategory": {
+        "label": "Kategorie produktu"
+      },
+      "productCategories": {
+        "label": "Kategorie produktů",
+        "placeholder": "Vyberte kategorie produktů"
+      },
+      "excludedProductCategories": {
+        "label": "Vyloučené kategorie produktů",
+        "placeholder": "Vyberte vyloučené kategorie produktů"
+      },
+      "productAttributes": {
+        "label": "Atributy produktů",
+        "placeholder": "Vyberte atributy produktů"
+      },
+      "excludeProductAttributes": {
+        "label": "Vyloučené atributy produktů",
+        "placeholder": "Vyberte vyloučené atributy produktů"
+      },
+      "productScoringAttributes": {
+        "title": "Charakteristiky pro zahrnutí produktů do výsledku kvízu"
+      },
+      "excludeProductScoringAttributes": {
+        "title": "Charakteristiky vylučující produkty z výsledku kvízu"
+      },
+      "score": {
+        "label": "Skóre"
+      },
+      "addQuestion": "Přidat otázku",
+      "submit": "Uložit kvíz",
+      "submitting": "Ukládání...",
+      "navigation": {
+        "previous": "Předchozí",
+        "next": "Další"
+      },
+      "resultPageSlots": {
+        "title": "Sekce výsledkové stránky",
+        "typeTitle": "Typ sekce",
+        "type": {
+          "ATTRIBUTES": "Atributy",
+          "CATEGORY": "Kategorie"
+        },
+        "categoryIdLabel": "Kategorie",
+        "attributeIdLabel": "Atribut",
+        "productCount": "Počet produktů",
+        "description": "Popis",
+        "removeButton": "Odstranit sekci",
+        "addButton": "Přidat sekci"
+      }
+    }
+  },
+  "overview": {
+    "welcomeBack": "Vítejte zpět",
+    "download": "Stáhnout",
+    "overview": "Přehled",
+    "totalAnswers": "Celkem odpovědí",
+    "subscription": "Předplatné",
+    "from": "od",
+    "to": "do",
+    "remainingAnswers": "Zbývající odpovědi",
+    "remainingAnswersDescription": "Počet odpovědí, které můžete ještě vygenerovat",
+    "subscriptionNotPaid": "Vaše předplatné je vyčerpáno, upgradujte svůj plán!",
+    "recentAnswers": "Nedávné odpovědi",
+    "recentAnswersDescription": "Vaše nejnovější vygenerované odpovědi",
+    "barChart": {
+      "answersLabel": "Odpovědi",
+      "title": "Přehled odpovědí",
+      "description": "Vaše odpovědi ve zvoleném období"
+    },
+    "recentSales": {
+      "noEmailAvailable": "Není k dispozici",
+      "noDateAvailable": "Není k dispozici"
+    }
+  },
+  "prompt": {
+    "title": "Generovat obsah",
+    "message": "Zpráva",
+    "length": "Délka",
+    "run": "Generovat",
+    "success": "Obsah byl úspěšně vygenerován",
+    "result": "Klikněte na Generovat, abyste viděli výsledek",
+    "randomTopic": {
+      "NAME": "Článek o současném známém herci",
+      "POLITICS": "Článek o politice",
+      "LOCAL_SINGER": "Článek o současném známém zpěvákovi",
+      "LOCAL_ACTOR": "Článek o současném známém herci",
+      "LOCAL_ACTRESS": "Článek o současném známém herečce",
+      "LOCAL_MUSICIAN": "Článek o současném známém hudebníkovi",
+      "LOCAL_CHEF": "Článek o současném známém šéfkuchaři",
+      "LOCAL_WRITER": "Článek o současném známém spisovateli",
+      "LOCAL_AUTHOR": "Článek o současném známém autorovi"
+    }
+  },
+  "subscription": {
+    "allSubscriptions": "Všechna předplatná",
+    "plansHeading": "Plány předplatného",
+    "plansDescription": "Vyberte si plán, který vám nejlépe vyhovuje",
+    "currentPlan": "Aktuální plán",
+    "cancelSubscriptionButton": "Zrušit předplatné",
+    "subscribeButtonText": "Předplatit",
+    "successToast": "Úspěšně jste se přihlásili k plánu",
+    "notAuthorized": "Nemáte oprávnění zobrazit tuto stránku",
+    "noSubscriptionIdReturned": "Nebylo vráceno ID předplatného Stripe",
+    "missingParametersInSuccessRedirect": "Chybějící parametry, nelze dokončit proces předplatného.",
+    "subscriptionNotPaid": "Platba nebyla úspěšná. Prosím zkuste to znovu později.",
+    "databaseError": "Při zápisu změn do databáze došlo k chybě."
+  },
+  "auth": {
+    "continueWithGoogle": "Přihlásit se přes Google",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "Zadejte svůj email...",
+      "continueWithEmail": "Pokračovat s emailem",
+      "orContinueWith": "Nebo pokračujte s",
+      "errors": {
+        "invalidEmail": "Neplatný e-mail"
+      }
+    },
+    "errors": {
+      "googleSignIn": "Chyba při přihlašování přes Google: {error}"
+    },
+    "success": {
+      "signedIn": "Úspěšně přihlášeno!"
+    },
+    "login": "Přihlášení",
+    "logo": "Logo",
+    "tagline": "Nabíjejte svá zařízení výhodně.",
+    "founder": {
+      "name": "Vojtěch Tranta",
+      "title": "zakladatel"
+    },
+    "createAccount": {
+      "title": "Vytvořit účet",
+      "description": "Pro vytvoření účtu zadejte svůj email"
+    },
+    "terms": {
+      "agreement": "Kliknutím na pokračovat souhlasíte s našimi podmínkami a zásadami ochrany soukromí."
+    }
+  },
+  "seo": {
+    "title": "AIstein - Lepší produktová doporučení",
+    "description": "Vytvářejte personalizovaná produktová doporučení pro vaše zákazníky pomocí našeho inteligentního kvízového systému",
+    "ogTitle": "AIstein - Inteligentní produktová doporučení",
+    "ogDescription": "Transformujte své podnikání s personalizovanými produktovými doporučeními. Vytvářejte poutavé kvízy, které pomohou zákazníkům najít perfektní produkty.",
+    "author": {
+      "name": "Vojtěch Tranta",
+      "url": "https://twitter.com/vojtatranta"
+    },
+    "publisher": "AIstein",
+    "twitter": {
+      "site": "@AIsteinapp",
+      "creator": "@vojtatranta"
+    }
+  },
+  "productAttributes": {
+    "listing": {
+      "title": "Atributy produktů",
+      "description": "Správa atributů produktů",
+      "addNew": "Přidat nový atribut produktu"
+    }
+  },
+  "productAttributeForm": {
+    "title": "Atribut produktu",
+    "description": "Popis",
+    "descriptionPlaceholder": "Zadejte popis atributu - čím podrobnější popis, tím lepší, hodí se pro klasifikaci skrze AI.",
+    "name": "Název",
+    "namePlaceholder": "Zadejte název atributu",
+    "submit": "Uložit",
+    "submitting": "Ukládám...",
+    "productAttributeCreated": "Atribut produktu byl vytvořen",
+    "productAttributeUpdated": "Atribut produktu byl aktualizován",
+    "actions": {
+      "update": "Aktualizovat",
+      "delete": "Smazat"
+    },
+    "messages": {
+      "updated": "Atribut produktu byl aktualizován",
+      "deleted": "Atribut produktu byl smazán"
+    }
+  },
+  "metadata": {
+    "dashboard": {
+      "overview": "Přehled",
+      "users": "Uživatelé",
+      "answers": "Odpovědi",
+      "productCategories": "Kategorie produktů",
+      "productAttributes": "Atributy produktů",
+      "subscription": "Předplatné",
+      "paymentSuccess": "Úspěšná platba",
+      "quizes": "Kvízy",
+      "questions": "Otázky",
+      "profile": "Profil",
+      "products": "Produkty"
+    }
+  },
+  "notFound": {
+    "title": "Něco chybí",
+    "description": "Omlouváme se, ale stránka, kterou hledáte, neexistuje nebo byla přesunuta.",
+    "goBack": "Zpět",
+    "backToHome": "Zpět na hlavní stránku"
+  },
+  "userNav": {
+    "upgradeToPro": "Upgradovat na Pro",
+    "account": "Účet",
+    "billing": "Fakturace",
+    "notifications": "Oznámení",
+    "logout": "Odhlásit se"
+  },
+  "import": {
+    "success": {
+      "noChanges": "Import byl úspěšný. Ale nic nebylo aktualizováno.",
+      "summary": "Import úspěšný. Zde je shrnutí:",
+      "error": "Import selhal. Seznam chyb:"
+    }
+  }
+}

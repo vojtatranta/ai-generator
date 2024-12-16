@@ -1,0 +1,475 @@
+{
+  "appSidebar": {
+    "overview": "Overview"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "quizes": "Quizzes",
+    "questions": "Questions",
+    "categories": "Categories",
+    "products": "Products",
+    "answers": "Answers",
+    "productAttributes": "Product Attributes",
+    "users": "Users",
+    "account": {
+      "title": "Account",
+      "profile": "Profile",
+      "login": "Login",
+      "logout": "Log out",
+      "subscription": "Subscription"
+    }
+  },
+  "common": {
+    "name": "name",
+    "searchPlaceholder": "Search by {searchKey}...",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "noResults": "No results found",
+    "selectAll": "Select all",
+    "selectRow": "Select row",
+    "actions": "Actions",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description",
+    "name": "Name",
+    "namePlaceholder": "Enter name",
+    "submit": "Save",
+    "submitting": "Saving...",
+    "table": {
+      "id": "ID",
+      "name": "NAME",
+      "title": "TITLE",
+      "description": "DESCRIPTION",
+      "createdAt": "CREATED",
+      "updatedAt": "UPDATED",
+      "status": "STATUS",
+      "actions": "ACTIONS",
+      "price": "PRICE",
+      "link": "LINK",
+      "category": "CATEGORY",
+      "options": "OPTIONS",
+      "text": "TEXT",
+      "type": "TYPE",
+      "question": "QUESTION",
+      "answer": "ANSWER",
+      "correct": "CORRECT",
+      "published": "PUBLISHED",
+      "yes": "Yes",
+      "no": "No",
+      "uuid": "UUID",
+      "email": "EMAIL",
+      "role": "ROLE",
+      "xmlId": "XML ID",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "entries": "entries",
+      "noEntries": "No entries found",
+      "rowsPerPage": "Rows per page",
+      "page": "Page",
+      "noPages": "No pages",
+      "goToFirstPage": "Go to first page",
+      "goToPreviousPage": "Go to previous page",
+      "goToNextPage": "Go to next page",
+      "goToLastPage": "Go to last page"
+    }
+  },
+  "productAttributeForm": {
+    "title": "Product Attribute",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter attribute description",
+    "name": "Name",
+    "namePlaceholder": "Enter attribute name",
+    "submit": "Save",
+    "submitting": "Saving...",
+    "productAttributeCreated": "Product attribute created",
+    "productAttributeUpdated": "Product attribute updated",
+    "actions": {
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "messages": {
+      "updated": "Product attribute updated",
+      "deleted": "Product attribute deleted"
+    }
+  },
+  "quiz": {
+    "result": {
+      "defaultHeadline": "These products you should buy",
+      "defaultDescription": "We have selected products that best match your needs based on your answers",
+      "noImage": "No image",
+      "addToBasket": "Add to basket",
+      "goToProduct": "Go to product",
+      "planRestriction": "The recommendations cannot be displayed as you have already reached the limit of displayed recommendations for this month.",
+      "category": "Products from selected categories",
+      "attribute": "Products with selected attributes"
+    },
+    "answer": {
+      "successMessage": "Thank you! Your answers have been saved.",
+      "previousQuestion": "Previous question",
+      "nextQuestion": "Next question",
+      "finish": "Finish",
+      "finishQuiz": "Finish Quiz",
+      "startOver": "Start Over",
+      "goToFinish": "Go to finish",
+      "emailLabel": "Your e-mail address",
+      "emailPlaceholder": "Enter your e-mail address",
+      "gatherEmailDescription": "To get the result as an email, please enter your e-mail address.",
+      "gatherEmailLabel": "Gather client email"
+    },
+    "listing": {
+      "title": "Quizzes",
+      "description": "Manage quizzes",
+      "addNew": "Add New",
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "columns": {
+        "id": "ID",
+        "createdAt": "CREATED",
+        "published": "PUBLISHED",
+        "yes": "Yes",
+        "no": "No",
+        "uuid": "UUID",
+        "name": "NAME",
+        "description": "DESCRIPTION"
+      }
+    },
+    "create": {
+      "title": "Create Quiz",
+      "description": "Create and configure your quiz",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "share": "Share",
+      "formTabTitle": "Form",
+      "resultTabTitle": "Quiz result page",
+      "optionHeadline": "Option",
+      "gatherEmail": {
+        "label": "Gather client email"
+      },
+      "resultPageSlots": {
+        "title": "Result Page Sections",
+        "typeTitle": "Section Type",
+        "type": {
+          "ATTRIBUTES": "Attributes",
+          "CATEGORY": "Category"
+        },
+        "categoryIdLabel": "Category",
+        "attributeIdLabel": "Attribute",
+        "productCount": "Number of Products",
+        "description": "Description",
+        "removeButton": "Remove Section",
+        "addButton": "Add Section"
+      },
+      "published": {
+        "label": "Published",
+        "description": "Make this quiz available to the public",
+        "shareLink": "Share this link:"
+      },
+      "name": {
+        "label": "Name"
+      },
+      "description": {
+        "label": "Description"
+      },
+      "resultPage": "Result Page",
+      "resultHeadline": {
+        "label": "Result Headline",
+        "placeholder": "Enter result headline"
+      },
+      "resultDescription": {
+        "label": "Result Description",
+        "placeholder": "Enter result description"
+      },
+      "backgroundImage": {
+        "label": "Background Image",
+        "placeholder": "Drag and drop or click to upload"
+      },
+      "questions": {
+        "label": "Questions",
+        "question": "Question",
+        "Question": "Question",
+        "isMultiChoice": "Allows multiple answers",
+        "removeQuestion": "Remove Question",
+        "addQuestion": "Add Question",
+        "of": "of"
+      },
+      "options": {
+        "label": "Options",
+        "addOption": "Add Option"
+      },
+      "questionName": {
+        "label": "Question Name",
+        "placeholder": "Enter question name"
+      },
+      "questionDescription": {
+        "label": "Question Description",
+        "placeholder": "Enter question description"
+      },
+      "optionText": {
+        "label": "Option Text",
+        "placeholder": "Enter text of the option"
+      },
+      "productCategory": {
+        "label": "Product Category"
+      },
+      "productCategories": {
+        "label": "Product Categories",
+        "placeholder": "Select product categories that if selected will be included in the result"
+      },
+      "excludedProductCategories": {
+        "label": "Excluded Product Categories",
+        "placeholder": "Select product categories that if selected won't be included in the result"
+      },
+      "productAttributes": {
+        "label": "Product Attributes",
+        "placeholder": "Select product attributes that if selected will be included in the result"
+      },
+      "excludeProductAttributes": {
+        "label": "Excluded Product Attributes",
+        "placeholder": "Select product attributes that if selected won't be included in the result"
+      },
+      "productScoringAttributes": {
+        "title": "Characteristics for including products in quiz results"
+      },
+      "excludeProductScoringAttributes": {
+        "title": "Characteristics excluding products from quiz results"
+      },
+      "score": {
+        "label": "Score"
+      },
+      "addQuestion": "Add Question",
+      "submit": "Save Quiz",
+      "submitting": "Saving...",
+      "navigation": {
+        "previous": "Previous",
+        "next": "Next"
+      }
+    }
+  },
+  "questions": {
+    "listing": {
+      "title": "Questions",
+      "description": "Manage questions",
+      "addNew": "Add New Question",
+      "columns": {
+        "id": "ID",
+        "createdAt": "CREATED",
+        "text": "TEXT",
+        "type": "TYPE",
+        "quizId": "QUIZ ID",
+        "options": "OPTIONS",
+        "question": "QUESTION"
+      }
+    }
+  },
+  "products": {
+    "listing": {
+      "title": "Products",
+      "description": "Manage products",
+      "addNew": "Add New Product",
+      "columns": {
+        "id": "ID",
+        "createdAt": "CREATED",
+        "name": "NAME",
+        "title": "TITLE",
+        "description": "DESCRIPTION",
+        "price": "PRICE",
+        "category": "CATEGORY",
+        "link": "LINK"
+      }
+    }
+  },
+  "categories": {
+    "listing": {
+      "title": "Categories",
+      "description": "Manage categories",
+      "addNew": "Add New Category",
+      "columns": {
+        "id": "ID",
+        "createdAt": "CREATED",
+        "name": "NAME",
+        "description": "DESCRIPTION"
+      }
+    }
+  },
+  "answers": {
+    "listing": {
+      "title": "Answers",
+      "viewResultPage": "View result page",
+      "answersInLastMonth": "Answers in last month",
+      "answersRemainingInPlan": "Answers remaining in this month in your plan",
+      "description": "View and manage quiz responses",
+      "addNew": "Add New Answer",
+      "limitReached": "Answer Limit Reached",
+      "limitReachedDescription": "You have reached your monthly answer limit. Current usage:",
+      "upgradePlan": "Upgrade your plan",
+      "columns": {
+        "id": "ID",
+        "createdAt": "CREATED",
+        "text": "TEXT",
+        "questionId": "QUESTION ID",
+        "correct": "CORRECT"
+      }
+    },
+    "quizFilterTitle": "Quizzes"
+  },
+  "users": {
+    "listing": {
+      "title": "Users",
+      "description": "Manage users",
+      "addNew": "Add New User",
+      "columns": {
+        "id": "ID",
+        "name": "NAME",
+        "email": "EMAIL",
+        "role": "ROLE",
+        "createdAt": "CREATED",
+        "status": "STATUS"
+      }
+    }
+  },
+  "auth": {
+    "title": "Login",
+    "continueWithGoogle": "Continue with Google",
+    "description": "Welcome back! Please enter your details.",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password"
+    },
+    "submit": "Sign In",
+    "submitting": "Signing in...",
+    "error": {
+      "invalidCredentials": "Invalid credentials"
+    },
+    "success": {
+      "signedIn": "Successfully signed in"
+    },
+    "signIn": "Sign in",
+    "termsAndConditions": "By continuing, you agree to our Terms of Service and Privacy Policy.",
+    "founder": {
+      "name": "Vojtěch Tranta",
+      "position": "Founder",
+      "title": "Founder"
+    },
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "Enter your email...",
+      "continueWithEmail": "Continue with email",
+      "orContinueWith": "Or continue with"
+    },
+    "errors": {
+      "googleSignIn": "Error signing in with Google: {error}"
+    },
+    "login": "Login",
+    "logo": "Logo",
+    "tagline": "Attract your customers with better product recommendations.",
+    "createAccount": {
+      "title": "Create an account",
+      "description": "Enter your email below to create your account"
+    },
+    "terms": {
+      "agreement": " By clicking continue, you agree to our terms and privacy policies."
+    }
+  },
+  "form": {
+    "errors": {
+      "invalidEmail": "Invalid email"
+    }
+  },
+  "subscription": {
+    "allSubscriptions": "All Subscriptions",
+    "plansHeading": "Subscription Plans",
+    "plansDescription": "Choose a plan that works best for you",
+    "currentPlan": "Current Plan",
+    "cancelSubscriptionButton": "Cancel Subscription",
+    "subscribeButtonText": "Subscribe",
+    "successToast": "Successfully subscribed to plan",
+    "notAuthorized": "You are not authorized to view this page",
+    "noSubscriptionIdReturned": "No Stripe subscription ID returned",
+    "missingParametersInSuccessRedirect": "Missing parameters, could not finish the subscription process.",
+    "subscriptionNotPaid": "The payment was not successful. Please try again later.",
+    "databaseError": "There was an error writing the changes to the database."
+  },
+  "overview": {
+    "welcomeBack": "Welcome back",
+    "download": "Download",
+    "overview": "Overview",
+    "totalAnswers": "Total Answers",
+    "subscription": "Subscription",
+    "from": "from",
+    "to": "to",
+    "remainingAnswers": "Remaining Answers",
+    "remainingAnswersDescription": "Number of answers you can still generate",
+    "subscriptionNotPaid": "Your subscription plan is exhausted, upgrade your plan!",
+    "recentAnswers": "Recent Answers",
+    "recentAnswersDescription": "Your most recent generated answers",
+    "barChart": {
+      "answersLabel": "Answers",
+      "title": "Answers Overview",
+      "description": "Your answers in the selected period"
+    },
+    "recentSales": {
+      "noEmailAvailable": "N/A",
+      "noDateAvailable": "N/A"
+    }
+  },
+  "prompt": {
+    "title": "Generate Content",
+    "message": "Message",
+    "length": "Length",
+    "run": "Generate",
+    "success": "Content generated successfully",
+    "randomTopic": {
+      "NAME": "Name",
+      "POLITICS": "Politics",
+      "LOCAL_SINGER": "Local Singer",
+      "LOCAL_ACTOR": "Local Actor",
+      "LOCAL_ACTRESS": "Local Actress",
+      "LOCAL_MUSICIAN": "Local Musician",
+      "LOCAL_CHEF": "Local Chef",
+      "LOCAL_WRITER": "Local Writer",
+      "LOCAL_AUTHOR": "Local Author"
+    }
+  },
+  "seo": {
+    "title": "PerfectPick - Better Product Recommendations",
+    "description": "Create personalized product recommendations for your customers with our intelligent quiz system",
+    "ogTitle": "PerfectPick - Intelligent Product Recommendations",
+    "ogDescription": "Transform your business with personalized product recommendations. Create engaging quizzes that help customers find the perfect products.",
+    "author": {
+      "name": "Vojtěch Tranta",
+      "url": "https://twitter.com/vojtatranta"
+    },
+    "publisher": "PerfectPick",
+    "twitter": {
+      "site": "@perfectpickapp",
+      "creator": "@vojtatranta"
+    }
+  },
+  "productAttributes": {
+    "form": {
+      "title": "Product Attribute",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter attribute description",
+      "name": "Name",
+      "namePlaceholder": "Enter attribute name",
+      "submit": "Save",
+      "submitting": "Saving..."
+    },
+    "listing": {
+      "title": "Product Attributes",
+      "description": "Manage product attributes",
+      "addNew": "Add New Product Attribute"
+    }
+  }
+}
