@@ -75,7 +75,7 @@ export const getMetaTags =
         }),
       },
       twitter: {
-        site: "@perfectpickapp",
+        site: "@aistein",
         cardType: "summary_large_image",
       },
       additionalLinkTags: [
@@ -95,11 +95,12 @@ export const getMetaTags =
         },
         {
           name: "author",
-          content: "Perfectpick",
+          content: "AIstein",
         },
         {
           name: "keywords",
-          content: "PerfectPick, create recommendations for your products!",
+          content:
+            "AIStein, generates content for your website in any language!",
         },
         {
           name: "twitter:image",
