@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_results: {
+        Row: {
+          ai_result: Json | null;
+          created_at: string;
+          id: number;
+          prompt: string | null;
+          prompt_slug: string;
+          user_id: string;
+          uuid: string;
+        };
+        Insert: {
+          ai_result?: Json | null;
+          created_at?: string;
+          id?: number;
+          prompt?: string | null;
+          prompt_slug: string;
+          user_id: string;
+          uuid?: string;
+        };
+        Update: {
+          ai_result?: Json | null;
+          created_at?: string;
+          id?: number;
+          prompt?: string | null;
+          prompt_slug?: string;
+          user_id?: string;
+          uuid?: string;
+        };
+        Relationships: [];
+      };
       answers: {
         Row: {
           answers: Json;

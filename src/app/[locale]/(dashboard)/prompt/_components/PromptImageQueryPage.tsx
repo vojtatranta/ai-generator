@@ -40,6 +40,9 @@ import { Maybe } from "actual-maybe";
 import { CopyableText } from "@/components/CopyableText";
 import { CopyButton } from "@/components/CopyButton";
 import { FileInput } from "@/components/ui/fileinput";
+import { OutputIframe } from "./OutputIframe";
+import { AIResult } from "@/lib/supabase-server";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_LENGTH = 200;
 
@@ -53,6 +56,20 @@ type QueryFormType = z.infer<typeof QueryFormSchema>;
 
 type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
 
+type ResultType = {
+  prompt: string;
+  result: InvokeOutput | null;
+};
+
+const parseImageFromResponseText = (text: string | null | undefined) => {
+  /// result <iframe><img src="https://replicate.delivery/xezq/5StDOTFr3v4NGFWZL77PAZ4tkEZBqlPpo2MVeZ9G9ppc8u9JA/out-0.jpg" width="250"/></iframe>
+  const match = text?.match(/<iframe.*?src="([^"]*)".*?<\/iframe>/);
+  if (match) {
+    return match;
+  }
+  return null;
+};
+
 const getDefaultValues = (
   t: (key: string) => string,
   randomNumberFromTopics: number,
@@ -65,47 +82,44 @@ const getDefaultValues = (
   };
 };
 
-const renderResult = (result: InvokeOutput) => {
-  return result.choices.flatMap((choice, choiceIndex) => {
-    if (Array.isArray(choice.message.content)) {
-      return choice.message.content.map((content, index) => {
-        return (
-          <div
-            key={`${choiceIndex}-${index}`}
-            className="flex flex-col items-center"
-          >
-            <img
-              className="w-full h-auto mb-4"
-              src={`data:image/png;base64,${choice.message.image}`}
-              alt={choice.message.content}
-            />
-            <CopyableText className="text-center">{content}</CopyableText>
-          </div>
-        );
-      });
-    }
-
-    return (
-      <div key={`${choice.index}`} className="flex flex-col items-center">
-        <CopyableText className="text-center">
-          {choice.message.content}
-        </CopyableText>
-      </div>
-    );
-  });
+const renderResult = (result: ResultType) => {
+  return (
+    result.result?.choices.flatMap((choice, choiceIndex) => {
+      return (
+        <div key={`${choice.index}`} className="flex flex-col items-center">
+          {Maybe.of(parseImageFromResponseText(choice.message.content))
+            .andThen((match) => {
+              return (
+                <div>
+                  <div className="rounded-lg flex items-center justify-center overflow-hidden">
+                    <img src={match[1]} className="max-w-full" />
+                  </div>
+                  {choice.message.content?.replaceAll(match[0], "")}
+                </div>
+              );
+            })
+            .getValue(
+              <CopyableText className="text-center max-w-full">
+                {choice.message.content}
+              </CopyableText>,
+            )}
+        </div>
+      );
+    }) ?? null
+  );
 };
 
 export const PromptImageQueryPage = memo(function PromptQueryPage({
+  aiResults,
   prompt,
   randomNumberFromImageTopics = 0,
 }: {
+  aiResults: AIResult[];
   prompt: UsedPromptType;
   randomNumberFromImageTopics: number;
 }) {
   const t = useTranslations();
-  const [promptResults, setPromptResults] = useState<
-    RouterOutput["langtail"]["invokePrompt"][]
-  >([]);
+  const [promptResults, setPromptResults] = useState<ResultType[]>([]);
   const form = useForm<QueryFormType>({
     resolver: zodResolver(QueryFormSchema),
     defaultValues: getDefaultValues(t, randomNumberFromImageTopics, prompt),
@@ -113,20 +127,36 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
 
   const invokeMutation = trpcApi.langtail.invokePrompt.useMutation({
     onSuccess: (data) => {
-      setPromptResults((prev) => [...prev, data]);
+      setPromptResults((prev) => {
+        const last = prev[prev.length - 1];
+
+        return [...prev.slice(-1), { ...last, result: data }];
+      });
       toast.success(t("prompt.success"));
     },
   });
 
   const onSubmit = async (data: QueryFormType) => {
     // await invokeQuery.refetch();
-    invokeMutation.mutateAsync({
+    setPromptResults((prev) => [
+      ...prev,
+      { prompt: data.message, result: null },
+    ]);
+    await invokeMutation.mutateAsync({
       prompt: prompt.prompt,
       message: data.message,
       image: data.image ?? undefined,
       length: Number(data.length || DEFAULT_LENGTH),
     });
   };
+
+  const allResults = [
+    ...promptResults.reverse().filter((result) => result.result),
+    ...aiResults.map((result) => ({
+      result: result.ai_result as InvokeOutput,
+      prompt: result.prompt ?? "",
+    })),
+  ];
 
   return (
     <PageContainer>
@@ -263,11 +293,19 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                             className="ml-2 max-h-[23px]"
                             variant="outline"
                             size="xs"
-                            value={Maybe.fromLast(promptResults).getValue("")}
+                            value={Maybe.fromFirst(
+                              promptResults.filter((result) => result.result),
+                            )
+                              .andThen((lastResult) =>
+                                String(lastResult.result),
+                              )
+                              .getValue("")}
                           />
                         </div>
                         <div>
-                          {Maybe.fromFirst(promptResults)
+                          {Maybe.fromFirst(
+                            promptResults.filter((result) => result.result),
+                          )
                             .andThen((lastResult) => (
                               <div>{renderResult(lastResult)}</div>
                             ))
@@ -291,22 +329,29 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
           </Card>
           <Card className="max-w-[500px]">
             <CardContent className="py-6">
-              {Maybe.fromFirst(promptResults)
+              {Maybe.fromFirst(allResults)
                 .andThen(() => (
                   <div>
                     <div className="text-sm text-gray-500 mb-2">
                       {t("prompt.olderResults")}
                     </div>
 
-                    {promptResults.map((result, index) => (
+                    {allResults.map((result, index) => (
                       <div
-                        key={`${index}-${result.id}`}
+                        key={`${index}-${result.prompt}`}
                         className="flex items-center space-x-2"
                       >
                         <div>
                           <div className="flex items-center justify-center w-6 h-6 mr-2 bg-primary-foreground text-primary rounded-full">
                             {index + 1}
                           </div>
+                          {Maybe.of(result.prompt)
+                            .andThen((userPrompt) => (
+                              <span className="text-sm text-gray-400">
+                                {userPrompt}
+                              </span>
+                            ))
+                            .orNull()}
 
                           {renderResult(result)}
                         </div>

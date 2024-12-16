@@ -32,6 +32,8 @@ export async function createSupabaseServerClient() {
   return client;
 }
 
+export type AIResult = Database["public"]["Tables"]["ai_results"]["Row"];
+
 export type Answer = Database["public"]["Tables"]["answers"]["Row"];
 export type PlanSubscription =
   Database["public"]["Tables"]["subscriptions"]["Row"];

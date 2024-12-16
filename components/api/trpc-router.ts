@@ -25,6 +25,7 @@ import {
 } from "@/lib/stripe";
 import z from "zod";
 import { PROMPTS } from "@/constants/data";
+import { Json } from "@/database.types";
 
 // Create context type
 type Context = {
@@ -548,6 +549,15 @@ export const langtailRouter = router({
           ...(input.length ? { length: String(input.length) } : {}),
         },
       });
+
+      await ctx.supabase.from("ai_results").insert([
+        {
+          user_id: ctx.user.id,
+          prompt_slug: input.prompt,
+          prompt: input.message,
+          ai_result: response as unknown as Json,
+        },
+      ]);
 
       return response;
     }),

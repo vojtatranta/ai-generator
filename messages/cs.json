@@ -127,7 +127,7 @@
   "generateSocialPostContentPromptTitle": "Vytvořte si obsah pro vaše sociální sítě",
   "generateSocialPostImageContentPromptTitle": "Použijte obrázky pro vytvoření obsahu pro vaše sociální sítě",
   "generateSocialPostContentPromptDescription": "Napište nápad na obsah pro vaše sociální sítě a náš systém vám pomůže s jeho vygenerováním. Do pole pro zprávu jsme pro vás připravili ukázkovou zprávu, abyste viděli, jak systém funguje.",
-  "generateSocialPostImageContentPromptDescription": "Nahrajte obrázek, ke kterému chcete vygenerovat text. Případně můžete nechat AI upravit obrázek nebo si můžete kompletně z textu nechat vygenerovat obrázek. Do pole pro zprávu jsme pro vás připravili ukázkovou zprávu, abyste viděli, jak systém funguje.",
+  "generateSocialPostImageContentPromptDescription": "Nahrajte obrázek, ke kterému chcete vytvořit obsah, nebo nechte naši umělou inteligenci, aby upravila obrázek nebo vytvořila obsah z textu.",
   "prompt": {
     "title": "Generovat obsah",
     "message": "Zpráva",
@@ -237,7 +237,8 @@
     },
     "promptTemplates": {
       "promptTemplatesMetaTitle": "AIstein - Šablony"
-    }
+    },
+    "promptMetadataTitle": "AIstein - Generování obsahu"
   },
   "notFound": {
     "title": "Něco chybí",
@@ -269,7 +270,7 @@
     "overview": "Přehled",
     "prompt": "Prompt",
     "post-generator": "Generování obsah",
-    "mage-social-post-generator": "Generování obsahu z obrázku"
+    "image-social-post-generator": "Generování obsahu z obrázku"
   },
   "promptTemplates": {
     "listing": {

@@ -234,7 +234,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                       {t("prompt.olderResults")}
                     </div>
 
-                    {promptResults.map((result, index) => (
+                    {promptResults.reverse().map((result, index) => (
                       <div
                         key={`${result.substring(0, 10)}-${index}`}
                         className="flex items-center space-x-2"
