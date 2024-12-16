@@ -56,7 +56,6 @@ const getStripeFromWindow = (
     const stripeFactory = window.Stripe as WindowStripeFactory | null;
     if (stripeFactory) {
       const assignedStripe = stripeFactory(publishableApiKey);
-      // @ts-expect-error
       window["assignedStripe"] = assignedStripe;
       return assignedStripe;
     }
@@ -104,9 +103,7 @@ export const PaymentModal: React.FC<{
     script.onload = handleScriptLoaded;
     document.body.appendChild(script);
     return () => {
-      // @ts-expect-error
       delete window["assignedStripe"];
-      // @ts-expect-error
       delete window["Stripe"];
       document.body.removeChild(script);
     };

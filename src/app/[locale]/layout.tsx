@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import Providers from "@/web/components/layout/providers";
 import { Toaster } from "@/web/components/ui/sonner";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import NextTopLoader from "nextjs-toploader";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -46,6 +47,7 @@ export default async function LocaleLayout({
           </NextIntlClientProvider>
         </NuqsAdapter>
       </body>
+      <GoogleAnalytics gaId="G-8C56VKQVWN" />
     </html>
   );
 }
