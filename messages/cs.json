@@ -186,7 +186,7 @@
       "email": "Email",
       "emailPlaceholder": "Zadejte svůj email...",
       "continueWithEmail": "Pokračovat s emailem",
-      "orContinueWith": "Nebo pokračujte s",
+      "orContinueWith": "Pokračujte s",
       "errors": {
         "invalidEmail": "Neplatný e-mail"
       }
@@ -198,8 +198,8 @@
       "signedIn": "Úspěšně přihlášeno!"
     },
     "login": "Přihlášení",
-    "logo": "Logo",
-    "tagline": "Nabíjejte svá zařízení výhodně.",
+    "logo": "AIstein.cz",
+    "tagline": "Tvoře obsah pro vaše stránky bez stresu.",
     "founder": {
       "name": "Vojtěch Tranta",
       "title": "zakladatel"

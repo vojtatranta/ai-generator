@@ -1,6 +1,7 @@
 {
   "appSidebar": {
-    "overview": "Overview"
+    "overview": "Overview",
+    "motto": "Create easily!"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -8,6 +9,7 @@
     "promptTemplates": "Templates",
     "account": {
       "title": "Account",
+      "profile": "Profile",
       "login": "Login",
       "logout": "Log out",
       "subscription": "Subscription"
@@ -15,23 +17,72 @@
   },
   "common": {
     "name": "name",
+    "searchPlaceholder": "Search by {searchKey}...",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "noResults": "No results found",
+    "selectAll": "Select all",
+    "selectRow": "Select row",
+    "actions": "Actions",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description",
+    "name": "Name",
+    "namePlaceholder": "Enter name",
     "submit": "Submit",
     "submitting": "Submitting...",
-    "resetFilters": "Reset filters",
     "table": {
-      "noResults": "No results.",
-      "loading": "Loading...",
-      "search": "Search",
-      "goToPage": "Go to page",
-      "pageSize": "Page size",
+      "id": "ID",
+      "name": "NAME",
+      "title": "TITLE",
+      "description": "DESCRIPTION",
+      "createdAt": "CREATED AT",
+      "updatedAt": "UPDATED AT",
+      "status": "STATUS",
+      "actions": "ACTIONS",
+      "price": "PRICE",
+      "link": "LINK",
+      "category": "CATEGORY",
+      "options": "OPTIONS",
+      "text": "TEXT",
+      "type": "TYPE",
+      "question": "QUESTION",
+      "answer": "ANSWER",
+      "correct": "CORRECT",
+      "published": "PUBLISHED",
+      "yes": "Yes",
+      "no": "No",
+      "uuid": "UUID",
+      "email": "EMAIL",
+      "role": "ROLE",
+      "xmlId": "XML ID",
       "showing": "Showing",
-      "of": "of",
       "to": "to",
+      "of": "of",
       "entries": "entries",
+      "noEntries": "No entries found",
+      "rowsPerPage": "Rows per page",
+      "page": "Page",
+      "noPages": "No pages",
       "goToFirstPage": "Go to first page",
       "goToPreviousPage": "Go to previous page",
       "goToNextPage": "Go to next page",
       "goToLastPage": "Go to last page"
+    },
+    "resetFilters": "Reset filters",
+    "form": {
+      "validation": {
+        "required": "This field is required",
+        "minChars": "Must be at least {0} characters",
+        "invalidEmail": "Please enter a valid email address",
+        "invalidPhone": "Please enter a valid phone number"
+      }
     }
   },
   "users": {
@@ -41,96 +92,113 @@
       "addNew": "Add new user",
       "columns": {
         "id": "ID",
-        "createdAt": "CREATED AT",
         "name": "NAME",
-        "email": "EMAIL"
+        "email": "EMAIL",
+        "role": "ROLE",
+        "createdAt": "CREATED AT",
+        "status": "STATUS"
       }
     }
   },
   "overview": {
     "welcomeBack": "Welcome back to AIstein!",
     "download": "Download",
-    "getStarted": "Get started",
-    "learnMore": "Learn more",
-    "welcomeMessage": "Welcome to AIstein! Get started by creating your first prompt.",
-    "description": "AIstein is a powerful AI tool that helps you generate content for your social media posts.",
-    "features": {
-      "title": "Features",
-      "description": "AIstein offers a variety of features to help you create content for your social media posts.",
-      "creator": "@vojtatranta"
-    }
-  },
-  "metadata": {
-    "dashboard": {
-      "overview": "Overview",
-      "users": "Users",
-      "subscription": "Subscription",
-      "paymentSuccess": "Payment success",
-      "profile": "Profile"
-    },
-    "promptTemplates": {
-      "promptTemplatesMetaTitle": "AIstein - Templates"
-    }
-  },
-  "breadCrumbs": {
-    "profile": "Profile",
     "overview": "Overview",
-    "prompt": "Prompt",
-    "post-generator": "Post Generator"
-  },
-  "form": {
-    "validation": {
-      "required": "This field is required",
-      "minChars": "Must be at least {0} characters",
-      "invalidEmail": "Please enter a valid email address",
-      "invalidPhone": "Please enter a valid phone number"
+    "mainHeadingText": "In this application you can generate content for your social media or your website",
+    "mainDescriptionText": "If you have trouble coming up with text for your website, about your product, or social media post, use our artificial intelligence that will be happy to help you!",
+    "subscription": "Subscription",
+    "from": "from",
+    "to": "to",
+    "remainingAnswers": "Remaining answers",
+    "remainingAnswersDescription": "Number of answers you can still generate",
+    "subscriptionNotPaid": "Your subscription is depleted, upgrade your plan!",
+    "recentAnswers": "Recent answers",
+    "recentAnswersDescription": "Your latest generated answers",
+    "barChart": {
+      "answersLabel": "Answers",
+      "title": "Answers overview",
+      "description": "Your answers in the selected period"
+    },
+    "recentSales": {
+      "noEmailAvailable": "Not available",
+      "noDateAvailable": "Not available"
     }
   },
-  "profile": {
-    "editProfile": "Edit profile",
-    "createProfile": "Create Your Profile",
-    "editProfileDescription": "Edit a profile.",
-    "createProfileDescription": "To create your resume, we first need some basic information about you.",
-    "profileUpdated": "Profile updated.",
-    "profileCreated": "Profile created.",
-    "saveChanges": "Save changes",
-    "create": "Create",
-    "step1": "Step 1",
-    "personalInformation": "Personal Information",
-    "fields": {
-      "name": "Name",
-      "email": "Email",
-      "contactno": "Contact Number",
-      "namePlaceholder": "Enter your name",
-      "emailPlaceholder": "Enter your email",
-      "contactnoPlaceholder": "Enter your contact number"
-    }
-  },
+  "generateSocialPostContentPromptTitle": "Create content for your social media",
+  "generateSocialPostImageContentPromptTitle": "Use images to create content for your social media",
+  "generateSocialPostContentPromptDescription": "Write an idea for your social media content and our system will help you generate it. We have prepared a sample message in the message field so you can see how the system works.",
+  "generateSocialPostImageContentPromptDescription": "Upload an image to generate text for it. You can also let AI edit the image or generate an image completely from text. We have prepared a sample message in the message field so you can see how the system works.",
   "prompt": {
     "title": "Generate content",
     "message": "Message",
+    "postGenerationResultsEmptyStateText": "The results of the previous generation will be displayed here so you can choose the post that works best for you.",
     "resultLength": "Result length",
     "resultLengthPlaceholder": "Enter result length",
-    "submit": "Submit",
-    "submitting": "Submitting...",
-    "success": "Content generated successfully",
-    "image": "Image",
+    "generateUsingAi": "Generate with AI",
+    "resultCopied": "Result was copied.",
+    "olderResults": "Previous results",
+    "success": "Content was successfully generated",
+    "result": "Click Generate to see the result",
     "randomTopic": {
+      "NAME": "Article about a current famous actor",
+      "POLITICS": "Article about politics",
+      "LOCAL_SINGER": "Article about a current famous singer",
+      "LOCAL_ACTOR": "Article about a current famous actor",
+      "LOCAL_ACTRESS": "Article about a current famous actress",
+      "LOCAL_MUSICIAN": "Article about a current famous musician",
+      "LOCAL_CHEF": "Article about a current famous chef",
+      "LOCAL_WRITER": "Article about a current famous writer",
+      "LOCAL_AUTHOR": "Article about a current famous author",
+      "RAPPER": "Article about a current famous rapper",
+      "ARTIST": "Article about a current famous artist",
+      "SCANDALOUS_CELEBRITY": "Article about a controversial celebrity",
+      "CURRENT_LOCAL_REALITY_SHOW": "Article about a current famous reality show",
+      "CURRENT_LOCAL_REALITY_SHOW_HOST": "Article about a current famous reality show host",
+      "CURRENT_LOCAL_REALITY_SHOW_GUEST": "Article about a current famous reality show guest",
       "describeImage": "Describe what you see in this image",
       "createSocialPostFromImage": "Create a social media post based on this image",
       "editTheImageWithContemporaryFilters": "Edit this image with contemporary filters",
       "makeTheImageLookLikeMadeOfFood": "Transform this image to look like it's made of food"
-    }
+    },
+    "image": "Image"
   },
   "image": {
     "placeholder": "Drop an image here or click to upload",
     "urlPlaceholder": "Or paste an image URL"
   },
-  "generateSocialPostContentPromptTitle": "Create content for your social media",
-  "generateSocialPostContentPromptDescription": "Write an idea for your social media content and our system will help you generate it. We have prepared a sample message in the message field so you can see how the system works.",
-  "generateSocialPostImageContentPromptTitle": "Use images to create content for your social media",
-  "generateSocialPostImageContentPromptDescription": "Upload an image to generate text for it. You can also let AI edit the image or generate an image completely from text. We have prepared a sample message in the message field so you can see how the system works.",
+  "subscription": {
+    "allSubscriptions": "All subscriptions",
+    "plansHeading": "Subscription plans",
+    "plansDescription": "Choose a plan that works best for you",
+    "currentPlan": "Current plan",
+    "cancelSubscriptionButton": "Cancel subscription",
+    "subscribeButtonText": "Subscribe",
+    "successToast": "You have successfully subscribed to the plan",
+    "notAuthorized": "You are not authorized to view this page",
+    "noSubscriptionIdReturned": "No Stripe subscription ID was returned",
+    "missingParametersInSuccessRedirect": "Missing parameters, cannot complete subscription process.",
+    "subscriptionNotPaid": "Payment was not successful. Please try again later.",
+    "databaseError": "An error occurred while writing changes to the database."
+  },
   "auth": {
-    "signIn": "Sign in"
+    "continueWithGoogle": "Sign in with Google",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "Enter your email...",
+      "continueWithEmail": "Continue with email",
+      "orContinueWith": "Continue with",
+      "errors": {
+        "invalidEmail": "Invalid email"
+      }
+    },
+    "errors": {
+      "googleSignIn": "Error signing in with Google: {error}"
+    },
+    "success": {
+      "signedIn": "Successfully signed in!"
+    },
+    "login": "Sign in",
+    "logo": "AIstein.cz",
+    "tagline": "Create content for your pages without stress."
   }
 }

@@ -2,7 +2,7 @@ import { getQuizResultLink } from "@/lib/public-links";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, response: Response) {
+export async function GET(request: Request) {
   const url = new URL(request.url);
   const resultId = url.searchParams.get("resultId");
 

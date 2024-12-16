@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   description: "Sign In page for authentication.",
 };
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default function Page() {
   return (
     <SignInViewPage>
       <UserAuthForm />

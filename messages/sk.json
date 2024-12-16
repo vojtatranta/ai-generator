@@ -1,6 +1,7 @@
 {
-  "auth": {
-    "signIn": "Prihlásiť sa"
+  "appSidebar": {
+    "overview": "Prehľad",
+    "motto": "Tvorte jednoducho!"
   },
   "menu": {
     "dashboard": "Prehľad",
@@ -8,6 +9,7 @@
     "promptTemplates": "Šablóny",
     "account": {
       "title": "Účet",
+      "profile": "Profil",
       "login": "Prihlásenie",
       "logout": "Odhlásiť sa",
       "subscription": "Predplatné"
@@ -15,23 +17,72 @@
   },
   "common": {
     "name": "názov",
+    "searchPlaceholder": "Hľadať podľa {searchKey}...",
+    "loading": "Načítavam...",
+    "error": "Došlo k chybe",
+    "save": "Uložiť",
+    "cancel": "Zrušiť",
+    "delete": "Vymazať",
+    "edit": "Upraviť",
+    "create": "Vytvoriť",
+    "search": "Hľadať",
+    "filter": "Filtrovať",
+    "noResults": "Nenájdené žiadne výsledky",
+    "selectAll": "Vybrať všetko",
+    "selectRow": "Vybrať riadok",
+    "actions": "Akcie",
+    "description": "Popis",
+    "descriptionPlaceholder": "Zadajte popis",
+    "name": "Názov",
+    "namePlaceholder": "Zadajte názov",
     "submit": "Odoslať",
     "submitting": "Odosielam...",
-    "resetFilters": "Resetovať filtre",
     "table": {
-      "noResults": "Žiadne výsledky.",
-      "loading": "Načítavam...",
-      "search": "Hľadať",
-      "goToPage": "Prejsť na stránku",
-      "pageSize": "Veľkosť stránky",
+      "id": "ID",
+      "name": "MENO",
+      "title": "NÁZOV",
+      "description": "POPIS",
+      "createdAt": "VYTVORENÉ",
+      "updatedAt": "AKTUALIZOVANÉ",
+      "status": "STAV",
+      "actions": "AKCIE",
+      "price": "CENA",
+      "link": "ODKAZ",
+      "category": "KATEGÓRIA",
+      "options": "MOŽNOSTI",
+      "text": "TEXT",
+      "type": "TYP",
+      "question": "OTÁZKA",
+      "answer": "ODPOVEĎ",
+      "correct": "SPRÁVNE",
+      "published": "PUBLIKOVANÉ",
+      "yes": "Áno",
+      "no": "Nie",
+      "uuid": "UUID",
+      "email": "EMAIL",
+      "role": "ROLA",
+      "xmlId": "XML ID",
       "showing": "Zobrazujem",
-      "of": "z",
       "to": "do",
+      "of": "z",
       "entries": "záznamov",
+      "noEntries": "Žiadne záznamy nenájdené",
+      "rowsPerPage": "Riadkov na stránku",
+      "page": "Stránka",
+      "noPages": "Žiadne stránky",
       "goToFirstPage": "Prejsť na prvú stránku",
       "goToPreviousPage": "Prejsť na predchádzajúcu stránku",
       "goToNextPage": "Prejsť na ďalšiu stránku",
       "goToLastPage": "Prejsť na poslednú stránku"
+    },
+    "resetFilters": "Resetovať filtre",
+    "form": {
+      "validation": {
+        "required": "Toto pole je povinné",
+        "minChars": "Musí mať aspoň {0} znakov",
+        "invalidEmail": "Zadajte platnú emailovú adresu",
+        "invalidPhone": "Zadajte platné telefónne číslo"
+      }
     }
   },
   "users": {
@@ -41,106 +92,113 @@
       "addNew": "Pridať nového používateľa",
       "columns": {
         "id": "ID",
-        "createdAt": "VYTVORENÉ",
         "name": "MENO",
-        "email": "EMAIL"
+        "email": "EMAIL",
+        "role": "ROLA",
+        "createdAt": "VYTVORENÉ",
+        "status": "STAV"
       }
     }
   },
   "overview": {
     "welcomeBack": "Vitajte späť v AIsteine!",
     "download": "Stiahnuť",
-    "getStarted": "Začať",
-    "learnMore": "Dozvedieť sa viac",
-    "welcomeMessage": "Vitajte v AIsteine! Začnite vytvorením svojho prvého promptu.",
-    "description": "AIstein je výkonný AI nástroj, ktorý vám pomáha generovať obsah pre vaše príspevky na sociálnych sieťach.",
-    "features": {
-      "title": "Funkcie",
-      "description": "AIstein ponúka rôzne funkcie, ktoré vám pomôžu vytvárať obsah pre vaše príspevky na sociálnych sieťach.",
-      "creator": "@vojtatranta"
-    }
-  },
-  "metadata": {
-    "dashboard": {
-      "overview": "Prehľad",
-      "users": "Používatelia",
-      "subscription": "Predplatné",
-      "paymentSuccess": "Platba úspešná",
-      "profile": "Profil"
-    },
-    "auth": {
-      "signIn": "Prihlásenie",
-      "signInDescription": "Prihlasovacia stránka pre autentizáciu."
-    },
-    "promptTemplates": {
-      "promptTemplatesMetaTitle": "AIstein - Šablóny"
-    },
-    "promptMetadataTitle": "AIstein - Generovanie obsahu"
-  },
-  "breadCrumbs": {
-    "profile": "Profil",
     "overview": "Prehľad",
-    "prompt": "Prompt",
-    "post-generator": "Generovanie obsahu"
-  },
-  "form": {
-    "validation": {
-      "required": "Toto pole je povinné",
-      "minChars": "Musí mať aspoň {0} znakov",
-      "invalidEmail": "Zadajte platnú emailovú adresu",
-      "invalidPhone": "Zadajte platné telefónne číslo"
+    "mainHeadingText": "V tejto aplikácii môžete generovať obsah pre vaše sociálne siete alebo pre vaše internetové stránky",
+    "mainDescriptionText": "Ak máte problém vymyslieť text pre váš web, o vašom produkte alebo príspevok na sociálne médiá, použite našu umelú inteligenciu, ktorá vám s tým rada pomôže!",
+    "subscription": "Predplatné",
+    "from": "od",
+    "to": "do",
+    "remainingAnswers": "Zostávajúce odpovede",
+    "remainingAnswersDescription": "Počet odpovedí, ktoré môžete ešte vygenerovať",
+    "subscriptionNotPaid": "Vaše predplatné je vyčerpané, upgradujte svoj plán!",
+    "recentAnswers": "Nedávne odpovede",
+    "recentAnswersDescription": "Vaše najnovšie vygenerované odpovede",
+    "barChart": {
+      "answersLabel": "Odpovede",
+      "title": "Prehľad odpovedí",
+      "description": "Vaše odpovede vo zvolenom období"
+    },
+    "recentSales": {
+      "noEmailAvailable": "Nie je k dispozícii",
+      "noDateAvailable": "Nie je k dispozícii"
     }
   },
-  "profile": {
-    "editProfile": "Upraviť profil",
-    "createProfile": "Vytvoriť profil",
-    "editProfileDescription": "Upraviť profil.",
-    "createProfileDescription": "Pre vytvorenie životopisu potrebujeme najprv základné informácie o vás.",
-    "profileUpdated": "Profil bol aktualizovaný.",
-    "profileCreated": "Profil bol vytvorený.",
-    "saveChanges": "Uložiť zmeny",
-    "create": "Vytvoriť",
-    "step1": "Krok 1",
-    "personalInformation": "Osobné informácie",
-    "fields": {
-      "name": "Meno",
-      "email": "Email",
-      "contactno": "Kontaktné číslo",
-      "namePlaceholder": "Zadajte vaše meno",
-      "emailPlaceholder": "Zadajte váš email",
-      "contactnoPlaceholder": "Zadajte vaše kontaktné číslo"
-    }
-  },
+  "generateSocialPostContentPromptTitle": "Vytvorte si obsah pre vaše sociálne siete",
+  "generateSocialPostImageContentPromptTitle": "Použite obrázky pre vytvorenie obsahu pre vaše sociálne siete",
+  "generateSocialPostContentPromptDescription": "Napíšte nápad na obsah pre vaše sociálne siete a náš systém vám pomôže s jeho vygenerovaním. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
+  "generateSocialPostImageContentPromptDescription": "Nahrajte obrázok, ku ktorému chcete vygenerovať text. Prípadne môžete nechať AI upraviť obrázok alebo si môžete kompletne z textu nechať vygenerovať obrázok. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
   "prompt": {
     "title": "Generovať obsah",
     "message": "Správa",
+    "postGenerationResultsEmptyStateText": "Tu sa zobrazia výsledky predchádzajúceho generovania, aby ste si mohli vybrať príspevok, ktorý je pre vás najlepší.",
     "resultLength": "Dĺžka výsledku",
     "resultLengthPlaceholder": "Zadajte dĺžku výsledku",
-    "submit": "Odoslať",
-    "submitting": "Odosielam...",
+    "generateUsingAi": "Generovať s AI",
+    "resultCopied": "Výsledok bol skopírovaný.",
+    "olderResults": "Predchádzajúce výsledky",
     "success": "Obsah bol úspešne vygenerovaný",
-    "image": "Obrázok",
+    "result": "Kliknite na Generovať, aby ste videli výsledok",
     "randomTopic": {
+      "NAME": "Článok o súčasnom známom hercovi",
+      "POLITICS": "Článok o politike",
+      "LOCAL_SINGER": "Článok o súčasnom známom spevákovi",
+      "LOCAL_ACTOR": "Článok o súčasnom známom hercovi",
+      "LOCAL_ACTRESS": "Článok o súčasnej známej herečke",
+      "LOCAL_MUSICIAN": "Článok o súčasnom známom hudobníkovi",
+      "LOCAL_CHEF": "Článok o súčasnom známom šéfkuchárovi",
+      "LOCAL_WRITER": "Článok o súčasnom známom spisovateľovi",
+      "LOCAL_AUTHOR": "Článok o súčasnom známom autorovi",
+      "RAPPER": "Článok o súčasnom známom rapperovi",
+      "ARTIST": "Článok o súčasnom známom umelcovi",
+      "SCANDALOUS_CELEBRITY": "Článok o kontroverznej celebrite",
+      "CURRENT_LOCAL_REALITY_SHOW": "Článok o súčasnej známej reality show",
+      "CURRENT_LOCAL_REALITY_SHOW_HOST": "Článok o súčasnom známom moderátorovi reality show",
+      "CURRENT_LOCAL_REALITY_SHOW_GUEST": "Článok o súčasnom známom hosťovi reality show",
       "describeImage": "Popíšte, čo vidíte na tomto obrázku",
       "createSocialPostFromImage": "Vytvorte príspevok na sociálne siete na základe tohto obrázku",
       "editTheImageWithContemporaryFilters": "Upravte tento obrázok pomocou moderných filtrov",
       "makeTheImageLookLikeMadeOfFood": "Transformujte tento obrázok tak, aby vyzeral ako z jedla"
-    }
+    },
+    "image": "Obrázok"
   },
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",
     "urlPlaceholder": "Alebo vložte URL obrázku"
   },
-  "generateSocialPostContentPromptTitle": "Vytvorte si obsah pre vaše sociálne siete",
-  "generateSocialPostContentPromptDescription": "Napíšte nápad na obsah pre vaše sociálne siete a náš systém vám pomôže s jeho vygenerovaním. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
-  "generateSocialPostImageContentPromptTitle": "Použite obrázky pre vytvorenie obsahu pre vaše sociálne siete",
-  "generateSocialPostImageContentPromptDescription": "Nahrajte obrázok, ku ktorému chcete vygenerovať text. Prípadne môžete nechať AI upraviť obrázok alebo si môžete kompletne z textu nechať vygenerovať obrázok. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
-  "graphs": {
-    "areaChart": {
-      "title": "Plošný graf - Vrstvený",
-      "description": "Zobrazenie celkového počtu návštevníkov za posledných 6 mesiacov",
-      "trendingUp": "Trend rastie o {value}% tento mesiac",
-      "dateRange": "Január - Jún 2024"
-    }
+  "subscription": {
+    "allSubscriptions": "Všetky predplatné",
+    "plansHeading": "Plány predplatného",
+    "plansDescription": "Vyberte si plán, ktorý vám najlepšie vyhovuje",
+    "currentPlan": "Aktuálny plán",
+    "cancelSubscriptionButton": "Zrušiť predplatné",
+    "subscribeButtonText": "Predplatiť",
+    "successToast": "Úspešne ste sa prihlásili k plánu",
+    "notAuthorized": "Nemáte oprávnenie zobraziť túto stránku",
+    "noSubscriptionIdReturned": "Nebolo vrátené ID predplatného Stripe",
+    "missingParametersInSuccessRedirect": "Chýbajúce parametre, nemožno dokončiť proces predplatného.",
+    "subscriptionNotPaid": "Platba nebola úspešná. Prosím skúste to znovu neskôr.",
+    "databaseError": "Pri zápise zmien do databázy došlo k chybe."
+  },
+  "auth": {
+    "continueWithGoogle": "Prihlásiť sa cez Google",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "Zadajte svoj email...",
+      "continueWithEmail": "Pokračovať s emailom",
+      "orContinueWith": "Pokračujte s",
+      "errors": {
+        "invalidEmail": "Neplatný email"
+      }
+    },
+    "errors": {
+      "googleSignIn": "Chyba pri prihlasovaní cez Google: {error}"
+    },
+    "success": {
+      "signedIn": "Úspešne prihlásené!"
+    },
+    "login": "Prihlásenie",
+    "logo": "AIstein.cz",
+    "tagline": "Tvorte obsah pre vaše stránky bez stresu."
   }
 }

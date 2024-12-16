@@ -6,13 +6,7 @@ export const metadata = {
   title: "Confirm invitation acceptance",
 };
 
-export default async function ConfirmInvitationAcceptance({
-  params: { invitationSharedId },
-  searchParams,
-}: {
-  params: { invitationSharedId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function ConfirmInvitationAcceptance() {
   // const [supabase, userWithRoles] = await Promise.all([
   //   createSupabaseServerClient(),
   //   getUser(),

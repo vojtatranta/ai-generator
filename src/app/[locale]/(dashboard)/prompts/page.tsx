@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { SearchParams } from "nuqs";
 
 type pageProps = {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 };
 
 export async function generateMetadata() {

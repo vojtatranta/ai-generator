@@ -7,15 +7,18 @@ export const metadata = {
 };
 
 export default async function Page({
-  params: { invitationSharedId },
+  params,
 }: {
-  params: { invitationSharedId: string };
+  params: Promise<{ invitationSharedId: string }>;
 }) {
   const user = await getMaybeUser();
 
   return (
     <SignInViewPage>
-      <UserRegisterForm user={user} shareInvitationId={invitationSharedId} />
+      <UserRegisterForm
+        user={user}
+        shareInvitationId={(await params).invitationSharedId}
+      />
     </SignInViewPage>
   );
 }

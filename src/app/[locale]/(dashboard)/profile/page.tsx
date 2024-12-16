@@ -4,10 +4,6 @@ import React from "react";
 import ProfileViewPage from "./_components/profile-view-page";
 import { getTranslations } from "next-intl/server";
 
-type pageProps = {
-  searchParams: SearchParams;
-};
-
 export async function generateMetadata() {
   const t = await getTranslations("metadata.dashboard");
   return {
@@ -15,6 +11,6 @@ export async function generateMetadata() {
   };
 }
 
-export default async function Page({ searchParams }: pageProps) {
+export default async function Page() {
   return <ProfileViewPage />;
 }

@@ -6,7 +6,7 @@ import { signOut } from "@/auth";
 import { notFound } from "next/navigation";
 
 type pageProps = {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 };
 
 export const metadata = {

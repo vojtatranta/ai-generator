@@ -6,9 +6,13 @@ export const metadata = {
   title: "Dashboard : User View",
 };
 
-export default async function Page({ params }: { params: { userId: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}) {
   const supabase = await createSupabaseServerClient();
-  const user = await supabase.auth.admin.getUserById(params.userId);
+  const user = await supabase.auth.admin.getUserById((await params).userId);
 
   if (!user.data.user) {
     notFound();
