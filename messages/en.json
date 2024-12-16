@@ -139,6 +139,8 @@
     "olderResults": "Previous results",
     "success": "Content was successfully generated",
     "result": "Click Generate to see the result",
+    "locale": "Output Language",
+    "localePlaceholder": "cs, en, sk",
     "randomTopic": {
       "NAME": "Article about a current famous actor",
       "POLITICS": "Article about politics",
@@ -197,9 +199,20 @@
     "success": {
       "signedIn": "Successfully signed in!"
     },
-    "login": "Sign in",
-    "logo": "AIstein.cz",
-    "tagline": "Create content for your pages without stress."
+    "login": "Login",
+    "logo": "AIstein.com",
+    "tagline": "Create content for your pages without stress.",
+    "founder": {
+      "name": "Vojtěch Tranta",
+      "title": "founder"
+    },
+    "createAccount": {
+      "title": "Create account",
+      "description": "Enter your email to create an account"
+    },
+    "terms": {
+      "agreement": "By clicking continue, you agree to our terms and privacy policy."
+    }
   },
   "promptTemplates": {
     "listing": {
@@ -222,5 +235,42 @@
     "post-generator": "Post Generator",
     "image-social-post-generator": "Image Post Generator",
     "users": "Users"
+  },
+  "metadata": {
+    "dashboard": {
+      "overview": "Overview",
+      "users": "Users",
+      "subscription": "Subscription",
+      "paymentSuccess": "Payment Success",
+      "profile": "Profile"
+    },
+    "auth": {
+      "signIn": "Sign In",
+      "signInDescription": "Sign in page for authentication."
+    },
+    "promptTemplates": {
+      "promptTemplatesMetaTitle": "AIstein - Templates"
+    },
+    "promptMetadataTitle": "AIstein - Content Generation"
+  },
+  "copyButton": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyDisabled": "Cannot copy"
+  },
+  "seo": {
+    "title": "AIstein - Better Product Recommendations",
+    "description": "Create personalized product recommendations for your customers using our intelligent quiz system",
+    "ogTitle": "AIstein - Smart Product Recommendations",
+    "ogDescription": "Transform your business with personalized product recommendations. Create engaging quizzes that help customers find perfect products.",
+    "author": {
+      "name": "Vojtěch Tranta",
+      "url": "https://twitter.com/vojtatranta"
+    },
+    "publisher": "AIstein",
+    "twitter": {
+      "site": "@AIsteinapp",
+      "creator": "@vojtatranta"
+    }
   }
 }

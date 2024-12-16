@@ -15,8 +15,44 @@
       "subscription": "Predplatné"
     }
   },
+  "metadata": {
+    "dashboard": {
+      "overview": "Prehľad",
+      "users": "Používatelia",
+      "subscription": "Predplatné",
+      "paymentSuccess": "Platba úspešná",
+      "profile": "Profil"
+    },
+    "auth": {
+      "signIn": "Prihlásenie",
+      "signInDescription": "Prihlasovacia stránka pre autentifikáciu."
+    },
+    "promptTemplates": {
+      "promptTemplatesMetaTitle": "AIstein - Šablóny"
+    },
+    "promptMetadataTitle": "AIstein - Generovanie obsahu"
+  },
+  "copyButton": {
+    "copy": "Kopírovať",
+    "copied": "Skopírované",
+    "copyDisabled": "Nelze kopírovať"
+  },
+  "seo": {
+    "title": "AIstein - Lepšie produktové odporúčania",
+    "description": "Vytvárajte personalizované produktové odporúčania pre vašich zákazníkov pomocou našej inteligentnej kvízovej sústavy",
+    "ogTitle": "AIstein - Inteligentné produktové odporúčania",
+    "ogDescription": "Transformujte svoje podnikanie s personalizovanými produktovými odporúčaniami. Vytvárajte pútavé kvízy, ktoré pomôžu zákazníkom nájsť perfektné produkty.",
+    "author": {
+      "name": "Vojtěch Tranta",
+      "url": "https://twitter.com/vojtatranta"
+    },
+    "publisher": "AIstein",
+    "twitter": {
+      "site": "@AIsteinapp",
+      "creator": "@vojtatranta"
+    }
+  },
   "common": {
-    "name": "názov",
     "searchPlaceholder": "Hľadať podľa {searchKey}...",
     "loading": "Načítavam...",
     "error": "Došlo k chybe",
@@ -139,6 +175,8 @@
     "olderResults": "Predchádzajúce výsledky",
     "success": "Obsah bol úspešne vygenerovaný",
     "result": "Kliknite na Generovať, aby ste videli výsledok",
+    "locale": "Jazyk výstupu",
+    "localePlaceholder": "cs, en, sk",
     "randomTopic": {
       "NAME": "Článok o súčasnom známom hercovi",
       "POLITICS": "Článok o politike",
@@ -177,7 +215,7 @@
     "notAuthorized": "Nemáte oprávnenie zobraziť túto stránku",
     "noSubscriptionIdReturned": "Nebolo vrátené ID predplatného Stripe",
     "missingParametersInSuccessRedirect": "Chýbajúce parametre, nemožno dokončiť proces predplatného.",
-    "subscriptionNotPaid": "Platba nebola úspešná. Prosím skúste to znovu neskôr.",
+    "subscriptionNotPaid": "Platba nebola úspešná. Prosím skúste to znova neskôr.",
     "databaseError": "Pri zápise zmien do databázy došlo k chybe."
   },
   "auth": {
@@ -195,11 +233,22 @@
       "googleSignIn": "Chyba pri prihlasovaní cez Google: {error}"
     },
     "success": {
-      "signedIn": "Úspešne prihlásené!"
+      "signedIn": "Úspešne prihlásený!"
     },
     "login": "Prihlásenie",
-    "logo": "AIstein.cz",
-    "tagline": "Tvorte obsah pre vaše stránky bez stresu."
+    "logo": "AIstein.sk",
+    "tagline": "Tvorte obsah pre vaše stránky bez stresu.",
+    "founder": {
+      "name": "Vojtěch Tranta",
+      "title": "zakladateľ"
+    },
+    "createAccount": {
+      "title": "Vytvoriť účet",
+      "description": "Pre vytvorenie účtu zadajte svoj email"
+    },
+    "terms": {
+      "agreement": "Kliknutím na pokračovať súhlasíte s našimi podmienkami a zásadami ochrany súkromia."
+    }
   },
   "promptTemplates": {
     "listing": {

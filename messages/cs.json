@@ -160,7 +160,9 @@
       "editTheImageWithContemporaryFilters": "Upravte tento obrázek pomocí moderních filtrů",
       "makeTheImageLookLikeMadeOfFood": "Transformujte tento obrázek tak, aby vypadal jako z jídla"
     },
-    "image": "Obrázek"
+    "image": "Obrázek",
+    "locale": "Jazyk výstupu",
+    "localePlaceholder": "cs, en, sk"
   },
   "image": {
     "placeholder": "Přesuňte sem obrázek nebo klikněte pro nahrání",

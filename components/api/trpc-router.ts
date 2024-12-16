@@ -545,7 +545,7 @@ export const langtailRouter = router({
         ],
         stream: false,
         variables: {
-          ...(input.locale ? { locale: input.locale } : {}),
+          ...(input.locale ? { language: input.locale } : {}),
           ...(input.length ? { length: String(input.length) } : {}),
         },
       });

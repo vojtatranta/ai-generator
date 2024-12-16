@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Loader2, Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React, { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -50,6 +50,7 @@ const QueryFormSchema = z.object({
   message: z.string(),
   image: z.string().nullable().optional(),
   length: z.number().default(DEFAULT_LENGTH),
+  locale: z.string(),
 });
 
 type QueryFormType = z.infer<typeof QueryFormSchema>;
@@ -74,10 +75,12 @@ const getDefaultValues = (
   t: (key: string) => string,
   randomNumberFromTopics: number,
   prompt: UsedPromptType,
+  locale: string,
 ): QueryFormType => {
   return {
     message: RANDOM_IMAGE_TOPICS(t)[randomNumberFromTopics] ?? "",
     length: prompt.defaultLength ?? DEFAULT_LENGTH,
+    locale,
     image: null,
   };
 };
@@ -119,10 +122,16 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
   randomNumberFromImageTopics: number;
 }) {
   const t = useTranslations();
+  const locale = useLocale();
   const [promptResults, setPromptResults] = useState<ResultType[]>([]);
   const form = useForm<QueryFormType>({
     resolver: zodResolver(QueryFormSchema),
-    defaultValues: getDefaultValues(t, randomNumberFromImageTopics, prompt),
+    defaultValues: getDefaultValues(
+      t,
+      randomNumberFromImageTopics,
+      prompt,
+      locale,
+    ),
   });
 
   const invokeMutation = trpcApi.langtail.invokePrompt.useMutation({
@@ -145,6 +154,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
     await invokeMutation.mutateAsync({
       prompt: prompt.prompt,
       message: data.message,
+      locale: data.locale,
       image: data.image ?? undefined,
       length: Number(data.length || DEFAULT_LENGTH),
     });
@@ -245,6 +255,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                             <FormControl>
                               <Input
                                 type="number"
+                                className="max-w-[150px]"
                                 placeholder={t(
                                   "prompt.resultLengthPlaceholder",
                                 )}
@@ -253,6 +264,24 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                                 onChange={(
                                   e: React.ChangeEvent<HTMLInputElement>,
                                 ) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="locale"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("prompt.locale")}</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                className="max-w-[150px]"
+                                placeholder={t("prompt.localePlaceholder")}
+                                {...field}
                               />
                             </FormControl>
                             <FormMessage />
