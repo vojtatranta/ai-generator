@@ -17,7 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/web/components/ui/chart";
-import { useTranslations } from "@/web/hooks/use-translations";
+import { useTranslations } from "next-intl";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },

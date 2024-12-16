@@ -3,7 +3,7 @@
 import { Input } from "@/web/components/ui/input";
 import { cn } from "@/web/lib/utils";
 import { useTranslations } from "next-intl";
-import { Options } from "nuqs";
+import { Options } from "nuqs/server";
 import { useTransition } from "react";
 
 interface DataTableSearchProps {
@@ -11,11 +11,11 @@ interface DataTableSearchProps {
   searchQuery: string;
   setSearchQuery: (
     value: string | ((old: string) => string | null) | null,
-    options?: Options<any> | undefined,
+    options?: Options | undefined,
   ) => Promise<URLSearchParams>;
   setPage: <Shallow>(
     value: number | ((old: number) => number | null) | null,
-    options?: Options<Shallow> | undefined,
+    options?: Options | undefined,
   ) => Promise<URLSearchParams>;
 }
 

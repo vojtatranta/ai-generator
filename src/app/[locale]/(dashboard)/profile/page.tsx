@@ -1,5 +1,5 @@
 import { searchParamsCache } from "@/web/lib/searchparams";
-import { SearchParams } from "nuqs/parsers";
+import { SearchParams } from "nuqs";
 import React from "react";
 import ProfileViewPage from "./_components/profile-view-page";
 import { getTranslations } from "next-intl/server";

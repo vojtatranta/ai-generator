@@ -113,7 +113,7 @@ importers:
         specifier: 22.10.2
         version: 22.10.2
       "@types/react":
-        specifier: 19.0.1
+        specifier: ^19.0.1
         version: 19.0.1
       "@types/react-dom":
         specifier: 19.0.2
@@ -199,6 +199,9 @@ importers:
       react-hook-form:
         specifier: ^7.54.1
         version: 7.54.1(react@18.3.1)
+      react-image-file-resizer:
+        specifier: ^0.4.8
+        version: 0.4.8
       react-responsive:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
@@ -11079,6 +11082,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+  react-image-file-resizer@0.4.8:
+    resolution:
+      {
+        integrity: sha512-Ue7CfKnSlsfJ//SKzxNMz8avDgDSpWQDOnTKOp/GNRFJv4dO9L5YGHNEnj40peWkXXAK2OK0eRIoXhOYpUzUTQ==,
+      }
+
   react-is@16.13.1:
     resolution:
       {
@@ -21266,6 +21275,8 @@ snapshots:
   react-hook-form@7.54.1(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  react-image-file-resizer@0.4.8: {}
 
   react-is@16.13.1: {}
 

@@ -1,4 +1,4 @@
-import { SearchParams } from "nuqs/parsers";
+import { SearchParams } from "nuqs";
 import { getAvailableProductPlans, getUserPlan, stripe } from "@/lib/stripe";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { sign } from "crypto";
@@ -14,9 +14,8 @@ export const metadata = {
 };
 
 export default async function PaymentSuccessPage({ searchParams }: pageProps) {
-  const supabase = await createSupabaseServerClient();
   const stripeSession = await stripe.checkout.sessions.retrieve(
-    String(searchParams.checkoutId),
+    String((await searchParams).checkoutId),
   );
 
   if (!stripeSession) {

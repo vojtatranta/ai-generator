@@ -13,7 +13,7 @@ import { Button } from "@/web/components/ui/button";
 import { Progress } from "@/web/components/ui/progress";
 import { ScrollArea } from "@/web/components/ui/scroll-area";
 import { useControllableState } from "@/hooks/use-controllable-state";
-import { cn, formatBytes } from "@/web/lib/utils";
+import { cn } from "@/web/lib/utils";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -235,8 +235,8 @@ export function FileUploader(props: FileUploaderProps) {
                     You can upload
                     {maxFiles > 1
                       ? ` ${maxFiles === Infinity ? "multiple" : maxFiles}
-                      files (up to ${formatBytes(maxSize)} each)`
-                      : ` a file with ${formatBytes(maxSize)}`}
+                      files (up to ${maxSize} each)`
+                      : ` a file with ${maxSize}`}
                   </p>
                 </div>
               </div>
@@ -287,9 +287,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
             <p className="line-clamp-1 text-sm font-medium text-foreground/80">
               {file.name}
             </p>
-            <p className="text-xs text-muted-foreground">
-              {formatBytes(file.size)}
-            </p>
+            <p className="text-xs text-muted-foreground">{file.size}</p>
           </div>
           {progress ? <Progress value={progress} /> : null}
         </div>

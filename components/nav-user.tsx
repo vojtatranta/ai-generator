@@ -1,5 +1,6 @@
 "use client";
 
+import { useSignOut } from "@/lib/use-sign-out";
 import {
   Avatar,
   AvatarFallback,
@@ -19,8 +20,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/web/components/ui/sidebar";
-import { useSignOut } from "@/web/lib/auth";
-import { useSidebar } from "@/web/lib/hooks/use-sidebar";
 import {
   BadgeCheck,
   Bell,
@@ -39,7 +38,6 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const { isMobile } = useSidebar();
   const { signOut } = useSignOut();
   const t = useTranslations("userNav");
 
@@ -65,7 +63,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={"right"}
             align="end"
             sideOffset={4}
           >
