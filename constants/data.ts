@@ -110,14 +110,14 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
   //   isActive: false,
   //   items: [],
   // },
-  {
-    title: t("menu.users"),
-    url: "/users",
-    icon: "user",
-    shortcut: ["u", "u"],
-    isActive: false,
-    items: [],
-  },
+  // {
+  //   title: t("menu.users"),
+  //   url: "/users",
+  //   icon: "user",
+  //   shortcut: ["u", "u"],
+  //   isActive: false,
+  //   items: [],
+  // },
   {
     title: t("menu.account.title"),
     url: "#",

@@ -200,5 +200,27 @@
     "login": "Sign in",
     "logo": "AIstein.cz",
     "tagline": "Create content for your pages without stress."
+  },
+  "promptTemplates": {
+    "listing": {
+      "title": "AI Templates",
+      "description": "Manage content generation AI prompt templates",
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "columns": {
+        "title": "TITLE",
+        "description": "DESCRIPTION"
+      }
+    },
+    "tryPrompt": "Try prompt"
+  },
+  "breadCrumbs": {
+    "profile": "Profile",
+    "overview": "Overview",
+    "prompt": "Prompt",
+    "prompts": "AI Prompts",
+    "post-generator": "Post Generator",
+    "image-social-post-generator": "Image Post Generator",
+    "users": "Users"
   }
 }

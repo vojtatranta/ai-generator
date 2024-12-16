@@ -272,15 +272,16 @@
   "breadCrumbs": {
     "profile": "Profil",
     "overview": "Přehled",
-    "prompt": "AI Prompt",
+    "prompt": "Prompt",
     "prompts": "AI Prompty",
-    "post-generator": "Generování obsah",
-    "image-social-post-generator": "Generování obsahu z obrázku"
+    "post-generator": "Generátor příspěvků",
+    "image-social-post-generator": "Generátor obrázkových příspěvků",
+    "users": "Uživatelé"
   },
   "promptTemplates": {
     "listing": {
-      "title": "Šablony",
-      "description": "Správa šablon pro generování obsahu",
+      "title": "AI Šablony",
+      "description": "Správa AI šablon pro generování obsahu",
       "selectAll": "Vybrat vše",
       "selectRow": "Vybrat řádek",
       "columns": {
@@ -289,7 +290,7 @@
       }
     },
     "openActionMenu": "Otevřít menu akcí",
-    "tryPrompt": "Vyzkoušet"
+    "tryPrompt": "Vyzkoušet prompt"
   },
   "profile": {
     "editProfile": "Upravit profil",

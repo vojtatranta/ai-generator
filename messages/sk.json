@@ -200,5 +200,27 @@
     "login": "Prihlásenie",
     "logo": "AIstein.cz",
     "tagline": "Tvorte obsah pre vaše stránky bez stresu."
+  },
+  "promptTemplates": {
+    "listing": {
+      "title": "AI Šablóny",
+      "description": "Správa AI šablón pre generovanie obsahu",
+      "selectAll": "Vybrať všetko",
+      "selectRow": "Vybrať riadok",
+      "columns": {
+        "title": "NÁZOV",
+        "description": "POPIS"
+      }
+    },
+    "tryPrompt": "Vyskúšať prompt"
+  },
+  "breadCrumbs": {
+    "profile": "Profil",
+    "overview": "Prehľad",
+    "prompt": "Prompt",
+    "prompts": "AI Prompty",
+    "post-generator": "Generátor príspevkov",
+    "image-social-post-generator": "Generátor obrázkových príspevkov",
+    "users": "Používatelia"
   }
 }

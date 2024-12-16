@@ -40,7 +40,9 @@ export const usePromptTemplatesColumns = () => {
         <Link href={`/prompt/${row.original.id}`}>
           <Button type="button" size="sm" className="mx-4">
             <Icons.wandSparkles className="h-4 w-4 mr-2" />
-            {t("promptTemplates.tryPrompt")}
+            <span className="text-nowrap">
+              {t("promptTemplates.tryPrompt")}
+            </span>
           </Button>
         </Link>
       ),
