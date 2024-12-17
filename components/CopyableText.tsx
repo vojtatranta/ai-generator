@@ -1,4 +1,5 @@
 import { cn } from "@/web/lib/utils";
+import { useTranslations } from "next-intl";
 import { memo, ReactNode } from "react";
 import { toast } from "sonner";
 
@@ -17,14 +18,15 @@ type CopyableTextProps = (
 export const CopyableText = memo(function CopyableText(
   props: CopyableTextProps,
 ) {
+  const t = useTranslations("copyButton");
   const handleCopyRequest = async () => {
     try {
       await navigator.clipboard.writeText(
         ("copyValue" in props && props.copyValue) || String(props.children),
       );
-      toast.success("Copied to clipboard");
+      toast.success(t("copied"));
     } catch (error) {
-      toast.error("Failed to copy to clipboard");
+      toast.error(t("failedToCopy"));
     }
   };
 

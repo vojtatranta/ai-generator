@@ -274,7 +274,8 @@
   "copyButton": {
     "copy": "Kopírovat",
     "copied": "Zkopírováno",
-    "copyDisabled": "Nelze kopírovat"
+    "copyDisabled": "Nelze kopírovat",
+    "failedToCopy": "Kopírovaní selhalo"
   },
   "breadCrumbs": {
     "profile": "Profil",

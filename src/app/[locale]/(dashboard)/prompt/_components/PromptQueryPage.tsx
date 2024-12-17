@@ -1,7 +1,8 @@
 "use client";
 import { Icons } from "@/components/icons";
 import PageContainer from "@/components/layout/page-container";
-import { RouterOutput, trpcApi } from "@/components/providers/TRPCProvider";
+import { trpcApi } from "@/components/providers/TRPCProvider";
+import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,15 +12,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  PROMPTS,
-  PROMPTS_UNION,
-  RANDOM_TOPICS,
-  UsedPromptType,
-} from "@/constants/data";
+import { RANDOM_TOPICS, UsedPromptType } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import React, { memo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,6 +34,12 @@ import { Maybe } from "actual-maybe";
 import { CopyableText } from "@/components/CopyableText";
 import { CopyButton } from "@/components/CopyButton";
 import { AIResult } from "@/lib/supabase-server";
+import {
+  InvokeOutput,
+  PromptResultHistory,
+  RenderResultType,
+  ResultType,
+} from "./PromptResultHistory";
 
 const DEFAULT_LENGTH = 200;
 
@@ -48,11 +50,6 @@ const QueryFormSchema = z.object({
 });
 
 type QueryFormType = z.infer<typeof QueryFormSchema>;
-type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
-type StateType = {
-  result: InvokeOutput | null;
-  prompt: string;
-};
 
 const getPromptResultData = (result: InvokeOutput | null) => {
   return (
@@ -84,7 +81,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
 }) {
   const t = useTranslations();
   const locale = useLocale();
-  const [promptResults, setPromptResults] = useState<StateType[]>([]);
+  const [promptResults, setPromptResults] = useState<ResultType[]>([]);
   const form = useForm<QueryFormType>({
     resolver: zodResolver(QueryFormSchema),
     defaultValues: getDefaultValues(t, randomNumberFromTopics, prompt, locale),
@@ -104,7 +101,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
   const onSubmit = async (data: QueryFormType) => {
     setPromptResults((prev) => [
       ...prev,
-      { prompt: data.message, result: null },
+      { id: uuidv4(), prompt: data.message, result: null },
     ]);
     // await invokeQuery.refetch();
     invokeMutation.mutateAsync({
@@ -115,11 +112,21 @@ export const PromptQueryPage = memo(function PromptQueryPage({
     });
   };
 
-  const allResults = [
-    ...promptResults.reverse().filter((result) => result.result),
+  const allResults: RenderResultType[] = [
+    ...[...promptResults]
+      .reverse()
+      .filter((result) => result.result)
+      .map((result) => ({
+        id: result.id,
+        aiResponse: result.result as InvokeOutput,
+        prompt: result.prompt ?? "",
+        aiResult: null,
+      })),
     ...aiResults.map((result) => ({
-      result: result.ai_result as InvokeOutput,
+      id: result.uuid,
+      aiResponse: result.ai_result as InvokeOutput,
       prompt: result.prompt ?? "",
+      aiResult: result,
     })),
   ];
 
@@ -127,12 +134,12 @@ export const PromptQueryPage = memo(function PromptQueryPage({
     promptResults.filter(
       (
         result,
-      ): result is StateType & {
+      ): result is ResultType & {
         result: InvokeOutput;
       } => Boolean(result.result),
     ),
   )
-    .andThen((result: StateType) => getPromptResultData(result.result))
+    .andThen((result: ResultType) => getPromptResultData(result.result))
     .getValue("");
 
   return (
@@ -285,51 +292,24 @@ export const PromptQueryPage = memo(function PromptQueryPage({
               </div>
             </CardContent>
           </Card>
-          <Card className="max-w-[500px]">
-            <CardContent className="py-6">
-              {Maybe.fromFirst(allResults)
-                .andThen(() => (
-                  <div>
-                    <div className="text-sm text-gray-500 mb-2">
-                      {t("prompt.olderResults")}
-                    </div>
-
-                    {allResults.map((result, index) => (
-                      <div
-                        key={`${result}-${index}`}
-                        className="flex items-center space-x-2"
-                      >
-                        <div>
-                          <div className="flex items-center justify-center w-6 h-6 mr-2 bg-primary-foreground text-primary rounded-full">
-                            {index + 1}
-                          </div>
-                          {Maybe.of(result.prompt)
-                            .andThen((userPrompt) => (
-                              <span className="text-sm text-gray-400">
-                                {userPrompt}
-                              </span>
-                            ))
-                            .orNull()}
-                          <CopyableText
-                            copyValue={getPromptResultData(result.result) ?? ""}
-                            className="w-full flex-1"
-                          >
-                            {getPromptResultData(result.result)}
-                          </CopyableText>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))
-                .getValue(
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="text-center text-sm text-gray-500">
-                      {t("prompt.postGenerationResultsEmptyStateText")}
-                    </div>
-                  </div>,
-                )}
-            </CardContent>
-          </Card>
+          <PromptResultHistory
+            allResults={allResults}
+            renderResult={(result: RenderResultType) => (
+              <div>
+                <div
+                  key={`${result.aiResponse.id}`}
+                  className="flex items-center space-x-2"
+                >
+                  <CopyableText
+                    copyValue={getPromptResultData(result.aiResponse) ?? ""}
+                    className="w-full flex-1"
+                  >
+                    {getPromptResultData(result.aiResponse)}
+                  </CopyableText>
+                </div>
+              </div>
+            )}
+          />
         </form>
       </Form>
     </PageContainer>

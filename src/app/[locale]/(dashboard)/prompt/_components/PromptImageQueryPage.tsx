@@ -12,17 +12,12 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import Resizer from "react-image-file-resizer";
-import {
-  PROMPTS,
-  PROMPTS_UNION,
-  RANDOM_IMAGE_TOPICS,
-  RANDOM_TOPICS,
-  UsedPromptType,
-} from "@/constants/data";
+import { RANDOM_IMAGE_TOPICS, UsedPromptType } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { v4 as uuidv4 } from "uuid";
 import React, { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -40,9 +35,13 @@ import { Maybe } from "actual-maybe";
 import { CopyableText } from "@/components/CopyableText";
 import { CopyButton } from "@/components/CopyButton";
 import { FileInput } from "@/components/ui/fileinput";
-import { OutputIframe } from "./OutputIframe";
 import { AIResult } from "@/lib/supabase-server";
-import { useRouter } from "next/navigation";
+import {
+  PromptResultHistory,
+  RenderResultType,
+  ResultType,
+} from "./PromptResultHistory";
+import { AIGeneratedImage } from "@/components/AIGeneratedImage";
 
 const DEFAULT_LENGTH = 200;
 
@@ -56,17 +55,6 @@ const QueryFormSchema = z.object({
 type QueryFormType = z.infer<typeof QueryFormSchema>;
 
 type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
-
-type RenderResult = {
-  aiResponse: InvokeOutput;
-  aiResult: AIResult | null;
-};
-
-type ResultType = {
-  prompt: string;
-  result: InvokeOutput | null;
-  aiResult?: AIResult | null;
-};
 
 const parseImageFromResponseText = (text: string | null | undefined) => {
   /// result <iframe><img src="https://replicate.delivery/xezq/5StDOTFr3v4NGFWZL77PAZ4tkEZBqlPpo2MVeZ9G9ppc8u9JA/out-0.jpg" width="250"/></iframe>
@@ -91,21 +79,27 @@ const getDefaultValues = (
   };
 };
 
-const renderResult = (result: RenderResult) => {
+const renderResult = (result: RenderResultType) => {
   return (
     result.aiResponse?.choices.flatMap((choice) => {
       return (
-        <div key={`${choice.index}`} className="flex flex-col items-center">
-          {Maybe.of(
-            Maybe.of(result.aiResult?.image_url)
-              .andThen((url) => [choice.message.content ?? "", url] as const)
-              .getValue() ?? parseImageFromResponseText(choice.message.content),
-          )
+        <div
+          key={`${result.aiResponse.id}`}
+          className="flex flex-col items-center"
+        >
+          {Maybe.of(parseImageFromResponseText(choice.message.content))
             .andThen((match) => {
               return (
                 <div>
                   <div className="rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src={match[1]} className="max-w-full" />
+                    <AIGeneratedImage
+                      unstableUrl={match[1]}
+                      stableUrl={Maybe.of(result.aiResult?.image_url).orNull()}
+                      className="max-w-full min-w-full"
+                      width="400px"
+                      height="500px"
+                      alt="AI generation result"
+                    />
                   </div>
                   {choice.message.content?.replaceAll(match[0], "")}
                 </div>
@@ -194,7 +188,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
     // await invokeQuery.refetch();
     setPromptResults((prev) => [
       ...prev,
-      { prompt: data.message, result: null },
+      { id: uuidv4(), prompt: data.message, result: null },
     ]);
     await invokeMutation.mutateAsync({
       prompt: prompt.prompt,
@@ -205,15 +199,17 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
     });
   };
 
-  const allResults: RenderResult[] = [
-    ...promptResults
+  const allResults: RenderResultType[] = [
+    ...[...promptResults]
       .reverse()
       .filter((result) => result.result)
       .map((result) => ({
+        id: result.id,
         aiResponse: result.result as InvokeOutput,
         aiResult: result.aiResult ?? null,
       })),
     ...aiResults.map((result) => ({
+      id: result.uuid,
       aiResponse: result.ai_result as InvokeOutput,
       aiResult: result,
     })),
@@ -378,7 +374,9 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                             variant="outline"
                             size="xs"
                             value={Maybe.fromFirst(
-                              promptResults.filter((result) => result.result),
+                              [...promptResults]
+                                .reverse()
+                                .filter((result) => result.result),
                             )
                               .andThen((lastResult) =>
                                 String(lastResult.result),
@@ -386,13 +384,16 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                               .getValue("")}
                           />
                         </div>
-                        <div>
+                        <div className="border p-2 rounded-lg min-h-[415px]">
                           {Maybe.fromFirst(
-                            promptResults.filter((result) => result.result),
+                            [...promptResults]
+                              .reverse()
+                              .filter((result) => result.result),
                           )
                             .andThen((lastResult) => (
                               <div>
                                 {renderResult({
+                                  id: lastResult.id,
                                   aiResponse: lastResult.result as InvokeOutput,
                                   aiResult: null,
                                 })}
@@ -416,49 +417,10 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
               </div>
             </CardContent>
           </Card>
-          <Card className="max-w-[500px]">
-            <CardContent className="py-6">
-              {Maybe.fromFirst(allResults)
-                .andThen(() => (
-                  <div>
-                    <div className="text-sm text-gray-500 mb-2">
-                      {t("prompt.olderResults")}
-                    </div>
-
-                    <div className="space-y-4">
-                      {allResults.map((result, index) => (
-                        <div
-                          key={`${index}-${result.aiResult?.prompt}`}
-                          className="flex items-center space-x-2"
-                        >
-                          <div>
-                            <div className="flex items-center justify-center w-6 h-6 mr-2 bg-primary-foreground text-primary rounded-full">
-                              {index + 1}
-                            </div>
-                            {Maybe.of(result.aiResult?.prompt)
-                              .andThen((userPrompt) => (
-                                <span className="text-sm text-gray-400">
-                                  {userPrompt}
-                                </span>
-                              ))
-                              .orNull()}
-
-                            {renderResult(result)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))
-                .getValue(
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="text-center text-sm text-gray-500">
-                      {t("prompt.postGenerationResultsEmptyStateText")}
-                    </div>
-                  </div>,
-                )}
-            </CardContent>
-          </Card>
+          <PromptResultHistory
+            allResults={allResults}
+            renderResult={renderResult}
+          />
         </form>
       </Form>
     </PageContainer>

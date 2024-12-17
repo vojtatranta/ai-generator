@@ -181,7 +181,12 @@
     "noSubscriptionIdReturned": "No Stripe subscription ID was returned",
     "missingParametersInSuccessRedirect": "Missing parameters, cannot complete subscription process.",
     "subscriptionNotPaid": "Payment was not successful. Please try again later.",
-    "databaseError": "An error occurred while writing changes to the database."
+    "databaseError": "An error occurred while writing changes to the database.",
+    "quotaLabel": "generated responses per month",
+    "perPeriod": "per month",
+    "defaultPlanDescription": "You have the default plan free for 14 days to try out all AIstein features.",
+    "proPlanDescription": "Pro plan is for users who use AIstein for personal purposes.",
+    "businessPlanDescription": "Business Plan is for companies that maintain social media for their clients."
   },
   "auth": {
     "continueWithGoogle": "Sign in with Google",
@@ -258,7 +263,8 @@
   "copyButton": {
     "copy": "Copy",
     "copied": "Copied",
-    "copyDisabled": "Cannot copy"
+    "copyDisabled": "Cannot copy",
+    "failedToCopy": "Failed to copy"
   },
   "seo": {
     "title": "AIstein - Better Product Recommendations",

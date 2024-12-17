@@ -35,7 +35,8 @@
   "copyButton": {
     "copy": "Kopírovať",
     "copied": "Skopírované",
-    "copyDisabled": "Nelze kopírovať"
+    "copyDisabled": "Nelze kopírovať",
+    "failedToCopy": "Kopírovanie zlyhalo"
   },
   "seo": {
     "title": "AIstein - Lepšie produktové odporúčania",
@@ -217,7 +218,12 @@
     "noSubscriptionIdReturned": "Nebolo vrátené ID predplatného Stripe",
     "missingParametersInSuccessRedirect": "Chýbajúce parametre, nemožno dokončiť proces predplatného.",
     "subscriptionNotPaid": "Platba nebola úspešná. Prosím skúste to znova neskôr.",
-    "databaseError": "Pri zápise zmien do databázy došlo k chybe."
+    "databaseError": "Pri zápise zmien do databázy došlo k chybe.",
+    "defaultPlanDescription": "Predvolený plán máte na 14 dní zadarmo na vyskúšanie všetkých funkcií AIsteinu.",
+    "proPlanDescription": "Pro plán je pre používateľov, ktorí používajú AIstein na osobné účely.",
+    "businessPlanDescription": "Business Plan je pre firmy, ktoré spravujú sociálne siete pre svojich klientov.",
+    "quotaLabel": "vygenerovaných odpovedí za mesiac",
+    "perPeriod": "za mesiac"
   },
   "auth": {
     "continueWithGoogle": "Prihlásiť sa cez Google",
