@@ -38,24 +38,20 @@ export const getSureUserPlan =
     return maybeResult;
   };
 
-export const getUsedNumberOfAnswers = async (userId: string) => {
+export const getUsedNumberOfGenerations = async (userId: string) => {
   const supabaseClient = await createSupabaseServerClient();
-  return (
-    (
-      await supabaseClient
-        .from("answers")
-        .select("*", {
-          count: "exact",
-        })
-        .eq("user", userId)
-        .gte(
-          "created_at",
-          new Date(
-            new Date().getTime() - 30 * 24 * 60 * 60 * 1000,
-          ).toISOString(),
-        )
-    )?.count ?? Infinity
-  );
+  const result = await supabaseClient
+    .from("ai_results")
+    .select("*", {
+      count: "exact",
+    })
+    .eq("user_id", userId)
+    .gte(
+      "created_at",
+      new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    );
+
+  return result?.count ?? Infinity;
 };
 
 export const createUserDefaultSubscription = async (

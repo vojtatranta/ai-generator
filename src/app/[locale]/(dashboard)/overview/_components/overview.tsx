@@ -25,24 +25,28 @@ import {
   TabsTrigger,
 } from "@/web/components/ui/tabs";
 import { getTranslations } from "next-intl/server";
-import { getSureUserPlan, getUsedNumberOfAnswers } from "@/lib/stripe";
+import { getSureUserPlan, getUsedNumberOfGenerations } from "@/lib/stripe";
 import { cn, getPlanRange } from "@/lib/utils";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { PROMPTS } from "@/constants/data";
 import { getPromptLink } from "@/lib/private-links";
+import { getPlanQuota } from "@/constants/plan";
 
 export default async function OverViewPage() {
   const userData = await getSureUserPlan();
   const t = await getTranslations();
-  const numberOfAnswers = await getUsedNumberOfAnswers(userData.user.id);
+  const numberOfGenerations = await getUsedNumberOfGenerations(
+    userData.user.id,
+  );
   const planRange = getPlanRange(userData.plan);
 
-  const remainingAnswers = planRange
-    ? planRange.to - (numberOfAnswers ?? 0)
+  const remainingGenerations = planRange
+    ? planRange.to - (numberOfGenerations ?? 0)
     : null;
 
-  const planExhausted = remainingAnswers != null && remainingAnswers <= 0;
+  const planExhausted =
+    remainingGenerations != null && remainingGenerations <= 0;
 
   return (
     <PageContainer scrollable>
@@ -86,18 +90,26 @@ export default async function OverViewPage() {
                       {t("overview.subscription")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex flex-col">
                     <div className="text-2xl font-bold">
                       <Link href="/subscription">
                         {userData.plan.product.name}
                       </Link>
                     </div>
-                    {planRange && (
-                      <p className="text-xs text-muted-foreground">
-                        {t("overview.from")} {planRange.from} {t("overview.to")}{" "}
-                        {planRange.to}
-                      </p>
-                    )}
+                    <div className="mt-10">
+                      {getPlanQuota(userData.plan.nickname)
+                        .andThen((quota) => (
+                          <div className="text-xs text-muted-foreground">
+                            <span className="font-bold">{quota}</span>{" "}
+                            {t("subscription.quotaLabel")}
+                          </div>
+                        ))
+                        .orNull()}
+                      <div className="text-xs text-muted-foreground">
+                        <span className="font-bold">{numberOfGenerations}</span>{" "}
+                        {t("subscription.numberOfGenerations")}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
                 {/* <Card>
