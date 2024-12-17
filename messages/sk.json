@@ -6,7 +6,7 @@
   "menu": {
     "dashboard": "Prehľad",
     "users": "Používatelia",
-    "promptTemplates": "Šablóny",
+    "promptTemplates": "AI šablóny",
     "account": {
       "title": "Účet",
       "profile": "Profil",
@@ -168,6 +168,7 @@
     "title": "Generovať obsah",
     "message": "Správa",
     "postGenerationResultsEmptyStateText": "Tu sa zobrazia výsledky predchádzajúceho generovania, aby ste si mohli vybrať príspevok, ktorý je pre vás najlepší.",
+    "postGenerationCurrentResulsEmptyStateText": "Výsledok generovania AI bude zobrazený tu.",
     "resultLength": "Dĺžka výsledku",
     "resultLengthPlaceholder": "Zadajte dĺžku výsledku",
     "generateUsingAi": "Generovať s AI",
@@ -267,9 +268,36 @@
     "profile": "Profil",
     "overview": "Prehľad",
     "prompt": "Prompt",
+    "subscription": "Predplatné",
     "prompts": "AI Prompty",
     "post-generator": "Generátor príspevkov",
     "image-social-post-generator": "Generátor obrázkových príspevkov",
     "users": "Používatelia"
+  },
+  "profile": {
+    "editProfile": "Upraviť profil",
+    "createProfile": "Vytvoriť profil",
+    "editProfileDescription": "Upraviť informácie o profile",
+    "createProfileDescription": "Vytvoriť informácie o profile",
+    "profileUpdated": "Profil bol aktualizovaný",
+    "profileCreated": "Profil bol vytvorený",
+    "saveChanges": "Uložiť zmeny",
+    "create": "Vytvoriť",
+    "step1": "Krok 1",
+    "personalInformation": "Osobné informácie",
+    "submitProfileFormText": "Odoslať",
+    "fields": {
+      "name": "Meno",
+      "namePlaceholder": "Zadajte svoje meno",
+      "email": "Email",
+      "emailPlaceholder": "Zadajte svoj email",
+      "contactno": "Kontaktné číslo",
+      "contactnoPlaceholder": "Zadajte svoje kontaktné číslo"
+    },
+    "form": {
+      "validation": {
+        "minChars": "Musí mať aspoň {count} znakov"
+      }
+    }
   }
 }

@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       ai_results: {
         Row: {
+          ai_response_id: string | null;
           ai_result: Json | null;
           created_at: string;
           id: number;
@@ -21,6 +22,7 @@ export type Database = {
           uuid: string;
         };
         Insert: {
+          ai_response_id?: string | null;
           ai_result?: Json | null;
           created_at?: string;
           id?: number;
@@ -31,6 +33,7 @@ export type Database = {
           uuid?: string;
         };
         Update: {
+          ai_response_id?: string | null;
           ai_result?: Json | null;
           created_at?: string;
           id?: number;

@@ -6,7 +6,7 @@
   "menu": {
     "dashboard": "Dashboard",
     "users": "Users",
-    "promptTemplates": "Templates",
+    "promptTemplates": "AI templates",
     "account": {
       "title": "Account",
       "profile": "Profile",
@@ -132,6 +132,7 @@
     "title": "Generate content",
     "message": "Message",
     "postGenerationResultsEmptyStateText": "The results of the previous generation will be displayed here so you can choose the post that works best for you.",
+    "postGenerationCurrentResulsEmptyStateText": "The result of the AI generation will be displayed here.",
     "resultLength": "Result length",
     "resultLengthPlaceholder": "Enter result length",
     "generateUsingAi": "Generate with AI",
@@ -232,6 +233,7 @@
     "overview": "Overview",
     "prompt": "Prompt",
     "prompts": "AI Prompts",
+    "subscription": "Subscription",
     "post-generator": "Post Generator",
     "image-social-post-generator": "Image Post Generator",
     "users": "Users"
@@ -271,6 +273,32 @@
     "twitter": {
       "site": "@AIsteinapp",
       "creator": "@vojtatranta"
+    }
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "createProfile": "Create Profile",
+    "editProfileDescription": "Edit your profile information",
+    "createProfileDescription": "Create your profile information",
+    "profileUpdated": "Profile updated",
+    "profileCreated": "Profile created",
+    "saveChanges": "Save changes",
+    "create": "Create",
+    "step1": "Step 1",
+    "personalInformation": "Personal Information",
+    "submitProfileFormText": "Submit",
+    "fields": {
+      "name": "Name",
+      "namePlaceholder": "Enter your name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "contactno": "Contact Number",
+      "contactnoPlaceholder": "Enter your contact number"
+    },
+    "form": {
+      "validation": {
+        "minChars": "Must be at least {count} characters"
+      }
     }
   }
 }

@@ -47,6 +47,7 @@ import {
   WandSparkles,
   Copy,
   Atom,
+  BadgeCheck,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -62,6 +63,7 @@ export const Icons = {
   fileQuestion: FileQuestion,
   check: Check,
   copy: Copy,
+  badgeCheck: BadgeCheck,
   atom: Atom,
   package: Package,
   keyboard: KeyboardIcon,

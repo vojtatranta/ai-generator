@@ -197,22 +197,22 @@ export default function AppSidebar({ user }: { user: User }) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <BadgeCheck />
-                    Account
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Billing
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
-                    Notifications
-                  </DropdownMenuItem>
+                  <Link href="/profile">
+                    <DropdownMenuItem>
+                      <BadgeCheck className="mr-2" />
+                      {t("userNav.account")}
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/subscription">
+                    <DropdownMenuItem>
+                      <CreditCard className="mr-2" />
+                      {t("userNav.billing")}
+                    </DropdownMenuItem>
+                  </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut />
+                  <LogOut className="mr-2" />
                   {t("menu.account.logout")}
                 </DropdownMenuItem>
               </DropdownMenuContent>

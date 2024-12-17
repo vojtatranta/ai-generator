@@ -44,10 +44,10 @@ export default async function SignInViewPage({
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">{t("auth.tagline")}</p>
-            <footer className="text-sm">
+            {/* <footer className="text-sm">
               {t("auth.founder.name")}
               <div className="text-xs">{t("auth.founder.title")}</div>
-            </footer>
+            </footer> */}
           </blockquote>
         </div>
       </div>

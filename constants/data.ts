@@ -65,7 +65,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
   {
     title: t("menu.promptTemplates"),
     url: "/prompts",
-    icon: "fileQuestion",
+    icon: "wandSparkles",
     shortcut: ["t", "t"],
     isActive: false,
     items: [],
@@ -121,7 +121,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
   {
     title: t("menu.account.title"),
     url: "#",
-    icon: "billing",
+    icon: "badgeCheck",
     isActive: true,
     items: [
       {

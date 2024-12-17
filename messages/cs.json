@@ -6,7 +6,7 @@
   "menu": {
     "dashboard": "Přehled",
     "users": "Uživatelé",
-    "promptTemplates": "Šablony",
+    "promptTemplates": "AI šablony",
     "account": {
       "title": "Účet",
       "profile": "Profil",
@@ -277,6 +277,7 @@
     "overview": "Přehled",
     "prompt": "Prompt",
     "prompts": "AI Prompty",
+    "subscription": "Předplatné",
     "post-generator": "Generátor příspěvků",
     "image-social-post-generator": "Generátor obrázkových příspěvků",
     "users": "Uživatelé"
@@ -298,21 +299,27 @@
   "profile": {
     "editProfile": "Upravit profil",
     "createProfile": "Vytvořit profil",
-    "editProfileDescription": "Upravit profil.",
-    "createProfileDescription": "Pro vytvoření životopisu potřebujeme nejdříve základní informace o vás.",
-    "profileUpdated": "Profil byl aktualizován.",
-    "profileCreated": "Profil byl vytvořen.",
+    "editProfileDescription": "Upravit informace o profilu",
+    "createProfileDescription": "Vytvořit informace o profilu",
+    "profileUpdated": "Profil byl aktualizován",
+    "profileCreated": "Profil byl vytvořen",
     "saveChanges": "Uložit změny",
     "create": "Vytvořit",
     "step1": "Krok 1",
     "personalInformation": "Osobní informace",
+    "submitProfileFormText": "Odeslat",
     "fields": {
       "name": "Jméno",
+      "namePlaceholder": "Zadejte své jméno",
       "email": "Email",
+      "emailPlaceholder": "Zadejte svůj email",
       "contactno": "Kontaktní číslo",
-      "namePlaceholder": "Zadejte vaše jméno",
-      "emailPlaceholder": "Zadejte váš email",
-      "contactnoPlaceholder": "Zadejte vaše kontaktní číslo"
+      "contactnoPlaceholder": "Zadejte své kontaktní číslo"
+    },
+    "form": {
+      "validation": {
+        "minChars": "Musí mít alespoň {count} znaků"
+      }
     }
   },
   "graphs": {
