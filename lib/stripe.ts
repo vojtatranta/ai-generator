@@ -5,7 +5,11 @@ import {
   PlanSubscription,
   User,
 } from "./supabase-server";
-import { DEFAULT_PLAN, HIGHEST_PLAN } from "@/constants/plan";
+import {
+  DEFAULT_PLAN,
+  DEFAULT_PLAN_OBJECT,
+  HIGHEST_PLAN,
+} from "@/constants/plan";
 import { getPlanRange } from "./utils";
 import { Database } from "@/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
@@ -143,7 +147,7 @@ export const getUserPlan =
     // }
 
     const plan =
-      plans.find(
+      [...plans, DEFAULT_PLAN_OBJECT].find(
         (p) =>
           p.product?.name?.toLowerCase() ===
           subscription.data.plan_name.toLocaleLowerCase(),
@@ -165,24 +169,27 @@ export const getUserPlan =
   };
 
 export const getAvailableProductPlans = async () => {
-  const [user, supabaseClient] = await Promise.all([
-    getUser(),
-    createSupabaseServerClient(),
-  ]);
+  const supabaseClient = await createSupabaseServerClient();
+  const user = await getUser();
   const userId = user.id;
   const fiveDaysOld = addDays(new Date(), -5).toISOString();
 
-  const { data: planDescriptor } = await supabaseClient
+  const { data: planDescriptors, error: plansError } = await supabaseClient
     .from("stripe_plans")
     .select("*")
     .eq("user", userId)
     .order("created_at", { ascending: false })
-    .single();
+    .limit(1);
+
+  const planDescriptor = planDescriptors?.[0];
+  if (plansError) {
+    console.error(plansError);
+  }
 
   if (
     planDescriptor &&
-    new Date(planDescriptor.created_at).getTime() >
-      new Date(fiveDaysOld).getTime()
+    new Date(fiveDaysOld).getTime() <
+      new Date(planDescriptor.created_at).getTime()
   ) {
     return planDescriptor.plans_json as unknown as PlanWithProduct[];
   }
@@ -199,17 +206,24 @@ export const getAvailableProductPlans = async () => {
     new Map(),
   );
 
-  const resultPlans = (plans.data
-    ?.filter((plan) => {
+  const resultPlans = [DEFAULT_PLAN_OBJECT, ...(plans.data ?? [])]
+    .filter((plan) => {
       if (!plan.product) return false;
 
       const product = productsMap.get(String(plan.product));
-      return product?.active;
+      if (product?.active === false) {
+        return false;
+      }
+
+      return plan.product || product?.active;
     })
     .map((plan) => ({
       ...plan,
-      product: plan.product ? productsMap.get(String(plan.product)) : null,
-    })) ?? []) as PlanWithProduct[];
+      product:
+        typeof plan.product === "string"
+          ? productsMap.get(String(plan.product))
+          : (plan.product ?? null),
+    })) as PlanWithProduct[];
 
   // @ts-expect-error: weird error here
   await supabaseClient.from("stripe_plans").insert([

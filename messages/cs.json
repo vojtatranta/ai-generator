@@ -1,4 +1,7 @@
 {
+  "defaultPlanDescription": "Výchozí plán máte na 14 dní zdarma na vyzkoušení všech funkcí AIsteinu.",
+  "proPlanDescription": "Pro plán je pro uživatele, kteří používají AIstein pro osobní účely.",
+  "businessPlanDescription": "Business Plan je pro firmy, které udržují sociální sítě pro své klienty.",
   "appSidebar": {
     "overview": "Přehled",
     "motto": "Tvořte snadno!"
@@ -16,7 +19,6 @@
     }
   },
   "common": {
-    "name": "jméno",
     "searchPlaceholder": "Hledat podle {searchKey}...",
     "loading": "Načítání...",
     "error": "Došlo k chybě",
@@ -172,6 +174,8 @@
   "subscription": {
     "allSubscriptions": "Všechna předplatná",
     "plansHeading": "Plány předplatného",
+    "quotaLabel": "vygenerovaných odpovědí za měsíc",
+    "perPeriod": "za měsíc",
     "plansDescription": "Vyberte si plán, který vám nejlépe vyhovuje",
     "currentPlan": "Aktuální plán",
     "cancelSubscriptionButton": "Zrušit předplatné",

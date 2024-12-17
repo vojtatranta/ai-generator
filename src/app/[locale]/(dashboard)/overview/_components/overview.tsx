@@ -8,6 +8,8 @@ import {
 import PageContainer from "@/web/components/layout/page-container";
 import { RecentSales } from "./recent-sales";
 import { Button } from "@/web/components/ui/button";
+import DrawingEinsteinPic from "../../../../../../public/ai-stein-drawinig.webp";
+import PostingEinsteinPic from "../../../../../../public/aistein-posting.webp";
 import {
   Card,
   CardContent,
@@ -136,7 +138,7 @@ export default async function OverViewPage() {
                       <div className="flex flex-row items-center justify-between gap-4">
                         <div className="max-w-[180px]">
                           <Image
-                            src={require("../../../../../../public/aistein-posting.webp")}
+                            src={PostingEinsteinPic}
                             alt="Aistein posting"
                             className="rounded-lg"
                             height="700"
@@ -160,7 +162,7 @@ export default async function OverViewPage() {
                       <div className="flex flex-row items-center justify-between gap-4">
                         <div className="max-w-[180px]">
                           <Image
-                            src={require("../../../../../../public/ai-stein-drawinig.webp")}
+                            src={DrawingEinsteinPic}
                             alt="Aistein posting"
                             className="rounded-lg"
                             height="700"
