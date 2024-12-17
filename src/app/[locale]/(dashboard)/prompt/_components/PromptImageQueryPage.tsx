@@ -59,14 +59,14 @@ type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
 
 type ResultType = {
   prompt: string;
-  result: InvokeOutput | null;
+  result: Omit<InvokeOutput, "aiResult"> | null;
 };
 
 const parseImageFromResponseText = (text: string | null | undefined) => {
   /// result <iframe><img src="https://replicate.delivery/xezq/5StDOTFr3v4NGFWZL77PAZ4tkEZBqlPpo2MVeZ9G9ppc8u9JA/out-0.jpg" width="250"/></iframe>
   const match = text?.match(/<iframe.*?src="([^"]*)".*?<\/iframe>/);
   if (match) {
-    return match;
+    return match[1];
   }
   return null;
 };
@@ -87,7 +87,7 @@ const getDefaultValues = (
 
 const renderResult = (result: ResultType) => {
   return (
-    result.result?.choices.flatMap((choice, choiceIndex) => {
+    result.result?.choices.flatMap((choice) => {
       return (
         <div key={`${choice.index}`} className="flex flex-col items-center">
           {Maybe.of(parseImageFromResponseText(choice.message.content))
@@ -134,16 +134,39 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
     ),
   });
 
+  const downloadImageMutation =
+    trpcApi.langtail.downloadImageResult.useMutation();
+
   const invokeMutation = trpcApi.langtail.invokePrompt.useMutation({
-    onSuccess: (data) => {
+    // @ts-expect-error: weird error here
+    onSuccess: (data: InvokeOutput) => {
       setPromptResults((prev) => {
         const last = prev[prev.length - 1];
-
-        return [...prev.slice(-1), { ...last, result: data }];
+        const { aiResult, ...rest } = data;
+        return [...prev.slice(-1), { ...(last ?? {}), result: rest }];
       });
+
+      requestImageDownload(data);
+
       toast.success(t("prompt.success"));
     },
   });
+
+  const requestImageDownload = (result: InvokeOutput) => {
+    const { aiResult } = result;
+    if (!aiResult || aiResult.image_url) {
+      return;
+    }
+
+    Maybe.of(parseImageFromResponseText(result.choices[0].message.content))
+      .andThen((match) => match[1])
+      .andThen((imageUrl) => {
+        downloadImageMutation.mutateAsync({
+          aiResultId: aiResult.id,
+          imageUrl,
+        });
+      });
+  };
 
   const onSubmit = async (data: QueryFormType) => {
     // await invokeQuery.refetch();
@@ -339,10 +362,10 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                               <div>{renderResult(lastResult)}</div>
                             ))
                             .getValue(
-                              <div className="flex flex-col items-center justify-center">
+                              <div className="flex flex-col items-center justify-center min-h-[260px]">
                                 <div className="text-center text-sm text-gray-500">
                                   {t(
-                                    "prompt.postGenerationResultsEmptyStateText",
+                                    "prompt.postGenerationCurrentResulsEmptyStateText",
                                   )}
                                 </div>
                               </div>,

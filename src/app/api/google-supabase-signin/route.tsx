@@ -7,6 +7,7 @@ import {
 } from "@/lib/stripe";
 
 export async function GET(request: NextRequest) {
+  console.log("BUUUM");
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get("code");
   const callbackUrl = searchParams.get("callbackUrl");

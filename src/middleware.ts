@@ -38,6 +38,8 @@ export default async function authMiddleware(request: NextRequest) {
   // First apply i18n middleware
   let response = i18nMiddleware(request);
 
+  console.log("middleware RequestUrl:", request.nextUrl.toString());
+
   // If the path is public, just return the i18n response
   if (isPublicPath(request.nextUrl.pathname)) {
     return response;

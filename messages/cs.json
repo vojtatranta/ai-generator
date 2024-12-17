@@ -132,6 +132,7 @@
     "title": "Generovat obsah",
     "message": "Zpráva",
     "postGenerationResultsEmptyStateText": "Tady se zobrazí výsledky předchozího generování, abyste si mohli vybrat post, který je pro vás nejlepší.",
+    "postGenerationCurrentResulsEmptyStateText": "Tady se zobrazí výsledek AI generování.",
     "resultLength": "Délka výsledného postu",
     "resultLengthPlaceholder": "Zadejte délku výsledného postu",
     "generateUsingAi": "Generovat s AI",

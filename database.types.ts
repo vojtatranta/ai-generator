@@ -14,6 +14,7 @@ export type Database = {
           ai_result: Json | null;
           created_at: string;
           id: number;
+          image_url: string | null;
           prompt: string | null;
           prompt_slug: string;
           user_id: string;
@@ -23,6 +24,7 @@ export type Database = {
           ai_result?: Json | null;
           created_at?: string;
           id?: number;
+          image_url?: string | null;
           prompt?: string | null;
           prompt_slug: string;
           user_id: string;
@@ -32,6 +34,7 @@ export type Database = {
           ai_result?: Json | null;
           created_at?: string;
           id?: number;
+          image_url?: string | null;
           prompt?: string | null;
           prompt_slug?: string;
           user_id?: string;

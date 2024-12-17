@@ -550,16 +550,80 @@ export const langtailRouter = router({
         },
       });
 
-      await ctx.supabase.from("ai_results").insert([
-        {
-          user_id: ctx.user.id,
-          prompt_slug: input.prompt,
-          prompt: input.message,
-          ai_result: response as unknown as Json,
-        },
-      ]);
+      const { data: aiResultData } = await ctx.supabase
+        .from("ai_results")
+        .insert([
+          {
+            user_id: ctx.user.id,
+            prompt_slug: input.prompt,
+            prompt: input.message,
+            ai_result: response as unknown as Json,
+          },
+        ])
+        .select("*")
+        .single();
 
-      return response;
+      return {
+        ...response,
+        aiResult: aiResultData ?? null,
+      };
+    }),
+
+  downloadImageResult: protectedProcedure
+    .input(
+      z.object({
+        aiResultId: z.number(),
+        imageUrl: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data: aiResult } = await ctx.supabase
+        .from("ai_results")
+        .select("*")
+        .eq("id", input.aiResultId)
+        .eq("user_id", ctx.user.id)
+        .single();
+
+      if (!aiResult) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "AI Result not found",
+        });
+      }
+
+      if (aiResult.image_url) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Image already exists",
+        });
+      }
+
+      const response = await fetch(input.imageUrl);
+      const imageBuffer = await response.blob();
+      const image = await ctx.supabase.storage
+        .from("ai_generation_images")
+        .upload(`${aiResult.uuid}.png`, imageBuffer, {
+          cacheControl: "3600000000000",
+          upsert: true,
+        });
+
+      if (image.error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: image.error.message,
+        });
+      }
+
+      const { data: updatedAiResultData } = await ctx.supabase
+        .from("ai_results")
+        .update({
+          image_url: image.data.path,
+        })
+        .eq("id", aiResult.id)
+        .select("*")
+        .single();
+
+      return updatedAiResultData;
     }),
 });
 
