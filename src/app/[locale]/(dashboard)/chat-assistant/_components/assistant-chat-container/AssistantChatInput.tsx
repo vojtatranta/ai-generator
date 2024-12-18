@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Image, X } from "lucide-react";
-import { nanoid } from "nanoid";
+import { v4 as uuidv4 } from "uuid";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -16,7 +16,7 @@ export function promptForImage(): Promise<{
   type: string;
 }> {
   return new Promise((resolve, reject) => {
-    const id = `file-input-${nanoid()}`;
+    const id = `file-input-${uuidv4()}`;
     const input = document.createElement("input");
     input.id = id;
     input.type = "file";

@@ -185,7 +185,7 @@ export const subscriptionRouter = router({
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: String(err),
+          message: `STRIPE ERROR: ${String(err)}`,
         });
       }
     }),

@@ -106,19 +106,7 @@ function renderMessage(message: ChatMessage, toolCalls: ChatCompletionChunk[]) {
   };
 }
 
-const Header = memo(function Header({
-  assistantName,
-  displayPlaygroundButton,
-  organizationSlug,
-  projectSlug,
-  assistantSlug,
-}: {
-  assistantName?: string;
-  displayPlaygroundButton: boolean;
-  organizationSlug: string;
-  projectSlug: string;
-  assistantSlug: string;
-}) {
+const Header = memo(function Header() {
   return <></>;
 });
 
@@ -215,22 +203,12 @@ export function getErrorDetails(error: unknown): {
 
 export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   description,
-  assistantSlug,
-  organizationSlug,
-  isEmbed,
-  projectSlug,
   imageSupport,
   variables,
-  userInOrganization,
 }: {
-  description: string;
-  assistantSlug: string;
-  organizationSlug: string;
-  projectSlug: string;
-  isEmbed: boolean;
-  imageSupport: boolean;
+  description?: string;
+  imageSupport?: boolean;
   variables?: Record<string, any>;
-  userInOrganization: boolean;
 }) {
   const [input, setInput] = useState("");
   const [toolCalls, setToolCalls] = useState<ChatCompletionChunk[]>([]);
@@ -274,7 +252,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
                 messageIndex: messages.length,
               });
 
-              if (isEmbed && "parent" in window && window.parent) {
+              if ("parent" in window && window.parent) {
                 window.parent.postMessage(
                   {
                     type: "embed-assistant-error",
@@ -318,10 +296,10 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   return (
     <div className="flex h-dvh flex-1 flex-col bg-muted/30">
       <Header
-        displayPlaygroundButton={userInOrganization && !isEmbed}
-        organizationSlug={organizationSlug}
-        projectSlug={projectSlug}
-        assistantSlug={assistantSlug}
+      // displayPlaygroundButton={userInOrganization && !isEmbed}
+      // organizationSlug={organizationSlug}
+      // projectSlug={projectSlug}
+      // assistantSlug={assistantSlug}
       />
       <div className=":is(.dark .dark\:to-background\/20) fixed inset-x-0 bottom-0 w-full overflow-auto bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
         <div className="relative flex h-[calc(100vh_-_theme(spacing.16))]">
@@ -351,7 +329,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
                     loading={isLoading}
                     send={send}
                     abort={abort}
-                    imageSupport={imageSupport}
+                    imageSupport={Boolean(imageSupport)}
                     setInput={setInput}
                     setImage={setImage}
                   />
