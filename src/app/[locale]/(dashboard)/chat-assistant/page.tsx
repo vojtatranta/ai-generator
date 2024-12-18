@@ -1,6 +1,5 @@
 import { searchParamsCache } from "@/web/lib/searchparams";
 import React from "react";
-import PromptTemplatesListingPage from "./_components/assistant-chat-page";
 import { getTranslations } from "next-intl/server";
 import { SearchParams } from "nuqs";
 import AssistantChatPage from "./_components/assistant-chat-page";

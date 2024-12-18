@@ -294,7 +294,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   });
 
   return (
-    <div className="flex h-dvh flex-1 flex-col bg-muted/30">
+    <div className="flex h-dvh flex-1 flex-col bg-muted/30 overflow-y-hidden">
       <Header
       // displayPlaygroundButton={userInOrganization && !isEmbed}
       // organizationSlug={organizationSlug}
@@ -320,7 +320,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
               </div>
             </div>
 
-            <div className="fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+            <div className="fixed inset-x-0 bottom-0 w-full to-50% duration-300 ease-in-out animate-in dark:from-background/10 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
               <div className="mx-auto sm:max-w-2xl sm:px-4">
                 <div className="space-y-4 border-t bg-background py-2 shadow-lg sm:rounded-t-xl sm:border sm:px-4 md:py-4">
                   <AssistantChatPromptForm

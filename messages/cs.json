@@ -263,7 +263,9 @@
       "promptTemplatesMetaTitle": "AIstein - Šablony"
     },
     "promptMetadataTitle": "AIstein - Generování obsahu",
-    "assistantChat": "AI chat - váš asistent pro vymýšlení obsahu"
+    "assistantChat": {
+      "assistantChatMetaTitle": "AI chat - váš asistent pro vymýšlení obsahu"
+    }
   },
   "notFound": {
     "title": "Něco chybí",
