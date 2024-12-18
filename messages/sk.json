@@ -219,8 +219,8 @@
     "missingParametersInSuccessRedirect": "Chýbajúce parametre, nemožno dokončiť proces predplatného.",
     "subscriptionNotPaid": "Platba nebola úspešná. Prosím skúste to znova neskôr.",
     "databaseError": "Pri zápise zmien do databázy došlo k chybe.",
-    "defaultPlanDescription": "Predvolený plán máte na 14 dní zadarmo na vyskúšanie všetkých funkcií AIsteinu.",
-    "proPlanDescription": "Pro plán je pre používateľov, ktorí používajú AIstein na osobné účely.",
+    "defaultPlanDescription": "Základný plán vám dáva 14 dní zadarmo na vyskúšanie všetkých funkcií AIsteinu.",
+    "proPlanDescription": "Pro plán je pre používateľov, ktorí používajú AIstein pre osobné účely.",
     "businessPlanDescription": "Business Plan je pre firmy, ktoré spravujú sociálne siete pre svojich klientov.",
     "quotaLabel": "vygenerovaných odpovedí za mesiac",
     "perPeriod": "za mesiac",
@@ -230,6 +230,12 @@
     "planQuota": "Limit plánu",
     "trialExpired": "Skúšobná doba vypršala",
     "trialExpiredDescription": "Vaša 14-dňová skúšobná doba vypršala. Pre pokračovanie v používaní AIsteinu si prosím vyberte niektorý z našich platených plánov."
+  },
+  "assistantChat": {
+    "title": "AI chat - váš asistent pre tvorbu obsahu",
+    "description": "Vytvárajte obsah pre vaše sociálne siete alebo pre vaše internetové stránky",
+    "sendMessage": "Odoslať správu",
+    "sendMessagePlaceholder": "Napíšte vašu správu..."
   },
   "auth": {
     "continueWithGoogle": "Prihlásiť sa cez Google",

@@ -1,7 +1,13 @@
 {
-  "defaultPlanDescription": "Výchozí plán máte na 14 dní zdarma na vyzkoušení všech funkcí AIsteinu.",
+  "assistantChat": {
+    "title": "AI chat - váš asistent pro tvorbu obsahu",
+    "description": "Vytvářejte obsah pro vaše sociální sítě nebo pro vaše internetové stránky",
+    "sendMessage": "Odeslat zprávu",
+    "sendMessagePlaceholder": "Napište vaši zprávu..."
+  },
+  "defaultPlanDescription": "Základní plán vám dává 14 dní zdarma na vyzkoušení všech funkcí AIsteinu.",
   "proPlanDescription": "Pro plán je pro uživatele, kteří používají AIstein pro osobní účely.",
-  "businessPlanDescription": "Business Plan je pro firmy, které udržují sociální sítě pro své klienty.",
+  "businessPlanDescription": "Business Plan je pro firmy, které spravují sociální sítě pro své klienty.",
   "appSidebar": {
     "overview": "Přehled",
     "motto": "Tvořte snadno!"
@@ -256,7 +262,8 @@
     "promptTemplates": {
       "promptTemplatesMetaTitle": "AIstein - Šablony"
     },
-    "promptMetadataTitle": "AIstein - Generování obsahu"
+    "promptMetadataTitle": "AIstein - Generování obsahu",
+    "assistantChat": "AI chat - váš asistent pro vymýšlení obsahu"
   },
   "notFound": {
     "title": "Něco chybí",
@@ -287,6 +294,7 @@
   "breadCrumbs": {
     "profile": "Profil",
     "overview": "Přehled",
+    "chat-assistant": "AI chat - váš asistent pro vymýšlení obsahu",
     "prompt": "Prompt",
     "prompts": "AI Prompty",
     "subscription": "Předplatné",
