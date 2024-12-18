@@ -24,8 +24,8 @@ export default async function AssistantChatPage({}: TSocketsListingPage) {
   const t = await getTranslations();
 
   return (
-    <PageContainer>
-      <Card>
+    <PageContainer stretch>
+      <div className="h-full min-h-full flex flex-1 overflow-hidden rounded-xl">
         {/* <CardHeader>
           <CardTitle className="text-sm font-medium">
             {t("assistantChat.title")}
@@ -43,7 +43,7 @@ export default async function AssistantChatPage({}: TSocketsListingPage) {
           </Link> */}
 
         <AssistantAIChatContainer />
-      </Card>
+      </div>
     </PageContainer>
   );
 }

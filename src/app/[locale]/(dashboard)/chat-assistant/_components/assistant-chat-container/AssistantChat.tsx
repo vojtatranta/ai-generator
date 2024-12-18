@@ -114,24 +114,6 @@ export const AssistantToolCallMessage = memo(function AssistantToolCallMessage({
           )}
         </div>
       </Badge>
-      {isExpanded && (
-        <div className="mt-2 max-h-[500px] w-full max-w-full overflow-auto rounded-md border bg-gray-200 p-3 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-          {children && (
-            <div className="mb-2">
-              <strong>Function Arguments:</strong>
-              <pre className="mt-1 whitespace-pre-wrap break-words">
-                {children}
-              </pre>
-            </div>
-          )}
-          <div className="w-full">
-            <strong>Result:</strong>
-            <div className="mt-1 whitespace-pre-wrap break-words">
-              {getPossibleJSONResult(toolResult) ?? "-"}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 });

@@ -294,17 +294,17 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   });
 
   return (
-    <div className="flex h-dvh flex-1 flex-col bg-muted/30 overflow-y-hidden">
+    <div className="flex flex-1 flex-col bg-muted/30 overflow-y-hidden max-h-full">
       <Header
       // displayPlaygroundButton={userInOrganization && !isEmbed}
       // organizationSlug={organizationSlug}
       // projectSlug={projectSlug}
       // assistantSlug={assistantSlug}
       />
-      <div className=":is(.dark .dark\:to-background\/20) fixed inset-x-0 bottom-0 w-full overflow-auto bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+      <div className=":is(.dark .dark\:to-background\/20) fixed inset-x-0 bottom-0 w-full overflow-auto from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
         <div className="relative flex h-[calc(100vh_-_theme(spacing.16))]">
           <div className="mx-auto w-full sm:max-w-2xl sm:px-4 ">
-            <div className="flex h-dvh w-full flex-1 flex-col">
+            <div className="flex w-full flex-1 flex-col">
               <div className="w-full pb-[200px] pt-4 md:pt-10">
                 {messages.length === 0 && description && (
                   <EmptyScreen description={description} />

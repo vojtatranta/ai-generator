@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   }
 
   return fetch(
-    "https://api.langtail.com/vojta-workspace-azxTHt/ai-generator/social-media-post-ideas-assistant/production?v=1",
+    "https://api.langtail.com/vojta-workspace-azxTHt/ai-generator/social-media-post-ideas-assistant/production",
     {
       method: "POST",
       headers: {
