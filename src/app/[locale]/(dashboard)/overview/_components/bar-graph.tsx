@@ -19,18 +19,22 @@ import { useSupabase } from "@/lib/supabase-client";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useDateRangePicker } from "@/components/date-range-picker";
-import { addDays, subDays } from "date-fns";
+import { addDays } from "date-fns";
 
 export const description = "An interactive bar chart";
 
 const getChartConfig = (t: (trans: string) => string) => ({
-  answers: {
-    label: t("answersLabel"),
+  generations: {
+    label: t("generationsLabel"),
     color: "hsl(var(--primary))",
   },
 });
 
-export function BarGraph({ userId }: { userId: string }) {
+export const BarGraph = React.memo(function BarGraph({
+  userId,
+}: {
+  userId: string;
+}) {
   const { date } = useDateRangePicker();
   const supabase = useSupabase();
   const t = useTranslations("overview.barChart");
@@ -40,24 +44,26 @@ export function BarGraph({ userId }: { userId: string }) {
 
   const { data } = useQuery(
     supabase
-      .from("answers")
+      .from("ai_results")
       .select("created_at") // Fetch only the created_at column for optimization
-      .eq("user", userId)
+      .eq("user_id", userId)
       .gte("created_at", addDays(date.from ?? new Date(), -1).toISOString())
       .lte("created_at", addDays(date.to ?? new Date(), 1).toISOString()),
   );
 
   const consolidatedData = React.useMemo(() => {
     return {
-      answers:
-        data?.reduce<Record<string, { date: string; answers: number }>>(
-          (acc, answer) => {
-            const key = new Date(answer.created_at).toISOString().slice(0, 10);
+      generations:
+        data?.reduce<Record<string, { date: string; generations: number }>>(
+          (acc, generation) => {
+            const key = new Date(generation.created_at)
+              .toISOString()
+              .slice(0, 10);
             acc[key] = acc[key] ?? {
               date: key,
-              answers: 0,
+              generations: 0,
             };
-            acc[key].answers += 1;
+            acc[key].generations += 1;
             return acc;
           },
           {},
@@ -66,21 +72,21 @@ export function BarGraph({ userId }: { userId: string }) {
   }, [data]);
 
   const chartData = React.useMemo(() => {
-    return Object.entries(consolidatedData["answers"] ?? {}).map(
+    return Object.entries(consolidatedData["generations"] ?? {}).map(
       ([key, value]) => ({
         date: key,
-        answers: value.answers,
+        generations: value.generations,
       }),
     );
   }, [consolidatedData]);
 
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("answers");
+    React.useState<keyof typeof chartConfig>("generations");
 
   const total = React.useMemo(
     () => ({
-      answers: Object.values(consolidatedData["answers"] ?? {}).reduce(
-        (acc, value) => acc + value.answers,
+      generations: Object.values(consolidatedData["generations"] ?? {}).reduce(
+        (acc, value) => acc + value.generations,
         0,
       ),
     }),
@@ -88,14 +94,14 @@ export function BarGraph({ userId }: { userId: string }) {
   );
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>{t("title")}</CardTitle>
           <CardDescription>{t("description")}</CardDescription>
         </div>
         <div className="flex">
-          {["answers"].map((key) => {
+          {["generations"].map((key) => {
             const chart = key as keyof typeof chartConfig;
             return (
               <button
@@ -148,7 +154,7 @@ export function BarGraph({ userId }: { userId: string }) {
               content={
                 <ChartTooltipContent
                   className="w-[150px]"
-                  nameKey="answers"
+                  nameKey="generations"
                   labelFormatter={(value) => {
                     return new Date(value).toLocaleDateString(locale, {
                       month: "short",
@@ -165,4 +171,4 @@ export function BarGraph({ userId }: { userId: string }) {
       </CardContent>
     </Card>
   );
-}
+});

@@ -1,6 +1,10 @@
 "use client";
 import PageContainer from "@/web/components/layout/page-container";
-import { PlanWithProduct, PlanWithProductAndSubscription } from "@/lib/stripe";
+import {
+  PlanWithProduct,
+  PlanWithProductAndSubscription,
+  SurePlanResult,
+} from "@/lib/stripe";
 import { Heading } from "@/components/ui/heading";
 import { useTranslations } from "next-intl";
 import { Maybe } from "actual-maybe";
@@ -23,7 +27,7 @@ import {
 } from "@/components/payment-modal";
 import { toast } from "sonner";
 import { PlanSubscription } from "@/lib/supabase-server";
-import { Loader2 } from "lucide-react";
+import { AlertTriangle, CircleAlert, Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -31,6 +35,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { If, Then } from "@/components/ui/condition";
+import { Icons } from "@/components/icons";
 
 export default function SubscriptionPlans({
   activeSubscriptions,
@@ -43,7 +49,7 @@ export default function SubscriptionPlans({
   plans: PlanWithProduct[];
   paymentSuccess: boolean;
   paymentError: string | null;
-  userPlan: PlanWithProductAndSubscription;
+  userPlan: SurePlanResult;
 }) {
   const router = useRouter();
   const t = useTranslations();
@@ -82,6 +88,51 @@ export default function SubscriptionPlans({
           <CardDescription>
             {t("subscription.plansDescription")}
           </CardDescription>
+          <If condition={userPlan.trialExpired}>
+            <Then>
+              <div className="bg-destructive p-4 text-primary-foreground rounded-md max-w-[650px]">
+                <div className="flex flex-row items-center gap-2">
+                  <CircleAlert className="h-12 w-12 mr-2" />
+                  <div className="flex flex-col gap-2">
+                    <div className="font-medium">
+                      {t("subscription.trialExpired")}
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {t("subscription.trialExpiredDescription")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Then>
+          </If>
+          <If condition={userPlan.planExceeded}>
+            <Then>
+              <div className="bg-destructive p-4 text-primary-foreground rounded-md max-w-[650px]">
+                <div className="flex flex-row items-center gap-2">
+                  <AlertTriangle className="h-12 w-12 mr-2" />
+                  <div className="flex flex-col gap-2">
+                    <div className="font-medium">
+                      {t("subscription.planExceeded")}
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {t("subscription.planExpiredDescription")}
+                      </p>
+                      <p>
+                        {t("subscription.usedGenerations")}:{" "}
+                        {userPlan.numberOfThisMonthGenerations}
+                      </p>
+                      <p>
+                        {t("subscription.planQuota")}: {userPlan.planQuota}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Then>
+          </If>
         </CardHeader>
         <CardContent className="max-w-[700px]">
           <div className="space-y-2">

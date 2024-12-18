@@ -186,7 +186,13 @@
     "perPeriod": "per month",
     "defaultPlanDescription": "You have the default plan free for 14 days to try out all AIstein features.",
     "proPlanDescription": "Pro plan is for users who use AIstein for personal purposes.",
-    "businessPlanDescription": "Business Plan is for companies that maintain social media for their clients."
+    "businessPlanDescription": "Business Plan is for companies that maintain social media for their clients.",
+    "planExceeded": "Generation limit exceeded",
+    "planExpiredDescription": "Your current plan has reached its generation limit. Please upgrade your plan to continue generating.",
+    "usedGenerations": "Used generations",
+    "planQuota": "Plan quota",
+    "trialExpired": "Trial period expired",
+    "trialExpiredDescription": "Your 14-day trial period has expired. Please choose one of our paid plans to continue using AIstein."
   },
   "auth": {
     "continueWithGoogle": "Sign in with Google",

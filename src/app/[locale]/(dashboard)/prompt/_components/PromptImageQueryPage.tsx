@@ -220,14 +220,14 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-[1fr_auto] md:grid-cols-[2fr_auto] gap-4"
+          className="grid grid-cols-[1fr_auto] md:grid-cols-[2fr_auto] gap-2"
         >
           <Card className="h-full">
             <CardHeader>
               <CardTitle className="text-left text-2xl font-bold">
                 {t(prompt.title)}
               </CardTitle>
-              <CardDescription className="max-w-[500px]">
+              <CardDescription className="max-w-[480px]">
                 {t(prompt.description)}
               </CardDescription>
             </CardHeader>
@@ -306,7 +306,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                             <FormControl>
                               <Input
                                 type="number"
-                                className="max-w-[150px]"
+                                className="max-w-[100px]"
                                 placeholder={t(
                                   "prompt.resultLengthPlaceholder",
                                 )}
@@ -330,7 +330,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                             <FormControl>
                               <Input
                                 type="text"
-                                className="max-w-[150px]"
+                                className="max-w-[100px]"
                                 placeholder={t("prompt.localePlaceholder")}
                                 {...field}
                               />

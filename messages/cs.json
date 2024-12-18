@@ -114,12 +114,12 @@
     "remainingAnswers": "Zbývající odpovědi",
     "remainingAnswersDescription": "Počet odpovědí, které můžete ještě vygenerovat",
     "subscriptionNotPaid": "Vaše předplatné je vyčerpáno, upgradujte svůj plán!",
-    "recentAnswers": "Nedávné odpovědi",
-    "recentAnswersDescription": "Vaše nejnovější vygenerované odpovědi",
+    "recentGenerations": "Nedávné generování",
+    "recentGenerationsDescription": "Vaše nejnovější vygenerované odpovědi AI",
     "barChart": {
-      "answersLabel": "Odpovědi",
-      "title": "Přehled odpovědí",
-      "description": "Vaše odpovědi ve zvoleném období"
+      "generationsLabel": "Generování AI",
+      "title": "Přehled generování",
+      "description": "Vaše generování ve zvoleném období"
     },
     "recentSales": {
       "noEmailAvailable": "Není k dispozici",
@@ -186,7 +186,13 @@
     "noSubscriptionIdReturned": "Nebylo vráceno ID předplatného Stripe",
     "missingParametersInSuccessRedirect": "Chybějící parametry, nelze dokončit proces předplatného.",
     "subscriptionNotPaid": "Platba nebyla úspěšná. Prosím zkuste to znovu později.",
-    "databaseError": "Při zápisu změn do databáze došlo k chybě."
+    "databaseError": "Při zápisu změn do databáze došlo k chybě.",
+    "planExceeded": "Překročili jste limit generování",
+    "planExpiredDescription": "Váš současný plán má vyčerpaný limit generování. Pro pokračování v generování prosím upgradujte svůj plán.",
+    "usedGenerations": "Použitá generování",
+    "planQuota": "Limit plánu",
+    "trialExpired": "Zkušební doba vypršela",
+    "trialExpiredDescription": "Vaše 14denní zkušební doba vypršela. Pro pokračování v používání AIsteinu si prosím vyberte některý z našich placených plánů."
   },
   "auth": {
     "continueWithGoogle": "Přihlásit se přes Google",

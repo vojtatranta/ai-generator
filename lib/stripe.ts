@@ -8,6 +8,8 @@ import {
 import {
   DEFAULT_PLAN,
   DEFAULT_PLAN_OBJECT,
+  FREE_PLAN_DURATION,
+  getPlanQuota,
   HIGHEST_PLAN,
 } from "@/constants/plan";
 import { getPlanRange } from "./utils";
@@ -27,20 +29,76 @@ export type PlanWithProductAndSubscription = {
   user: User;
 };
 
-export const getSureUserPlan =
-  async (): Promise<PlanWithProductAndSubscription> => {
-    const maybeResult = await getUserPlan();
-    if (!maybeResult) {
-      console.error("User plan not found, logging out");
-      throw new Error("User plan not found");
-    }
+export type SurePlanResult = PlanWithProductAndSubscription & {
+  planQuota: number | null;
+  numberOfThisMonthGenerations: number;
+  planExceeded: boolean;
+  trialExpired: boolean;
+};
 
-    return maybeResult;
+export const getSureUserPlan = async (): Promise<SurePlanResult> => {
+  const maybeResult = await getUserPlan();
+  if (!maybeResult) {
+    console.error("User plan not found, logging out");
+    throw new Error("User plan not found");
+  }
+
+  const numberOfThisMonthGenerations = await getUsedNumberOfGenerations(
+    maybeResult.user.id,
+  );
+
+  const planQuota = getPlanQuota(maybeResult.plan.nickname).orNull();
+
+  const trialExpired =
+    maybeResult.plan.id === DEFAULT_PLAN_OBJECT.id &&
+    new Date(maybeResult.subscription.created_at).getTime() +
+      FREE_PLAN_DURATION <
+      Date.now();
+
+  return {
+    ...maybeResult,
+    planQuota: getPlanQuota(maybeResult.plan.nickname).orNull(),
+    numberOfThisMonthGenerations,
+    planExceeded:
+      planQuota == null ? false : numberOfThisMonthGenerations >= planQuota,
+    trialExpired,
   };
+};
 
-export const getUsedNumberOfGenerations = async (userId: string) => {
+export const getSurePlanStateDescriptor = async (
+  userId: string,
+  supabaseClient: SupabaseClient<Database>,
+): Promise<SurePlanResult> => {
+  const numberOfThisMonthGenerations = await getUsedNumberOfGenerations(userId);
+  const plan = await getUserPlanByUserId(userId, supabaseClient);
+
+  if (!plan) {
+    throw new Error("User plan not found in getSurePlanStateDescriptor");
+  }
+
+  const planQuota = getPlanQuota(plan.plan.nickname).orNull();
+
+  const trialExpired =
+    plan.plan.id === DEFAULT_PLAN_OBJECT.id &&
+    new Date(plan.subscription.created_at).getTime() + FREE_PLAN_DURATION <
+      Date.now();
+
+  return {
+    ...plan,
+    planQuota: getPlanQuota(plan.plan.nickname).orNull(),
+    numberOfThisMonthGenerations,
+    planExceeded:
+      planQuota == null ? false : numberOfThisMonthGenerations >= planQuota,
+    trialExpired,
+  };
+};
+
+export const getUsedNumberOfGenerations = async (
+  userId: string,
+  client?: SupabaseClient<Database>,
+) => {
   const supabaseClient = await createSupabaseServerClient();
-  const result = await supabaseClient
+  const result = await (client ?? supabaseClient)
     .from("ai_results")
     .select("*", {
       count: "exact",
@@ -109,60 +167,56 @@ export const getUserPlan =
     const supabaseClient = await createSupabaseServerClient();
     const user = await getUser();
 
-    if (!user) {
-      console.error("User not found when getting user plan");
-      return null;
-    }
-
-    const [subscription, plans] = await Promise.all([
-      supabaseClient
-        .from("subscriptions")
-        .select("*")
-        .eq("user", user.id)
-        .eq("active", true)
-        .single(),
-      getAvailableProductPlans(),
-    ]);
-
-    if (!subscription.data) {
-      console.error(`Active subscription not found in the database ${user.id}`);
-      return null;
-    }
-
-    // if (subscription.data.is_admin) {
-    //   const plan =
-    //     plans.find(
-    //       (p) => p.product.name?.toLowerCase() === HIGHEST_PLAN.toLowerCase()
-    //     ) ?? null;
-
-    //   if (!plan) {
-    //     return null;
-    //   }
-
-    //   return { user, plan, subscription: subscription.data };
-    // }
-
-    const plan =
-      [...plans, DEFAULT_PLAN_OBJECT].find(
-        (p) =>
-          p.product?.name?.toLowerCase() ===
-          subscription.data.plan_name.toLocaleLowerCase(),
-      ) ?? null;
-
-    if (!plan) {
-      console.error(
-        "Plan not found in the stripe plan list",
-        subscription.data.plan_name,
-      );
-      return null;
-    }
-
-    return {
-      user,
-      plan,
-      subscription: subscription.data,
-    };
+    return getUserPlanByUserId(user.id, supabaseClient);
   };
+
+export const getUserPlanByUserId = async (
+  userId: string,
+  supabaseClient: SupabaseClient<Database>,
+): Promise<PlanWithProductAndSubscription | null> => {
+  const user = await getUser();
+
+  if (!user) {
+    console.error("User not found when getting user plan");
+    return null;
+  }
+
+  const [subscription, plans] = await Promise.all([
+    supabaseClient
+      .from("subscriptions")
+      .select("*")
+      .eq("user", user.id)
+      .eq("active", true)
+      .single(),
+    getAvailableProductPlans(),
+  ]);
+
+  if (!subscription.data) {
+    console.error(`Active subscription not found in the database ${user.id}`);
+    return null;
+  }
+
+  const plan =
+    [...plans, DEFAULT_PLAN_OBJECT].find(
+      (p) =>
+        p.product?.name?.toLowerCase() ===
+        subscription.data.plan_name.toLocaleLowerCase(),
+    ) ?? null;
+
+  if (!plan) {
+    console.error(
+      "Plan not found in the stripe plan list",
+      subscription.data.plan_name,
+    );
+    return null;
+  }
+
+  return {
+    user,
+    plan,
+    subscription: subscription.data,
+  };
+};
 
 export const getAvailableProductPlans = async () => {
   const supabaseClient = await createSupabaseServerClient();

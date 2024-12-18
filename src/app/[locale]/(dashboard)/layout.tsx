@@ -6,19 +6,22 @@ import { SidebarInset, SidebarProvider } from "@/web/components/ui/sidebar";
 import { SupabaseAuthContextProvider } from "@/web/lib/supabase-client";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Perfect Pick - Pick perfect products for your needs",
-  description:
-    "Perfect Pick is a product recommendation service that uses AI to suggest the best products for your needs. Create a quiz, answer a few questions, and get matched with products that are tailored to your preferences.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations();
+  return {
+    title:
+      "AIstein.cz -AI-generated content for social media, blogs, and e-shops.",
+    description:
+      "AIstein.cz - Create AI-generated content for social media, blogs, and e-shops. Set up your AIstein profile, choose an AI template, and write your content. With AIstein, you can generate content with just one click on the 'Generate content' button and you're done! AIstein is here for you to create content as quickly and efficiently as possible. With AIstein, you can generate content with just one click on the 'Generate content' button and you're done!",
+  };
 };
 
 export default async function DashboardLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
 }) {
   // Persisting the sidebar state in the cookie.
   const cookieStore = await cookies();

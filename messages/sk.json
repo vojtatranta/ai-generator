@@ -223,7 +223,13 @@
     "proPlanDescription": "Pro plán je pre používateľov, ktorí používajú AIstein na osobné účely.",
     "businessPlanDescription": "Business Plan je pre firmy, ktoré spravujú sociálne siete pre svojich klientov.",
     "quotaLabel": "vygenerovaných odpovedí za mesiac",
-    "perPeriod": "za mesiac"
+    "perPeriod": "za mesiac",
+    "planExceeded": "Prekročili ste limit generovania",
+    "planExpiredDescription": "Váš aktuálny plán má vyčerpaný limit generovania. Pre pokračovanie v generovaní prosím upgradujte svoj plán.",
+    "usedGenerations": "Použité generovania",
+    "planQuota": "Limit plánu",
+    "trialExpired": "Skúšobná doba vypršala",
+    "trialExpiredDescription": "Vaša 14-dňová skúšobná doba vypršala. Pre pokračovanie v používaní AIsteinu si prosím vyberte niektorý z našich platených plánov."
   },
   "auth": {
     "continueWithGoogle": "Prihlásiť sa cez Google",

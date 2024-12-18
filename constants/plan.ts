@@ -13,7 +13,7 @@ export const DISPLAYED_STRIPE_PLANS: string[] = [
 ];
 
 export const PLAN_QUOTAS = {
-  [DEFAULT_PLAN]: 100,
+  [DEFAULT_PLAN]: 200,
   [PRO_PLAN]: 100,
   [BUSINESS_PLAN]: 1000,
 };

@@ -6,7 +6,7 @@ import {
   DateRangePickerProvider,
 } from "@/web/components/date-range-picker";
 import PageContainer from "@/web/components/layout/page-container";
-import { RecentSales } from "./recent-sales";
+import { RecentGenerations } from "./recent-generations";
 import { Button } from "@/web/components/ui/button";
 import DrawingEinsteinPic from "../../../../../../public/ai-stein-drawinig.webp";
 import PostingEinsteinPic from "../../../../../../public/aistein-posting.webp";
@@ -26,9 +26,7 @@ import {
 } from "@/web/components/ui/tabs";
 import { getTranslations } from "next-intl/server";
 import { getSureUserPlan, getUsedNumberOfGenerations } from "@/lib/stripe";
-import { cn, getPlanRange } from "@/lib/utils";
 import Link from "next/link";
-import { Icons } from "@/components/icons";
 import { PROMPTS } from "@/constants/data";
 import { getPromptLink } from "@/lib/private-links";
 import { getPlanQuota } from "@/constants/plan";
@@ -39,14 +37,6 @@ export default async function OverViewPage() {
   const numberOfGenerations = await getUsedNumberOfGenerations(
     userData.user.id,
   );
-  const planRange = getPlanRange(userData.plan);
-
-  const remainingGenerations = planRange
-    ? planRange.to - (numberOfGenerations ?? 0)
-    : null;
-
-  const planExhausted =
-    remainingGenerations != null && remainingGenerations <= 0;
 
   return (
     <PageContainer scrollable>
@@ -188,28 +178,28 @@ export default async function OverViewPage() {
                   </Link>
                 </Card>
               </div>
-              {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <div className="col-span-4">
                   <BarGraph userId={userData.user.id} />
                 </div>
                 <Card className="col-span-4 md:col-span-3">
                   <CardHeader>
-                    <CardTitle>{t("overview.recentAnswers")}</CardTitle>
+                    <CardTitle>{t("overview.recentGenerations")}</CardTitle>
                     <CardDescription>
-                      {t("overview.recentAnswersDescription")}
+                      {t("overview.recentGenerationsDescription")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales userId={userData.user.id} />
+                    <RecentGenerations userId={userData.user.id} />
                   </CardContent>
                 </Card>
-                <div className="col-span-4">
-                <AreaGraph />
+                {/* <div className="col-span-4">
+                  <AreaGraph />
+                </div>
+                <div className="col-span-4 md:col-span-3">
+                  <PieGraph />
+                </div> */}
               </div>
-              <div className="col-span-4 md:col-span-3">
-                <PieGraph />
-              </div>
-              </div> */}
             </TabsContent>
           </Tabs>
         </div>

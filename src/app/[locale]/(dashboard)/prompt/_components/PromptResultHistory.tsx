@@ -49,16 +49,18 @@ export const PromptResultHistory = memo(function PromptResultHistory({
                     className="flex items-center space-x-2"
                   >
                     <div>
-                      <div className="flex items-center justify-center w-6 h-6 mr-2 bg-primary-foreground text-primary rounded-full">
-                        {index + 1}
+                      <div className="mb-1">
+                        <div className="inline-block items-center justify-center w-6 h-6 mr-2 text-center bg-primary-foreground text-primary rounded-full">
+                          {index + 1}
+                        </div>
+                        {Maybe.of(result.prompt ?? result.aiResult?.prompt)
+                          .andThen((userPrompt) => (
+                            <span className="text-sm text-gray-400">
+                              {userPrompt}
+                            </span>
+                          ))
+                          .orNull()}
                       </div>
-                      {Maybe.of(result.prompt ?? result.aiResult?.prompt)
-                        .andThen((userPrompt) => (
-                          <span className="text-sm text-gray-400">
-                            {userPrompt}
-                          </span>
-                        ))
-                        .orNull()}
 
                       {renderResult(result)}
                     </div>

@@ -5,6 +5,7 @@ import i18nMiddleware, { config as i18nConfig } from "./middlewares/i18n";
 import { routing } from "./i18n/routing";
 import {
   createUserDefaultSubscription,
+  getSurePlanStateDescriptor,
   getUserPlan,
   getUserSubscription,
 } from "@/lib/stripe";
@@ -85,10 +86,29 @@ export default async function authMiddleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const currentPlan = await getUserSubscription(user.id, supabase);
+  const currentPlan = await getSurePlanStateDescriptor(user.id, supabase);
   if (!currentPlan) {
     console.warn("User has no plan, creating default plan");
     await createUserDefaultSubscription(user.id, supabase);
+  }
+
+  try {
+    const descriptor = await getSurePlanStateDescriptor(user.id, supabase);
+
+    const subscriptionUrl = request.nextUrl.clone();
+    if (
+      (descriptor.trialExpired || descriptor.planExceeded) &&
+      !subscriptionUrl.pathname.includes("/subscription")
+    ) {
+      subscriptionUrl.pathname = "/subscription";
+      return NextResponse.redirect(subscriptionUrl);
+    }
+  } catch (error) {
+    console.error("Error getting sure plan state descriptor", error);
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.searchParams.set("callbackUrl", request.nextUrl.toString());
+    return NextResponse.redirect(loginUrl);
   }
 
   // User is authenticated, continue with the request

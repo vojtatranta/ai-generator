@@ -147,14 +147,14 @@ export const PromptQueryPage = memo(function PromptQueryPage({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-[1fr_auto] md:grid-cols-[2fr_auto] gap-4"
+          className="grid grid-cols-[1fr_auto] md:grid-cols-[2fr_auto] gap-2"
         >
           <Card className="h-full">
             <CardHeader>
               <CardTitle className="text-left text-2xl font-bold">
                 {t(prompt.title)}
               </CardTitle>
-              <CardDescription className="max-w-[500px]">
+              <CardDescription className="max-w-[480px]">
                 {t(prompt.description)}
               </CardDescription>
             </CardHeader>
@@ -186,11 +186,13 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                         name="length"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("prompt.resultLength")}</FormLabel>
+                            <FormLabel className="text-xs">
+                              {t("prompt.resultLength")}
+                            </FormLabel>
                             <FormControl>
                               <Input
                                 type="number"
-                                className="max-w-[150px]"
+                                className="max-w-[100px]"
                                 placeholder={t(
                                   "prompt.resultLengthPlaceholder",
                                 )}
@@ -210,11 +212,13 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                         name="locale"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("prompt.locale")}</FormLabel>
+                            <FormLabel className="text-xs">
+                              {t("prompt.locale")}
+                            </FormLabel>
                             <FormControl>
                               <Input
                                 type="text"
-                                className="max-w-[150px]"
+                                className="max-w-[100px]"
                                 placeholder={t("prompt.localePlaceholder")}
                                 {...field}
                               />
@@ -227,7 +231,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                         variant="primary"
                         type="submit"
                         className={cn("flex items-center space-x-2", {
-                          "opacity-50 cursor-not-allowed":
+                          "opacity-50 cursor-not-allowed text-nowrap":
                             form.formState.isSubmitting,
                         })}
                         disabled={
