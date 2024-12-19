@@ -3,6 +3,8 @@ import React from "react";
 import { getTranslations } from "next-intl/server";
 import { SearchParams } from "nuqs";
 import AssistantChatPage from "./_components/assistant-chat-page";
+import { getSureUserPlan } from "@/lib/stripe";
+import { FEATURES } from "@/constants/plan";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;

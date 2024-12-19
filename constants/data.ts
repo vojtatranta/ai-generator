@@ -1,4 +1,6 @@
+import { PlanWithProduct } from "@/lib/stripe";
 import { NavItem } from "@/web/types";
+import { DEFAULT_PLAN, DEFAULT_PLAN_OBJECT } from "./plan";
 
 export const POST_GENERATOR = "post-generator" as const;
 export const POST_IMAGE_GENERATOR = "image-social-post-generator" as const;
@@ -7,6 +9,14 @@ export const PROMPTS = {
   POST_GENERATOR,
   POST_IMAGE_GENERATOR,
 } as const;
+
+export const DEFAULT_LANGUAGE = "cs" as const;
+export const SUPPORTED_LANGUAGES = [
+  DEFAULT_LANGUAGE,
+  "sk",
+  "en",
+  "pl",
+] as const;
 
 export type PROMPTS_UNION = typeof POST_GENERATOR;
 
@@ -70,14 +80,14 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     isActive: false,
     items: [],
   },
-  // {
-  //   title: t("menu.questions"),
-  //   url: "/questions",
-  //   icon: "messageCircleQuestion",
-  //   shortcut: ["x", "x"],
-  //   isActive: false,
-  //   items: [],
-  // },
+  {
+    title: t("menu.chatAssistant"),
+    url: "/chat-assistant",
+    icon: "bot",
+    shortcut: ["c", "c"],
+    isActive: false,
+    items: [],
+  },
   // {
   //   title: t("menu.categories"),
   //   url: "/product-categories",
@@ -147,3 +157,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     ],
   },
 ];
+
+export const isDefaultPlan = (plan: PlanWithProduct) =>
+  plan.product.name.toLowerCase() === DEFAULT_PLAN.toLocaleLowerCase() ||
+  plan.id === DEFAULT_PLAN_OBJECT.id;

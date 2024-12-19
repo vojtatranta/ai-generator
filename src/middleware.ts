@@ -116,6 +116,6 @@ export default async function authMiddleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|.*\\..*).*)", "/(cs|en|sk)/:path*"],
+  matcher: ["/((?!api|_next|.*\\..*).*)", `/(cs|en|sk|pl)/:path*`],
 };
 // https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=709743336135-vcbk30pj2t6fumb7kg1r4qr98cvhki7t.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&code_challenge=GE3CdV-Fxr_hWQEqEIDjMxBvS0VlkkSNKT5BLaOlYtw&code_challenge_method=S256&scope=openid+profile+email

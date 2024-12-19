@@ -26,6 +26,7 @@ import {
 import z from "zod";
 import { PROMPTS } from "@/constants/data";
 import { Json } from "@/database.types";
+import { getLocale } from "next-intl/server";
 
 // Create context type
 type Context = {
@@ -151,13 +152,15 @@ export const subscriptionRouter = router({
         subscriptionId: z.number(),
         planIdToSubscribe: z.string(),
         currentDomain: z.string(),
+        locale: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
       const { planIdToSubscribe, currentDomain } = input;
+
       try {
-        // @ts-expect-error: strinage error likely due to typing
         const result = await stripe.checkout.sessions.create({
+          // @ts-expect-error: strinage error likely due to typing
           return_url: `${currentDomain}/api/stripe-webhook?checkoutId={CHECKOUT_SESSION_ID}&planId=${planIdToSubscribe}&userId=${ctx.user.id}&subscriptionId=${input.subscriptionId}`,
           payment_method_types: ["card"],
           customer_email: ctx.user.email,
@@ -174,6 +177,7 @@ export const subscriptionRouter = router({
             planId: planIdToSubscribe,
           },
           mode: "subscription",
+          locale: input.locale ?? (await getLocale()),
         });
 
         return {

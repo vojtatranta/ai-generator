@@ -8,7 +8,9 @@ import {
 import {
   DEFAULT_PLAN,
   DEFAULT_PLAN_OBJECT,
+  FEATURES,
   FREE_PLAN_DURATION,
+  getPlanFeatures,
   getPlanQuota,
   HIGHEST_PLAN,
 } from "@/constants/plan";
@@ -16,6 +18,7 @@ import { getPlanRange } from "./utils";
 import { Database } from "@/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { addDays } from "date-fns";
+import { Maybe } from "actual-maybe";
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -34,6 +37,7 @@ export type SurePlanResult = PlanWithProductAndSubscription & {
   numberOfThisMonthGenerations: number;
   planExceeded: boolean;
   trialExpired: boolean;
+  features: { [K in keyof typeof FEATURES]?: boolean };
 };
 
 export const getSureUserPlan = async (): Promise<SurePlanResult> => {
@@ -43,26 +47,8 @@ export const getSureUserPlan = async (): Promise<SurePlanResult> => {
     throw new Error("User plan not found");
   }
 
-  const numberOfThisMonthGenerations = await getUsedNumberOfGenerations(
-    maybeResult.user.id,
-  );
-
-  const planQuota = getPlanQuota(maybeResult.plan.nickname).orNull();
-
-  const trialExpired =
-    maybeResult.plan.id === DEFAULT_PLAN_OBJECT.id &&
-    new Date(maybeResult.subscription.created_at).getTime() +
-      FREE_PLAN_DURATION <
-      Date.now();
-
-  return {
-    ...maybeResult,
-    planQuota: getPlanQuota(maybeResult.plan.nickname).orNull(),
-    numberOfThisMonthGenerations,
-    planExceeded:
-      planQuota == null ? false : numberOfThisMonthGenerations >= planQuota,
-    trialExpired,
-  };
+  const supabaseClient = await createSupabaseServerClient();
+  return getSurePlanStateDescriptor(maybeResult.user.id, supabaseClient);
 };
 
 export const getSurePlanStateDescriptor = async (
@@ -90,6 +76,13 @@ export const getSurePlanStateDescriptor = async (
     planExceeded:
       planQuota == null ? false : numberOfThisMonthGenerations >= planQuota,
     trialExpired,
+    features: getPlanFeatures(plan.plan.nickname).reduce(
+      (acc, feature) => ({
+        ...acc,
+        [feature]: true,
+      }),
+      {},
+    ),
   };
 };
 

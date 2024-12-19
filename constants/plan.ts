@@ -32,6 +32,26 @@ export const FREE_PLAN_DURATION = 1000 * 60 * 60 * 24 * 14; // 14 days
 
 export const DEFAULT_PLAN_ID = "default-plan-id";
 
+export const FEATURES = {
+  AI_CHAT: "AI_CHAT",
+} as const;
+
+export const PLAN_FEATURES = {
+  [DEFAULT_PLAN]: [FEATURES.AI_CHAT],
+  [PRO_PLAN]: [],
+  [BUSINESS_PLAN]: [FEATURES.AI_CHAT],
+};
+
+export const getPlanFeatures = (planNickname: string | null) => {
+  return Object.entries(PLAN_FEATURES)
+    .filter(
+      ([plan]) =>
+        plan.toLocaleLowerCase() === planNickname?.toLocaleLowerCase(),
+    )
+    .map(([, features]) => features)
+    .flat();
+};
+
 export const DEFAULT_PLAN_OBJECT = {
   id: DEFAULT_PLAN_ID,
   object: "plan",
@@ -50,6 +70,7 @@ export const DEFAULT_PLAN_OBJECT = {
   metadata: {
     ai_generator: "1",
     active: "1",
+    description_key: "defaultPlanDescription",
   },
   product: {
     id: DEFAULT_PLAN_ID,
@@ -70,6 +91,7 @@ export const DEFAULT_PLAN_OBJECT = {
     metadata: {
       ai_generator: "1",
       active: "1",
+      description_key: "defaultPlanDescription",
     },
   },
   tiers: [],

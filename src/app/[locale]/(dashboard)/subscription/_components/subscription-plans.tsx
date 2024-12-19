@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/card";
 import { If, Then } from "@/components/ui/condition";
 import { Icons } from "@/components/icons";
+import { isDefaultPlan } from "@/constants/data";
 
 export default function SubscriptionPlans({
   activeSubscriptions,
@@ -154,9 +155,18 @@ export default function SubscriptionPlans({
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {t(plan.product.description)}
-                      </p>
+                      <If
+                        condition={Boolean(
+                          "description_key" in plan.product.metadata &&
+                            plan.product.metadata["description_key"],
+                        )}
+                      >
+                        <Then>
+                          <p className="text-sm text-muted-foreground">
+                            {t(plan.product.metadata["description_key"])}
+                          </p>
+                        </Then>
+                      </If>
                       {getPlanQuota(plan.nickname)
                         .andThen((quota) => (
                           <p className="mt-8 text-xs text-muted-foreground">
@@ -174,27 +184,33 @@ export default function SubscriptionPlans({
                       <div className="text-xs text-muted-foreground">
                         {t("subscription.perPeriod")}
                       </div>
-                      <Button
-                        disabled={
-                          userPlan?.plan.id === plan.id || mutation.isLoading
-                        }
-                        onClick={async () => {
-                          const result = await mutation.mutateAsync({
-                            planIdToSubscribe: plan.id,
-                            currentDomain: window.location.origin,
-                            subscriptionId: userPlan.subscription.id,
-                          });
+                      <If condition={!isDefaultPlan(plan)}>
+                        <Then>
+                          <Button
+                            disabled={
+                              userPlan?.plan.id === plan.id ||
+                              mutation.isLoading
+                            }
+                            onClick={async () => {
+                              const result = await mutation.mutateAsync({
+                                planIdToSubscribe: plan.id,
+                                locale,
+                                currentDomain: window.location.origin,
+                                subscriptionId: userPlan.subscription.id,
+                              });
 
-                          setPaymentStripeObject({
-                            clientSessionSecret: String(
-                              result.clientSessionSecret,
-                            ),
-                            publishableApiKey: result.publishableApiKey,
-                          });
-                        }}
-                      >
-                        {t("subscription.subscribeButtonText")}
-                      </Button>
+                              setPaymentStripeObject({
+                                clientSessionSecret: String(
+                                  result.clientSessionSecret,
+                                ),
+                                publishableApiKey: result.publishableApiKey,
+                              });
+                            }}
+                          >
+                            {t("subscription.subscribeButtonText")}
+                          </Button>
+                        </Then>
+                      </If>
                     </div>
                   </div>
                 ))

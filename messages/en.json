@@ -3,6 +3,9 @@
     "overview": "Overview",
     "motto": "Create easily!"
   },
+  "defaultPlanDescription": "Default plan gives you 14 days free trial to test all AIstein features.",
+  "proPlanDescription": "Pro plan is for users who use AIstein for personal purposes.",
+  "businessPlanDescription": "Business Plan is for companies that maintain social media for their clients.",
   "menu": {
     "dashboard": "Dashboard",
     "users": "Users",
@@ -172,7 +175,7 @@
   "subscription": {
     "allSubscriptions": "All subscriptions",
     "plansHeading": "Subscription plans",
-    "plansDescription": "Choose a plan that works best for you",
+    "plansDescription": "Choose a plan that best suits your needs",
     "currentPlan": "Current plan",
     "cancelSubscriptionButton": "Cancel subscription",
     "subscribeButtonText": "Subscribe",
@@ -184,10 +187,7 @@
     "databaseError": "An error occurred while writing changes to the database.",
     "quotaLabel": "generated responses per month",
     "perPeriod": "per month",
-    "defaultPlanDescription": "Default plan gives you 14 days free trial to test all AIstein features.",
-    "proPlanDescription": "Pro plan is for users who use AIstein for personal purposes.",
-    "businessPlanDescription": "Business Plan is for companies that maintain social media for their clients.",
-    "planExceeded": "Generation limit exceeded",
+    "planExceeded": "You have exceeded the generation limit",
     "planExpiredDescription": "Your current plan has reached its generation limit. Please upgrade your plan to continue generating.",
     "usedGenerations": "Used generations",
     "planQuota": "Plan quota",
@@ -195,7 +195,7 @@
     "trialExpiredDescription": "Your 14-day trial period has expired. Please choose one of our paid plans to continue using AIstein."
   },
   "assistantChat": {
-    "title": "AI Chat - Your Content Creation Assistant",
+    "title": "AI Chat - Your Personal Content Creation Assistant",
     "description": "Create content for your social media or website effortlessly",
     "sendMessage": "Send message",
     "sendMessagePlaceholder": "Type your message here..."
@@ -248,6 +248,7 @@
   "breadCrumbs": {
     "profile": "Profile",
     "overview": "Overview",
+    "chat-assistant": "AI Chat - Your Personal Content Creation Assistant",
     "prompt": "Prompt",
     "prompts": "AI Prompts",
     "subscription": "Subscription",
@@ -260,7 +261,7 @@
       "overview": "Overview",
       "users": "Users",
       "subscription": "Subscription",
-      "paymentSuccess": "Payment Success",
+      "paymentSuccess": "Payment Successful",
       "profile": "Profile"
     },
     "auth": {
@@ -270,7 +271,10 @@
     "promptTemplates": {
       "promptTemplatesMetaTitle": "AIstein - Templates"
     },
-    "promptMetadataTitle": "AIstein - Content Generation"
+    "promptMetadataTitle": "AIstein - Content Generation",
+    "assistantChat": {
+      "assistantChatMetaTitle": "AI Chat - Your Content Creation Assistant"
+    }
   },
   "copyButton": {
     "copy": "Copy",
@@ -318,5 +322,30 @@
         "minChars": "Must be at least {count} characters"
       }
     }
+  },
+  "aiChatExampleMessages": {
+    "1-example": {
+      "prompt": "Generate an image of a modern cafe in Prague in minimalist style",
+      "description": "This example shows how you can generate images with specific artistic style and location."
+    },
+    "2-example": {
+      "prompt": "Create an idea for an Instagram post about a new vegan menu in a restaurant",
+      "description": "This example will help you create engaging social media content focused on gastronomy."
+    },
+    "3-example": {
+      "prompt": "Generate a product photography image of natural cosmetics",
+      "description": "Example of how to create professional-looking product photography."
+    },
+    "4-example": {
+      "prompt": "Design a series of 3 LinkedIn posts about the importance of digital transformation",
+      "description": "This example demonstrates how to create a coherent series of posts for a professional network."
+    }
+  },
+  "userNav": {
+    "upgradeToPro": "Upgrade to Pro",
+    "account": "Account",
+    "billing": "Billing",
+    "notifications": "Notifications",
+    "logout": "Log out"
   }
 }

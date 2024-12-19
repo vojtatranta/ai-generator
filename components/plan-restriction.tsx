@@ -1,6 +1,8 @@
-import { getUserPlan, PlanWithProduct } from "@/lib/stripe";
+import { FEATURES } from "@/constants/plan";
+import { getUserPlan, PlanWithProduct, SurePlanResult } from "@/lib/stripe";
 import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
 import { getPlanRange } from "@/lib/utils";
+import { memo } from "react";
 
 type PlanRestrictionChildren =
   | React.ReactNode
@@ -84,3 +86,23 @@ export async function PlanRestrictionWrapper({
     </PlanRestriction>
   );
 }
+
+export const PlanFeatureLimitation = memo(function PlanFeatureLimitation({
+  forbiddenFallback,
+  planDescr,
+  requestedFeatures,
+  children,
+}: {
+  forbiddenFallback: React.ReactNode;
+  planDescr: SurePlanResult;
+  requestedFeatures: (keyof typeof FEATURES)[];
+  children: React.ReactNode;
+}) {
+  if (
+    requestedFeatures.some((feature) => !Boolean(planDescr.features[feature]))
+  ) {
+    return forbiddenFallback;
+  }
+
+  return children;
+});

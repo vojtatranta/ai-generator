@@ -4,7 +4,7 @@ import { Heading } from "@/web/components/ui/heading";
 import { Separator } from "@/web/components/ui/separator";
 import { searchParamsCache } from "@/web/lib/searchparams";
 import { cn } from "@/web/lib/utils";
-import { Plus } from "lucide-react";
+import { CircleAlert, Plus } from "lucide-react";
 import Link from "next/link";
 import PromptTemplatesTable from "./assistant-chat-container";
 import { getTranslations } from "next-intl/server";
@@ -17,11 +17,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AssistantAIChatContainer } from "./assistant-chat-container/AssistantChatContainer";
+import { PlanFeatureLimitation } from "@/components/plan-restriction";
+import { getSureUserPlan } from "@/lib/stripe";
+import { FEATURES } from "@/constants/plan";
 
 type TSocketsListingPage = {};
 
 export default async function AssistantChatPage({}: TSocketsListingPage) {
   const t = await getTranslations();
+  const surePlanDesc = await getSureUserPlan();
 
   return (
     <PageContainer stretch>
@@ -42,7 +46,36 @@ export default async function AssistantChatPage({}: TSocketsListingPage) {
             {t("promptTemplate.listing.addNew")}
           </Link> */}
 
-        <AssistantAIChatContainer />
+        <PlanFeatureLimitation
+          planDescr={surePlanDesc}
+          requestedFeatures={[FEATURES.AI_CHAT]}
+          forbiddenFallback={
+            <div className="flex items-center mt-20 justify-center min-h-full w-full h-full">
+              <div className="bg-destructive p-4 text-primary-foreground rounded-md max-w-[650px]">
+                <div className="flex flex-row items-center gap-2">
+                  <CircleAlert className="h-12 w-12 mr-2" />
+                  <div className="flex flex-col gap-2">
+                    <div className="font-medium">
+                      {t(
+                        `subscription.planDoesntHaveFeature.${FEATURES.AI_CHAT}`,
+                      )}
+                    </div>
+                    <div>
+                      <Link
+                        href="/subscription"
+                        className="text-primary-foreground underline"
+                      >
+                        {t("subscription.manageSubscriptionToupgrade")}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        >
+          <AssistantAIChatContainer />
+        </PlanFeatureLimitation>
       </div>
     </PageContainer>
   );

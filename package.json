@@ -60,6 +60,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "19.0.2",
     "@types/sanitize-html": "^2.13.0",
+    "@vercel/functions": "^1.5.2",
     "@vis.gl/react-google-maps": "^1.4.2",
     "actual-maybe": "^0.4.1",
     "ai": "^2.2.31",

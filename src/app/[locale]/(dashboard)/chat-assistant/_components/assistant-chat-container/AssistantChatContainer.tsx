@@ -15,6 +15,8 @@ import {
   UserMessage,
 } from "./AssistantChat";
 import { AssistantChatPromptForm } from "./AssistantChatForm";
+import { useTranslations } from "next-intl";
+import { If, Then } from "@/components/ui/condition";
 
 export function renderMessageContent(
   message:
@@ -147,7 +149,7 @@ export const Chat = memo(function Chat({
           <div key={`${String(message.content)}-${index}`}>
             {content}
             {errorDescriptor?.messageIndex === index && (
-              <div className="my-2 max-w-xs rounded border bg-red-900 p-2 text-xs dark:border-red-700 dark:bg-red-100 dark:text-red-800 md:-ml-4">
+              <div className="my-2 max-w-xs rounded border bg-destructive p-2 text-xs dark:border-red-700 dark:bg-red-100 dark:text-red-800 md:-ml-4">
                 <CircleAlert className="mr-2 inline-block h-4 w-4" />
                 {errorDescriptor.error}
               </div>
@@ -201,6 +203,58 @@ export function getErrorDetails(error: unknown): {
   };
 }
 
+const ExampleMessage = memo(function ExampleMessage({
+  prompt,
+  description,
+  onSubmit,
+}: {
+  prompt: string;
+  description?: string;
+  onSubmit: (prompt: string) => void;
+}) {
+  return (
+    <div className="block">
+      <button
+        className="inline-flex font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start"
+        type="button"
+        onClick={(event) => {
+          event.preventDefault();
+          onSubmit(prompt);
+        }}
+      >
+        <span className="font-medium">{prompt}</span>
+        <span className="text-muted-foreground">{description}</span>
+      </button>
+    </div>
+  );
+});
+
+const useExampleMessages = () => {
+  const t = useTranslations("aiChatExampleMessages");
+  return [
+    {
+      id: "1-example",
+      prompt: t("1-example.prompt"),
+      description: t("1-example.description"),
+    },
+    {
+      id: "2-example",
+      prompt: t("2-example.prompt"),
+      description: t("2-example.description"),
+    },
+    {
+      id: "3-example",
+      prompt: t("3-example.prompt"),
+      description: t("3-example.description"),
+    },
+    {
+      id: "4-example",
+      prompt: t("4-example.prompt"),
+      description: t("4-example.description"),
+    },
+  ];
+};
+
 export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   description,
   imageSupport,
@@ -210,6 +264,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   imageSupport?: boolean;
   variables?: Record<string, any>;
 }) {
+  const exampleMessages = useExampleMessages();
   const [input, setInput] = useState("");
   const [toolCalls, setToolCalls] = useState<ChatCompletionChunk[]>([]);
   const [image, setImage] = useState("");
@@ -239,7 +294,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
           setThreadId(headerValue);
         }
         const contentType = res.headers.get("content-type");
-        console.log("content", contentType);
+
         if (contentType && contentType.includes("text/event-stream")) {
           return readableStreamFromSSEResponse(res, abortController);
         } else {
@@ -322,6 +377,22 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
 
             <div className="fixed inset-x-0 bottom-0 w-full to-50% duration-300 ease-in-out animate-in dark:from-background/10 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
               <div className="mx-auto sm:max-w-2xl sm:px-4">
+                <If condition={messages.length === 0}>
+                  <Then>
+                    <div className="grid sm:grid-cols-2 gap-2 w-full mb-2">
+                      {exampleMessages.map((message) => (
+                        <ExampleMessage
+                          key={message.id}
+                          prompt={message.prompt}
+                          description={message.description}
+                          onSubmit={(content: string) => {
+                            send([{ role: "user", content }]);
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </Then>
+                </If>
                 <div className="space-y-4 border-t bg-background py-2 shadow-lg sm:rounded-t-xl sm:border sm:px-4 md:py-4">
                   <AssistantChatPromptForm
                     input={input}

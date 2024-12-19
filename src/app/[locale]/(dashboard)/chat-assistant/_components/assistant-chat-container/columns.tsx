@@ -40,7 +40,7 @@ export const usePromptTemplatesColumns = () => {
         <Link href={`/prompt/${row.original.id}`}>
           <Button type="button" size="sm" className="mx-4">
             <Icons.wandSparkles className="h-4 w-4 mr-2" />
-            <span className="text-nowrap">
+            <span className="whitespace-nowrap">
               {t("promptTemplates.tryPrompt")}
             </span>
           </Button>
@@ -51,7 +51,7 @@ export const usePromptTemplatesColumns = () => {
       accessorKey: "title",
       header: t("promptTemplates.listing.columns.title"),
       cell: ({ row }) => (
-        <div className="text-nowrap">
+        <div className="whitespace-nowrap">
           <CopyableText>{t(row.original.title)}</CopyableText>
         </div>
       ),

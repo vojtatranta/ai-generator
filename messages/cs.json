@@ -1,6 +1,6 @@
 {
   "assistantChat": {
-    "title": "AI chat - váš asistent pro tvorbu obsahu",
+    "title": "AI chat - váš osobní asistent pro tvorbu obsahu",
     "description": "Vytvářejte obsah pro vaše sociální sítě nebo pro vaše internetové stránky",
     "sendMessage": "Odeslat zprávu",
     "sendMessagePlaceholder": "Napište vaši zprávu..."
@@ -16,6 +16,7 @@
     "dashboard": "Přehled",
     "users": "Uživatelé",
     "promptTemplates": "AI šablony",
+    "chatAssistant": "AI chat",
     "account": {
       "title": "Účet",
       "profile": "Profil",
@@ -187,6 +188,7 @@
     "currentPlan": "Aktuální plán",
     "cancelSubscriptionButton": "Zrušit předplatné",
     "subscribeButtonText": "Předplatit",
+    "upgradeButtonText": "Upgradovat",
     "successToast": "Úspěšně jste se přihlásili k plánu",
     "notAuthorized": "Nemáte oprávnění zobrazit tuto stránku",
     "noSubscriptionIdReturned": "Nebylo vráceno ID předplatného Stripe",
@@ -194,9 +196,13 @@
     "subscriptionNotPaid": "Platba nebyla úspěšná. Prosím zkuste to znovu později.",
     "databaseError": "Při zápisu změn do databáze došlo k chybě.",
     "planExceeded": "Překročili jste limit generování",
-    "planExpiredDescription": "Váš současný plán má vyčerpaný limit generování. Pro pokračování v generování prosím upgradujte svůj plán.",
+    "planExpiredDescription": "Váš aktuální plán dosáhl svého limitu generování. Pro pokračování v generování prosím upgradujte svůj plán.",
     "usedGenerations": "Použitá generování",
-    "planQuota": "Limit plánu",
+    "planQuota": "Kvóta plánu",
+    "planDoesntHaveFeature": {
+      "AI_CHAT": "Váš aktuální plán nemá přístup k AI chatu. Pro získání přístupu prosím upgradujte svůj plán."
+    },
+    "manageSubscriptionToupgrade": "Spravovat předplatné a upgradovat",
     "trialExpired": "Zkušební doba vypršela",
     "trialExpiredDescription": "Vaše 14denní zkušební doba vypršela. Pro pokračování v používání AIsteinu si prosím vyberte některý z našich placených plánů."
   },
@@ -350,6 +356,24 @@
       "description": "Zobrazení celkového počtu návštěvníků za posledních 6 měsíců",
       "trendingUp": "Trend roste o {value}% tento měsíc",
       "dateRange": "Leden - Červen 2024"
+    }
+  },
+  "aiChatExampleMessages": {
+    "1-example": {
+      "prompt": "Vygeneruj mi obrázek moderní kavárny v Praze ve stylu minimalismu",
+      "description": "Tento příklad ukazuje, jak můžete generovat obrázky s konkrétním uměleckým stylem a lokací."
+    },
+    "2-example": {
+      "prompt": "Vytvoř mi nápad na Instagram post o novém veganském menu v restauraci",
+      "description": "Tento příklad vám pomůže vytvořit poutavý obsah pro sociální sítě zaměřený na gastronomii."
+    },
+    "3-example": {
+      "prompt": "Vygeneruj mi obrázek produktové fotografie přírodní kosmetiky",
+      "description": "Ukázka, jak vytvořit profesionálně vypadající produktovou fotografii."
+    },
+    "4-example": {
+      "prompt": "Navrhni sérii 3 příspěvků na LinkedIn o důležitosti digitální transformace",
+      "description": "Tento příklad demonstruje, jak vytvořit souvislou sérii příspěvků na profesní síť."
     }
   }
 }

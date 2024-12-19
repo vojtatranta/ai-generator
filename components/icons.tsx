@@ -48,6 +48,7 @@ import {
   Copy,
   Atom,
   BadgeCheck,
+  Bot,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -65,6 +66,7 @@ export const Icons = {
   copy: Copy,
   badgeCheck: BadgeCheck,
   atom: Atom,
+  bot: Bot,
   package: Package,
   keyboard: KeyboardIcon,
   wandSparkles: WandSparkles,
