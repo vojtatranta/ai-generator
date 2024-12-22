@@ -9,8 +9,9 @@ import {
   getUserPlan,
   getUserSubscription,
 } from "@/lib/stripe";
+import { getSubscriptionLink } from "@/lib/private-links";
 
-const basePaths = ["/login", "/auth", "/answer"];
+const basePaths = ["/", "/app/login", "/app/auth"];
 const locales = routing.locales;
 
 function isPublicPath(path: string): boolean {
@@ -100,7 +101,7 @@ export default async function authMiddleware(request: NextRequest) {
       (descriptor.trialExpired || descriptor.planExceeded) &&
       !subscriptionUrl.pathname.includes("/subscription")
     ) {
-      subscriptionUrl.pathname = "/subscription";
+      subscriptionUrl.pathname = getSubscriptionLink();
       return NextResponse.redirect(subscriptionUrl);
     }
   } catch (error) {

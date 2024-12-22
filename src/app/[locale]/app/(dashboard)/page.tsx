@@ -1,3 +1,4 @@
+import { getBaseAppLink } from "@/lib/private-links";
 import { getUser } from "@/web/lib/supabase-server";
 import { redirect } from "next/navigation";
 
@@ -7,6 +8,6 @@ export default async function Dashboard() {
   if (!userWithRoles) {
     return redirect("/login");
   } else {
-    redirect("/overview");
+    redirect(getBaseAppLink());
   }
 }

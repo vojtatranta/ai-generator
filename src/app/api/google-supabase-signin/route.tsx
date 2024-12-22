@@ -5,6 +5,7 @@ import {
   createUserDefaultSubscription,
   getUserSubscription,
 } from "@/lib/stripe";
+import { getBaseAppLink } from "@/lib/private-links";
 
 export async function GET(request: NextRequest) {
   console.log("BUUUM");
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
     await createUserDefaultSubscription(data.user.id, supabase);
   }
 
-  const redirectUrl = new URL(callbackUrl ?? "/overview", request.url);
+  const redirectUrl = new URL(callbackUrl ?? getBaseAppLink(), request.url);
   return NextResponse.redirect(redirectUrl.toString());
 }
 

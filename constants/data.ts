@@ -1,6 +1,7 @@
 import { PlanWithProduct } from "@/lib/stripe";
 import { NavItem } from "@/web/types";
 import { DEFAULT_PLAN, DEFAULT_PLAN_OBJECT } from "./plan";
+import { icons } from "lucide-react";
 
 export const POST_GENERATOR = "post-generator" as const;
 export const POST_IMAGE_GENERATOR = "image-social-post-generator" as const;
@@ -213,3 +214,8 @@ export const getNavItems = (
 export const isDefaultPlan = (plan: PlanWithProduct) =>
   plan.product.name.toLowerCase() === DEFAULT_PLAN.toLocaleLowerCase() ||
   plan.id === DEFAULT_PLAN_OBJECT.id;
+
+export const CompanyInfo = {
+  name: "AIstein",
+  logo: icons.Atom,
+};

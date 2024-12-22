@@ -21,5 +21,5 @@ export const getSubscriptionLink = (): string => {
 };
 
 export const getBaseAppLink = (): string => {
-  return "/app";
+  return "/app/overview";
 };

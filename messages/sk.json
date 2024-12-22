@@ -392,5 +392,114 @@
     "shareOnFacebook": "Zdieľať na Facebooku",
     "shareOnLinkedin": "Zdieľať na LinkedIn"
   },
-  "generatedbyAIStein": "Vygenerované pomocou AIstein"
+  "generatedbyAIStein": "Vygenerované pomocou AIstein",
+  "landingPage": {
+    "navigation": {
+      "home": "Domov",
+      "features": "Funkcie",
+      "pricing": "Cenník",
+      "contact": "Kontakt",
+      "openApp": "Otvoriť AIstein"
+    },
+    "hero": {
+      "title": "Vytvárajte obsah rýchlejšie s AI",
+      "description": "Generujte príspevky na sociálne siete, články a obrázky v priebehu sekúnd s AI platformou AIstein",
+      "getStarted": "Začnite zadarmo",
+      "watchDemo": "Pozrieť demo"
+    },
+    "features": {
+      "title": "Všetko, čo potrebujete pre tvorbu obsahu",
+      "aiPost": {
+        "title": "AI generovanie príspevkov",
+        "description": "Generujte pútavé príspevky na sociálne siete s AI, ktorá rozumie vášmu štýlu"
+      },
+      "imageCreation": {
+        "title": "Tvorba obrázkov",
+        "description": "Vytvárajte vlastné obrázky pre vaše príspevky pomocou našej AI technológie"
+      },
+      "articleWriting": {
+        "title": "Písanie článkov",
+        "description": "Píšte a sumarizujte články automaticky s pomocou AI"
+      }
+    },
+    "howItWorks": {
+      "title": "Ako AIstein funguje",
+      "step1": {
+        "title": "Vyberte si úlohu",
+        "description": "Vyberte si z viacerých nástrojov na generovanie obsahu pomocou AI"
+      },
+      "step2": {
+        "title": "Popíšte vaše potreby",
+        "description": "Poskytnite krátky popis alebo nahrajte obrázok"
+      },
+      "step3": {
+        "title": "Získajte výsledky",
+        "description": "Dostanete AI-generovaný obsah v priebehu sekúnd"
+      }
+    },
+    "pricing": {
+      "title": "Jednoduchý, transparentný cenník",
+      "starter": {
+        "title": "Starter",
+        "price": "0€",
+        "period": "Navždy zadarmo",
+        "features": {
+          "generations": "20 AI generovaní/mesiac",
+          "templates": "Základné šablóny",
+          "support": "Komunitná podpora"
+        }
+      },
+      "pro": {
+        "title": "Pro",
+        "price": "29€",
+        "period": "mesačne",
+        "features": {
+          "generations": "Neobmedzené generovanie",
+          "templates": "Premium šablóny",
+          "support": "Prioritná podpora"
+        }
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "price": "Individuálne",
+        "period": "Kontaktujte obchod",
+        "features": {
+          "solutions": "Vlastné riešenia",
+          "api": "API prístup",
+          "support": "Dedikovaná podpora"
+        }
+      },
+      "getStarted": "Začať",
+      "contactSales": "Kontaktovať obchod"
+    },
+    "contact": {
+      "title": "Kontaktujte nás",
+      "email": {
+        "title": "Email",
+        "value": "support@aistein.com"
+      },
+      "phone": {
+        "title": "Telefón",
+        "value": "+1 (555) 123-4567"
+      },
+      "form": {
+        "name": "Meno",
+        "email": "Email",
+        "message": "Správa",
+        "submit": "Odoslať správu"
+      }
+    },
+    "cta": {
+      "title": "Začnite vytvárať lepší obsah už dnes",
+      "description": "Pridajte sa k tisícom marketérov, ktorí šetria čas s AIstein",
+      "button": "Vyskúšajte AIstein zadarmo"
+    },
+    "footer": {
+      "links": {
+        "terms": "Podmienky",
+        "privacy": "Súkromie",
+        "contact": "Kontakt"
+      }
+    }
+  }
 }

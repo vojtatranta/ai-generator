@@ -14,6 +14,7 @@ import GoogleSignInButton from "./google-auth-button";
 import { Button } from "@/web/components/ui/button";
 import { User } from "@/web/lib/supabase-server";
 import { useSignOut } from "@/web/lib/use-sign-out";
+import { getBaseAppLink } from "@/lib/private-links";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Enter a valid email address" }),
@@ -32,7 +33,7 @@ export default function UserRegisterForm({
   const { signOut } = useSignOut({
     redirectTo: shareInvitationId
       ? `/invitation-accept/${shareInvitationId}`
-      : "/overview",
+      : getBaseAppLink(),
   });
 
   const searchParams = useSearchParams();
@@ -53,9 +54,6 @@ export default function UserRegisterForm({
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        // redirectTo: shareInvitationId
-        //   ? `/invitation-accept/${shareInvitationId}`
-        //   : callbackUrl ?? "/overview",
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
@@ -69,21 +67,13 @@ export default function UserRegisterForm({
     if (data) {
       return redirect(data.url);
     }
-
-    // router.push(callbackUrl ?? "/dashboard");
-
-    // signIn("google", {
-    //   callbackUrl: shareInvitationId
-    //     ? `/confirm-invitation-acceptance/${shareInvitationId}`
-    //     : callbackUrl ?? "/overview",
-    // });
   };
 
   const onSubmit = async (data: UserFormValue) => {
     startTransition(() => {
       signIn("credentials", {
         email: data.email,
-        callbackUrl: callbackUrl ?? "/overview",
+        callbackUrl: callbackUrl ?? getBaseAppLink(),
       });
       toast.success("Signed In Successfully!");
     });

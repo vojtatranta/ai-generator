@@ -29,6 +29,8 @@ export const getPlanQuota = (planNickname: string | null) =>
   );
 
 export const FREE_PLAN_DURATION = 1000 * 60 * 60 * 24 * 14; // 14 days
+export const FREE_TRIAL_DURATION_IN_DAYS =
+  FREE_PLAN_DURATION / 1000 / 60 / 60 / 24;
 
 export const DEFAULT_PLAN_ID = "default-plan-id";
 

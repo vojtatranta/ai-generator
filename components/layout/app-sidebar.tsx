@@ -33,7 +33,7 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/web/components/ui/sidebar";
-import { getNavItems } from "@/web/constants/data";
+import { CompanyInfo, getNavItems } from "@/web/constants/data";
 import {
   BadgeCheck,
   Bell,
@@ -53,11 +53,6 @@ import { User } from "@/lib/supabase-server";
 import { useTranslations } from "next-intl";
 import { getProfileLink, getSubscriptionLink } from "@/lib/private-links";
 
-export const company = {
-  name: "AIstein",
-  logo: icons.Atom,
-};
-
 export default function AppSidebar({ user }: { user: User }) {
   const pathname = usePathname();
   const { signOut } = useSignOut();
@@ -70,10 +65,10 @@ export default function AppSidebar({ user }: { user: User }) {
       <SidebarHeader>
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground ">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <company.logo className="size-4" />
+            <CompanyInfo.logo className="size-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{company.name}</span>
+            <span className="truncate font-semibold">{CompanyInfo.name}</span>
             <span className="truncate text-xs">{t("appSidebar.motto")}</span>
           </div>
         </div>
