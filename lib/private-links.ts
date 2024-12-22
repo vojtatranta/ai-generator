@@ -2,7 +2,7 @@ import { AI_CHAT_PROMPT_SLUG } from "@/constants/data";
 
 export const getPromptLink = (promptSlug: string): string => {
   if (promptSlug === AI_CHAT_PROMPT_SLUG) {
-    return "/app/chat-assistant";
+    return getChatAssistantLink();
   }
 
   return `/app/prompt/${promptSlug}`;
@@ -22,4 +22,12 @@ export const getSubscriptionLink = (): string => {
 
 export const getBaseAppLink = (): string => {
   return "/app/overview";
+};
+
+export const getChatAssistantLink = (): string => {
+  return "/app/chat-assistant";
+};
+
+export const getPromptsLink = (): string => {
+  return "/app/prompts";
 };

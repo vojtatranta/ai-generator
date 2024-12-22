@@ -36,7 +36,7 @@ export default async function LocaleLayout({
       className={`${poppins.className}`}
       suppressHydrationWarning={true}
     >
-      <body>
+      <body className="overflow-hidden">
         <NuqsAdapter>
           <NextIntlClientProvider messages={messages}>
             <NextTopLoader showSpinner={false} />

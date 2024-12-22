@@ -10,6 +10,7 @@ import {
   getUserSubscription,
 } from "@/lib/stripe";
 import { getSubscriptionLink } from "@/lib/private-links";
+import { getLoginLink } from "@/lib/public-links";
 
 const basePaths = ["/", "/app/login", "/app/auth"];
 const locales = routing.locales;
@@ -37,6 +38,14 @@ function isPublicPath(path: string): boolean {
 }
 
 export default async function authMiddleware(request: NextRequest) {
+  const { hostname } = request.nextUrl;
+
+  // Detekce subdomeny
+  if (hostname.startsWith("app.")) {
+    request.nextUrl.pathname = `/app${request.nextUrl.pathname}`;
+    return NextResponse.rewrite(request.nextUrl);
+  }
+
   // First apply i18n middleware
   let response = i18nMiddleware(request);
 
@@ -99,7 +108,7 @@ export default async function authMiddleware(request: NextRequest) {
     const subscriptionUrl = request.nextUrl.clone();
     if (
       (descriptor.trialExpired || descriptor.planExceeded) &&
-      !subscriptionUrl.pathname.includes("/subscription")
+      !subscriptionUrl.pathname.includes(getSubscriptionLink())
     ) {
       subscriptionUrl.pathname = getSubscriptionLink();
       return NextResponse.redirect(subscriptionUrl);
@@ -107,12 +116,11 @@ export default async function authMiddleware(request: NextRequest) {
   } catch (error) {
     console.error("Error getting sure plan state descriptor", error);
     const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = "/login";
+    loginUrl.pathname = getLoginLink();
     loginUrl.searchParams.set("callbackUrl", request.nextUrl.toString());
     return NextResponse.redirect(loginUrl);
   }
 
-  // User is authenticated, continue with the request
   return response;
 }
 

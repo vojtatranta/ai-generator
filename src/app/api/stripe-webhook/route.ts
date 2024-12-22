@@ -1,6 +1,7 @@
 import { createSupabaseServerClient, getUser } from "@/web/lib/supabase-server";
 import { NextRequest, NextResponse } from "next/server";
 import { getAvailableProductPlans, stripe } from "@/lib/stripe";
+import { getSubscriptionLink } from "@/lib/private-links";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
   const paymentUserId = String(searchParams.get("userId"));
 
   if (!user || user.id !== paymentUserId) {
-    const redirectUrl = new URL("/subscription", req.url);
+    const redirectUrl = new URL(getSubscriptionLink(), req.url);
     redirectUrl.searchParams.set("error", "subscription.notAuthorized");
     return NextResponse.redirect(redirectUrl.toString());
   }
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
     !subscribedPlanId ||
     !paymentUserId
   ) {
-    const redirectUrl = new URL("/subscription", req.url);
+    const redirectUrl = new URL(getSubscriptionLink(), req.url);
     redirectUrl.searchParams.set(
       "error",
       "subscription.missingParametersInSuccessRedirect",
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
   const stripeSubscriptionId = String(stripeSession.subscription);
 
   if (!stripeSession.subscription) {
-    const redirectUrl = new URL("/subscription", req.url);
+    const redirectUrl = new URL(getSubscriptionLink(), req.url);
     redirectUrl.searchParams.set(
       "error",
       "subscription.noSubscriptionIdReturned",
@@ -49,7 +50,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (stripeSession.payment_status !== "paid") {
-    const redirectUrl = new URL("/subscription", req.url);
+    const redirectUrl = new URL(getSubscriptionLink(), req.url);
     redirectUrl.searchParams.set("error", "subscription.subscriptionNotPaid");
     return NextResponse.redirect(redirectUrl.toString());
   }
@@ -92,12 +93,12 @@ export async function GET(req: NextRequest) {
   });
 
   if (updateError || insertError) {
-    const redirectUrl = new URL("/subscription", req.url);
+    const redirectUrl = new URL(getSubscriptionLink(), req.url);
     redirectUrl.searchParams.set("error", "subscription.databaseError");
     return NextResponse.redirect(redirectUrl.toString());
   }
 
-  const redirectUrl = new URL("/subscription", req.url);
+  const redirectUrl = new URL(getSubscriptionLink(), req.url);
   redirectUrl.searchParams.set("success", "true");
   return NextResponse.redirect(redirectUrl.toString());
 }

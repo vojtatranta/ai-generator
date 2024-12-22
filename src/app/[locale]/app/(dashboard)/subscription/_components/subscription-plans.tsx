@@ -38,6 +38,7 @@ import {
 import { If, Then } from "@/components/ui/condition";
 import { Icons } from "@/components/icons";
 import { isDefaultPlan } from "@/constants/data";
+import { getSubscriptionLink } from "@/lib/private-links";
 
 export default function SubscriptionPlans({
   activeSubscriptions,
@@ -69,7 +70,7 @@ export default function SubscriptionPlans({
       toast.error(t(paymentError));
     }
 
-    router.replace("/subscription");
+    router.replace(getSubscriptionLink());
   }, [paymentSuccess, paymentError, t, router]);
 
   return (
@@ -267,7 +268,7 @@ export default function SubscriptionPlans({
                           });
 
                           toast.success(t("subscription.successToast"));
-                          router.replace("/subscription");
+                          router.replace(getSubscriptionLink());
                         } catch (err) {
                           toast.error(String(err));
                         }

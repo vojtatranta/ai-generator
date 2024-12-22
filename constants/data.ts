@@ -2,6 +2,14 @@ import { PlanWithProduct } from "@/lib/stripe";
 import { NavItem } from "@/web/types";
 import { DEFAULT_PLAN, DEFAULT_PLAN_OBJECT } from "./plan";
 import { icons } from "lucide-react";
+import {
+  getBaseAppLink,
+  getChatAssistantLink,
+  getProfileLink,
+  getPromptsLink,
+  getSubscriptionLink,
+} from "@/lib/private-links";
+import { getLoginLink } from "@/lib/public-links";
 
 export const POST_GENERATOR = "post-generator" as const;
 export const POST_IMAGE_GENERATOR = "image-social-post-generator" as const;
@@ -92,7 +100,7 @@ export const getNavItems = (
 ): NavItem[] => [
   {
     title: t("menu.dashboard"),
-    url: "/app/overview",
+    url: getBaseAppLink(),
     icon: "dashboard",
     isActive: currentPath.includes("overview"),
     shortcut: ["d", "d"],
@@ -100,7 +108,7 @@ export const getNavItems = (
   },
   {
     title: t("menu.promptTemplates"),
-    url: "/app/prompts",
+    url: getPromptsLink(),
     icon: "wandSparkles",
     shortcut: ["t", "t"],
     isActive:
@@ -132,7 +140,7 @@ export const getNavItems = (
   },
   {
     title: t("menu.chatAssistant"),
-    url: "/app/chat-assistant",
+    url: getChatAssistantLink(),
     icon: "bot",
     shortcut: ["c", "c"],
     isActive: currentPath.includes("/chat-assistant"),
@@ -180,23 +188,23 @@ export const getNavItems = (
   // },
   {
     title: t("menu.account.title"),
-    url: "/app/profile",
+    url: getProfileLink(),
     icon: "badgeCheck",
     isActive:
-      currentPath.includes("/profile") ||
-      currentPath.includes("/login") ||
-      currentPath.includes("/subscription"),
+      currentPath.includes(getProfileLink()) ||
+      currentPath.includes(getLoginLink()) ||
+      currentPath.includes(getSubscriptionLink()),
     items: [
       {
         title: t("menu.account.profile"),
-        url: "/app/profile",
+        url: getProfileLink(),
         icon: "userPen",
         shortcut: ["m", "m"],
       },
 
       {
         title: t("menu.account.subscription"),
-        url: "/app/subscription",
+        url: getSubscriptionLink(),
         icon: "userPen",
         shortcut: ["m", "m"],
       },
@@ -204,7 +212,7 @@ export const getNavItems = (
       {
         title: t("menu.account.login"),
         shortcut: ["l", "l"],
-        url: "/app/login",
+        url: getLoginLink(),
         icon: "login",
       },
     ],
