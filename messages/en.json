@@ -16,7 +16,8 @@
       "login": "Login",
       "logout": "Log out",
       "subscription": "Subscription"
-    }
+    },
+    "chatAssistant": "AI Chat"
   },
   "common": {
     "name": "name",
@@ -115,10 +116,16 @@
     "remainingAnswers": "Remaining answers",
     "remainingAnswersDescription": "Number of answers you can still generate",
     "subscriptionNotPaid": "Your subscription is depleted, upgrade your plan!",
+    "recentGenerations": "Recent generations",
+    "recentGenerationsDescription": "Your latest AI-generated responses",
+    "generatePostCTA": "Create post",
+    "generateImagePostCTA": "Create post with image",
+    "summarizeArticleCTA": "Summarize article",
     "recentAnswers": "Recent answers",
     "recentAnswersDescription": "Your latest generated answers",
     "barChart": {
       "answersLabel": "Answers",
+      "generationsLabel": "AI Generations",
       "title": "Answers overview",
       "description": "Your answers in the selected period"
     },
@@ -131,6 +138,7 @@
   "generateSocialPostImageContentPromptTitle": "Use images to create content for your social media",
   "generateSocialPostContentPromptDescription": "Write an idea for your social media content and our system will help you generate it. We have prepared a sample message in the message field so you can see how the system works.",
   "generateSocialPostImageContentPromptDescription": "Upload an image to generate text for it. You can also let AI edit the image or generate an image completely from text. We have prepared a sample message in the message field so you can see how the system works.",
+  "summarizeArticlePromptDescription": "Let AI summarize any article for you. Just paste the article text and AI will create a summary for you.",
   "prompt": {
     "title": "Generate content",
     "message": "Message",
@@ -166,8 +174,25 @@
       "editTheImageWithContemporaryFilters": "Edit this image with contemporary filters",
       "makeTheImageLookLikeMadeOfFood": "Transform this image to look like it's made of food"
     },
-    "image": "Image"
+    "image": "Image",
+    "summarizationResultLength": "Summary length",
+    "summarizationResultLengthPlaceholder": "Enter summary length",
+    "articleToSummarize": "Article to summarize",
+    "summarizeUsingAi": "Summarize using AI",
+    "summarizedResult": "Summarized result",
+    "clickAtSummarizeToSeeResult": "Click Summarize to see the result",
+    "randomArticle": {
+      "LOCAL_SINGER": "Karel Gott was a Czech singer, who was often called the \"Golden Voice of Prague\". During his career spanning over five decades, he released nearly 300 albums, selling tens of millions of records worldwide, making him the most successful male singer in Czech history.",
+      "LOCAL_ACTOR": "Vladimír Menšík was one of the most popular Czech actors and comedians. He appeared in numerous films and television shows throughout his career, becoming a household name in Czechoslovakia. Despite his health issues, he continued performing until his death in 1988.",
+      "LOCAL_ACTRESS": "Jiřina Bohdalová is a renowned Czech actress with a career spanning over seven decades. She has appeared in numerous films, television shows, and theater productions, becoming one of the most recognizable faces in Czech entertainment.",
+      "LOCAL_MUSICIAN": "Bedřich Smetana was a Czech composer who pioneered the development of a musical style that became closely identified with his country's aspirations to independent statehood. He is widely regarded as the father of Czech music.",
+      "LOCAL_CHEF": "Zdeněk Pohlreich is a Czech chef and television personality, known for his appearances on various cooking shows. He has significantly influenced modern Czech gastronomy and owns several successful restaurants in Prague.",
+      "LOCAL_WRITER": "Karel Čapek was a Czech writer, playwright and critic. He is best known for his science fiction work and for introducing the word 'robot' to the English language and science fiction as a whole through his play R.U.R.",
+      "LOCAL_AUTHOR": "Božena Němcová was a Czech writer who wrote the classic novel 'Babička' (The Grandmother). She is often regarded as the mother of Czech prose and played a significant role in the Czech National Revival movement."
+    }
   },
+  "generateArticleSummaryPromptTitle": "Summarize articles with AI",
+  "generateArticleSummaryPromptDescription": "Let AI summarize any article for you. We have prepared an example in the Message field.",
   "image": {
     "placeholder": "Drop an image here or click to upload",
     "urlPlaceholder": "Or paste an image URL"
@@ -191,8 +216,12 @@
     "planExpiredDescription": "Your current plan has reached its generation limit. Please upgrade your plan to continue generating.",
     "usedGenerations": "Used generations",
     "planQuota": "Plan quota",
-    "trialExpired": "Trial period expired",
-    "trialExpiredDescription": "Your 14-day trial period has expired. Please choose one of our paid plans to continue using AIstein."
+    "numberOfGenerations": "current number of AI generations this month",
+    "trialExpired": "Trial period has expired",
+    "trialExpiredDescription": "Your 14-day trial period has expired. Please choose one of our paid plans to continue using AIstein.",
+    "youHaveATrial": "You have an active FREE trial",
+    "trialDescription": "During the trial period, you can use all AIstein features for free.",
+    "trialRemains": "Your trial period ends in {remains} days."
   },
   "assistantChat": {
     "title": "AI Chat - Your Personal Content Creation Assistant",
@@ -243,8 +272,11 @@
         "description": "DESCRIPTION"
       }
     },
-    "tryPrompt": "Try prompt"
+    "tryPrompt": "Try prompt",
+    "openActionMenu": "Open action menu"
   },
+  "articleSummarizerPromptTitle": "Summarize articles with AI",
+  "articleSummarizerPromptDescription": "Let AI summarize any article for you. We have prepared an example in the Message field.",
   "breadCrumbs": {
     "profile": "Profile",
     "overview": "Overview",
@@ -254,7 +286,8 @@
     "subscription": "Subscription",
     "post-generator": "Post Generator",
     "image-social-post-generator": "Image Post Generator",
-    "users": "Users"
+    "users": "Users",
+    "article-summarizer": "Article Summarizer"
   },
   "metadata": {
     "dashboard": {
@@ -347,5 +380,11 @@
     "billing": "Billing",
     "notifications": "Notifications",
     "logout": "Log out"
-  }
+  },
+  "social": {
+    "shareOnX": "Share on X (Twitter)",
+    "shareOnFacebook": "Share on Facebook",
+    "shareOnLinkedin": "Share on LinkedIn"
+  },
+  "generatedbyAIStein": "Generated by AIstein"
 }

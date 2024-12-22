@@ -4,6 +4,7 @@ import { Maybe } from "actual-maybe";
 import { Card, CardContent } from "@/components/ui/card";
 import { RouterOutput } from "@/components/providers/TRPCProvider";
 import { AIResult } from "@/lib/supabase-server";
+import { FBShare } from "@/components/social";
 
 export type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
 
@@ -23,9 +24,11 @@ export type ResultType = {
 
 export const PromptResultHistory = memo(function PromptResultHistory({
   allResults,
+  fbShare,
   renderResult,
 }: {
   allResults: RenderResultType[];
+  fbShare?: boolean;
   renderResult: (
     result: RenderResultType,
   ) => React.ReactNode | React.ReactElement | React.JSX.Element;
@@ -46,7 +49,7 @@ export const PromptResultHistory = memo(function PromptResultHistory({
                 {allResults.map((result, index) => (
                   <div
                     key={`${result.id}`}
-                    className="flex items-center space-x-2"
+                    className="flex flex-col items-center space-x-2"
                   >
                     <div>
                       <div className="mb-1">
@@ -63,6 +66,14 @@ export const PromptResultHistory = memo(function PromptResultHistory({
                       </div>
 
                       {renderResult(result)}
+                    </div>
+                    <div className="flex items-center justify-center mt-2">
+                      {fbShare && (
+                        <FBShare
+                          imageUrl={result.aiResult?.image_url}
+                          text={t("generatedbyAIStein")}
+                        />
+                      )}
                     </div>
                   </div>
                 ))}

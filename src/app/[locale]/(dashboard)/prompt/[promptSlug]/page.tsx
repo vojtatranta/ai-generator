@@ -5,12 +5,14 @@ import { SearchParams } from "nuqs";
 import { PromptQueryPage } from "../_components/PromptQueryPage";
 import { notFound } from "next/navigation";
 import {
+  ARTICLE_SUMMARIZER,
   RANDOM_IMAGE_TOPICS,
   RANDOM_TOPICS,
   USED_PROMPTS,
 } from "@/constants/data";
 import { PromptImageQueryPage } from "../_components/PromptImageQueryPage";
 import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
+import { PromptArticleSummarizerPage } from "../_components/PromptArticleSummarizerPage";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -62,6 +64,16 @@ export default async function Page({ searchParams, params }: pageProps) {
   const randomNumberFromTopics = Math.floor(
     Math.random() * RANDOM_TOPICS(t).length,
   );
+
+  if (usedPrompt.id === ARTICLE_SUMMARIZER) {
+    return (
+      <PromptArticleSummarizerPage
+        aiResults={lastResults ?? []}
+        prompt={usedPrompt}
+        randomNumberFromTopics={randomNumberFromTopics}
+      />
+    );
+  }
 
   return (
     <PromptQueryPage

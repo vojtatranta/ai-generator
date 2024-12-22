@@ -55,7 +55,6 @@ import { useTranslations } from "next-intl";
 export const company = {
   name: "AIstein",
   logo: icons.Atom,
-  plan: "Enterprise",
 };
 
 export default function AppSidebar({ user }: { user: User }) {
@@ -63,7 +62,7 @@ export default function AppSidebar({ user }: { user: User }) {
   const { signOut } = useSignOut();
   const t = useTranslations();
 
-  const navItems = React.useMemo(() => getNavItems(t), [t]);
+  const navItems = React.useMemo(() => getNavItems(t, pathname), [t, pathname]);
 
   return (
     <Sidebar collapsible="icon">
@@ -95,7 +94,7 @@ export default function AppSidebar({ user }: { user: User }) {
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
                         tooltip={item.title}
-                        isActive={pathname === item.url}
+                        isActive={pathname === item.url || item.isActive}
                       >
                         {item.icon && <Icon />}
                         <span>{item.title}</span>
@@ -108,7 +107,9 @@ export default function AppSidebar({ user }: { user: User }) {
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton
                               asChild
-                              isActive={pathname === subItem.url}
+                              isActive={
+                                pathname === subItem.url || subItem.isActive
+                              }
                             >
                               <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
@@ -125,7 +126,7 @@ export default function AppSidebar({ user }: { user: User }) {
                   <SidebarMenuButton
                     asChild
                     tooltip={item.title}
-                    isActive={pathname === item.url}
+                    isActive={pathname === item.url || item.isActive}
                   >
                     <Link href={item.url}>
                       <Icon />

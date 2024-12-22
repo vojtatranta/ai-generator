@@ -42,6 +42,7 @@ import {
   ResultType,
 } from "./PromptResultHistory";
 import { AIGeneratedImage } from "@/components/AIGeneratedImage";
+import { FBShare } from "@/components/social";
 
 const DEFAULT_LENGTH = 200;
 
@@ -395,8 +396,18 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                                 {renderResult({
                                   id: lastResult.id,
                                   aiResponse: lastResult.result as InvokeOutput,
-                                  aiResult: null,
+                                  aiResult: lastResult.aiResult ?? null,
                                 })}
+                                {Maybe.of(lastResult.aiResult?.image_url)
+                                  .andThen((imageUrl) => (
+                                    <div className="flex items-center justify-center mt-2">
+                                      <FBShare
+                                        imageUrl={imageUrl}
+                                        text="AI stein vygeneroval!"
+                                      />
+                                    </div>
+                                  ))
+                                  .getValue(null)}
                               </div>
                             ))
                             .getValue(
@@ -418,6 +429,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
             </CardContent>
           </Card>
           <PromptResultHistory
+            fbShare
             allResults={allResults}
             renderResult={renderResult}
           />

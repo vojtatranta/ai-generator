@@ -10,6 +10,7 @@ import { RecentGenerations } from "./recent-generations";
 import { Button } from "@/web/components/ui/button";
 import DrawingEinsteinPic from "../../../../../../public/ai-stein-drawinig.webp";
 import PostingEinsteinPic from "../../../../../../public/aistein-posting.webp";
+import DrawingEinsteinWritingArticle from "../../../../../../public/esintein-writing.jpg";
 import {
   Card,
   CardContent,
@@ -30,6 +31,7 @@ import Link from "next/link";
 import { PROMPTS } from "@/constants/data";
 import { getPromptLink } from "@/lib/private-links";
 import { getPlanQuota } from "@/constants/plan";
+import { Icons } from "@/components/icons";
 
 export default async function OverViewPage() {
   const userData = await getSureUserPlan();
@@ -61,48 +63,144 @@ export default async function OverViewPage() {
             </TabsTrigger> */}
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-2">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      {t("overview.mainHeadingText")}
+                      {t("generateSocialPostContentPromptTitle")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription>
-                      {t("overview.mainDescriptionText")}
-                    </CardDescription>
+                    <div className="flex flex-row items-center justify-between gap-4">
+                      <div className="max-w-[180px]">
+                        <Image
+                          src={PostingEinsteinPic}
+                          alt="Aistein posting"
+                          className="rounded-lg"
+                          height="700"
+                        />
+                      </div>
+                      <div className="text-muted-foreground">
+                        {t("generateSocialPostContentPromptDescription")}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex flex-row justify-end">
+                      <Link href={getPromptLink(PROMPTS.POST_GENERATOR)}>
+                        <Button type="button">
+                          <Icons.messageCircleMore className="mr-2 h-4 w-4" />
+                          {t("overview.generatePostCTA")}
+                        </Button>
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      {t("overview.subscription")}
+                      {t("generateSocialPostImageContentPromptTitle")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="flex flex-col">
-                    <div className="text-2xl font-bold">
-                      <Link href="/subscription">
-                        {userData.plan.product.name}
-                      </Link>
-                    </div>
-                    <div className="mt-10">
-                      {getPlanQuota(userData.plan.nickname)
-                        .andThen((quota) => (
-                          <div className="text-xs text-muted-foreground">
-                            <span className="font-bold">{quota}</span>{" "}
-                            {t("subscription.quotaLabel")}
-                          </div>
-                        ))
-                        .orNull()}
-                      <div className="text-xs text-muted-foreground">
-                        <span className="font-bold">{numberOfGenerations}</span>{" "}
-                        {t("subscription.numberOfGenerations")}
+                  <CardContent>
+                    <div className="flex flex-row items-center justify-between gap-2">
+                      <div className="max-w-[180px]">
+                        <Image
+                          src={DrawingEinsteinPic}
+                          alt="Aistein posting"
+                          className="rounded-lg"
+                          height="700"
+                        />
                       </div>
+                      <div className="text-muted-foreground">
+                        {t("generateSocialPostImageContentPromptDescription")}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex flex-row justify-end">
+                      <Link href={getPromptLink(PROMPTS.POST_IMAGE_GENERATOR)}>
+                        <Button type="button">
+                          <Icons.palette className="mr-2 h-4 w-4" />
+                          {t("overview.generateImagePostCTA")}
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
-                {/* <Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {t("generateArticleSummaryPromptTitle")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-row items-center justify-between gap-2">
+                      <div className="max-w-[180px]">
+                        <Image
+                          src={DrawingEinsteinWritingArticle}
+                          alt="Aistein writing"
+                          className="rounded-lg"
+                          height="700"
+                        />
+                      </div>
+                      <div className="text-muted-foreground">
+                        {t("summarizeArticlePromptDescription")}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex flex-row justify-end">
+                      <Link href={getPromptLink(PROMPTS.ARTICLE_SUMMARIZER)}>
+                        <Button type="button">
+                          <Icons.notebookPen className="mr-2 h-4 w-4" />
+                          {t("overview.summarizeArticleCTA")}
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+                <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-2">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        {t("overview.mainHeadingText")}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription>
+                        {t("overview.mainDescriptionText")}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        {t("overview.subscription")}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col">
+                      <div className="text-2xl font-bold">
+                        <Link href="/subscription">
+                          {userData.plan.product.name}
+                        </Link>
+                      </div>
+                      <div className="mt-10">
+                        {getPlanQuota(userData.plan.nickname)
+                          .andThen((quota) => (
+                            <div className="text-xs text-muted-foreground">
+                              <span className="font-bold">{quota}</span>{" "}
+                              {t("subscription.quotaLabel")}
+                            </div>
+                          ))
+                          .orNull()}
+                        <div className="text-xs text-muted-foreground">
+                          <span className="font-bold">
+                            {numberOfGenerations}
+                          </span>{" "}
+                          {t("subscription.numberOfGenerations")}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  {/* <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     Active Now
@@ -127,58 +225,9 @@ export default async function OverViewPage() {
                   </p>
                 </CardContent>
               </Card> */}
+                </div>
               </div>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-                <Card>
-                  <Link href={getPromptLink(PROMPTS.POST_GENERATOR)}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        {t("generateSocialPostContentPromptTitle")}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-row items-center justify-between gap-4">
-                        <div className="max-w-[180px]">
-                          <Image
-                            src={PostingEinsteinPic}
-                            alt="Aistein posting"
-                            className="rounded-lg"
-                            height="700"
-                          />
-                        </div>
-                        <div className="text-muted-foreground">
-                          {t("generateSocialPostContentPromptDescription")}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Link>
-                </Card>
-                <Card>
-                  <Link href={getPromptLink(PROMPTS.POST_IMAGE_GENERATOR)}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        {t("generateSocialPostImageContentPromptTitle")}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-row items-center justify-between gap-4">
-                        <div className="max-w-[180px]">
-                          <Image
-                            src={DrawingEinsteinPic}
-                            alt="Aistein posting"
-                            className="rounded-lg"
-                            height="700"
-                          />
-                        </div>
-                        <div className="text-muted-foreground">
-                          {t("generateSocialPostImageContentPromptDescription")}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Link>
-                </Card>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-7">
                 <div className="col-span-4">
                   <BarGraph userId={userData.user.id} />
                 </div>

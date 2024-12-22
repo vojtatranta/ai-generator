@@ -40,6 +40,7 @@ import {
   RenderResultType,
   ResultType,
 } from "./PromptResultHistory";
+import { XPost } from "@/components/social";
 
 const DEFAULT_LENGTH = 200;
 
@@ -289,6 +290,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
                           />
                         </FormControl>
                         <FormMessage />
+                        <XPost text={lastPromptResult ?? ""} />
                       </FormItem>
                     )}
                   />

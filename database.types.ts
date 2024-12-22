@@ -141,6 +141,33 @@ export type Database = {
           },
         ];
       };
+      feedback: {
+        Row: {
+          created_at: string;
+          id: number;
+          positive: boolean;
+          score: number | null;
+          text: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          positive?: boolean;
+          score?: number | null;
+          text?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          positive?: boolean;
+          score?: number | null;
+          text?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       product_attributes: {
         Row: {
           attribute_category_name: string | null;

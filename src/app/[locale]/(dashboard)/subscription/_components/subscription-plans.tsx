@@ -27,7 +27,7 @@ import {
 } from "@/components/payment-modal";
 import { toast } from "sonner";
 import { PlanSubscription } from "@/lib/supabase-server";
-import { AlertTriangle, CircleAlert, Loader2 } from "lucide-react";
+import { AlertTriangle, BugPlay, CircleAlert, Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -89,6 +89,35 @@ export default function SubscriptionPlans({
           <CardDescription>
             {t("subscription.plansDescription")}
           </CardDescription>
+          <If
+            condition={
+              userPlan.trial &&
+              !userPlan.trialExpired &&
+              userPlan.remainsOfTrial != null
+            }
+          >
+            <Then>
+              <div className="bg-primary p-4 text-primary-foreground rounded-md max-w-[650px]">
+                <div className="flex flex-row items-center gap-2">
+                  <div className="flex flex-col gap-2">
+                    <div className="font-medium">
+                      {t("subscription.youHaveATrial")}
+                    </div>
+                    <div className="text-sm">
+                      {t("subscription.trialDescription")}
+                    </div>
+                    <div className="text-sm">
+                      {t("subscription.trialRemains", {
+                        remains: Math.round(
+                          (userPlan.remainsOfTrial ?? 0) / 1000 / 60 / 60 / 24,
+                        ),
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Then>
+          </If>
           <If condition={userPlan.trialExpired}>
             <Then>
               <div className="bg-destructive p-4 text-primary-foreground rounded-md max-w-[650px]">

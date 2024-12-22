@@ -37,6 +37,8 @@ export type SurePlanResult = PlanWithProductAndSubscription & {
   numberOfThisMonthGenerations: number;
   planExceeded: boolean;
   trialExpired: boolean;
+  trial: boolean;
+  remainsOfTrial: number | null;
   features: { [K in keyof typeof FEATURES]?: boolean };
 };
 
@@ -64,10 +66,18 @@ export const getSurePlanStateDescriptor = async (
 
   const planQuota = getPlanQuota(plan.plan.nickname).orNull();
 
+  const trial = plan.plan.id === DEFAULT_PLAN_OBJECT.id;
   const trialExpired =
-    plan.plan.id === DEFAULT_PLAN_OBJECT.id &&
+    trial &&
     new Date(plan.subscription.created_at).getTime() + FREE_PLAN_DURATION <
       Date.now();
+
+  const remainsOfTrial =
+    !trial || trialExpired
+      ? null
+      : new Date(plan.subscription.created_at).getTime() +
+        FREE_PLAN_DURATION -
+        Date.now();
 
   return {
     ...plan,
@@ -83,6 +93,8 @@ export const getSurePlanStateDescriptor = async (
       }),
       {},
     ),
+    trial,
+    remainsOfTrial,
   };
 };
 

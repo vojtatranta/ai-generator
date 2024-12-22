@@ -123,6 +123,9 @@
     "subscriptionNotPaid": "Vaše předplatné je vyčerpáno, upgradujte svůj plán!",
     "recentGenerations": "Nedávné generování",
     "recentGenerationsDescription": "Vaše nejnovější vygenerované odpovědi AI",
+    "generatePostCTA": "Vytvořit příspěvek",
+    "generateImagePostCTA": "Vytvořit příspěvek s obrázkem",
+    "summarizeArticleCTA": "Shrnout článek",
     "barChart": {
       "generationsLabel": "Generování AI",
       "title": "Přehled generování",
@@ -137,9 +140,11 @@
   "generateSocialPostImageContentPromptTitle": "Použijte obrázky pro vytvoření obsahu pro vaše sociální sítě",
   "generateSocialPostContentPromptDescription": "Napište nápad na obsah pro vaše sociální sítě a náš systém vám pomůže s jeho vygenerováním. Do pole pro zprávu jsme pro vás připravili ukázkovou zprávu, abyste viděli, jak systém funguje.",
   "generateSocialPostImageContentPromptDescription": "Nahrajte obrázek, ke kterému chcete vytvořit obsah, nebo nechte naši umělou inteligenci, aby upravila obrázek nebo vytvořila obsah z textu.",
+  "summarizeArticlePromptDescription": "Nechte si shrnout jakýkoliv článek pomocí uměle inteligence. Stačí vložit text članku a AI vám vytvoří jeho shrnutí.",
   "prompt": {
     "title": "Generovat obsah",
     "message": "Zpráva",
+    "articleToSummarize": "Článek k shrnutí",
     "postGenerationResultsEmptyStateText": "Tady se zobrazí výsledky předchozího generování, abyste si mohli vybrat post, který je pro vás nejlepší.",
     "postGenerationCurrentResulsEmptyStateText": "Tady se zobrazí výsledek AI generování.",
     "resultLength": "Délka výsledného postu",
@@ -170,10 +175,29 @@
       "editTheImageWithContemporaryFilters": "Upravte tento obrázek pomocí moderních filtrů",
       "makeTheImageLookLikeMadeOfFood": "Transformujte tento obrázek tak, aby vypadal jako z jídla"
     },
+    "randomArticle": {
+      "LOCAL_SINGER": "Tento článek je o současném známém zpěvákovi. Zpěvák se narodil v roce 1980 v Praze. V letech 2000-2005 studoval herectví na DAMU. Od roku 2005 se živil jako hudebník. V roce 2010 založil skupinu, se kterou nahrál tři alba. V roce 2015 začal sólovou kariéru. V roce 2018 získal cenu Anděl za nejlepšího zpěváka. V roce 2020 vydal další album.",
+      "LOCAL_ACTOR": "Tento článek je o současném známém herci. Herec se narodil v roce 1970 v Brně. V letech 1990-1995 studoval herectví na JAMU. Od roku 1995 se živil jako herec. V roce 2000 založil skupinu, se kterou nahrál tři alba. V roce 2005 začal sólovou kariéru. V roce 2010 získal cenu Anděl za nejlepšího herce. V roce 2015 vydal další album.",
+      "LOCAL_ACTRESS": "Tento článek je o současném známém herečce. Herečka se narodila v roce 1975 v Praze. V letech 1995-2000 studovala herectví na DAMU. Od roku 2000 se živila jako herečka. V roce 2005 založila skupinu, se kterou nahrála tři alba. V roce 2010 začala sólovou kariéru. V roce 2015 získala cenu Anděl za nejlepší herečku. V roce 2020 vydala další album.",
+      "LOCAL_MUSICIAN": "Tento článek je o současném známém hudebníkovi. Hudebník se narodil v roce 1985 v Praze. V letech 2005-2010 studoval hudební skladbu na HAMU. Od roku 2010 se živil jako hudebník. V roce 2015 založil skupinu, se kterou nahrál tři alba. V roce 2018 začal sólovou kariéru. V roce 2020 získal cenu Anděl za nejlepšího hudebníka. V roce 2020 vydal další album.",
+      "LOCAL_CHEF": "Tento článek je o současném známém šéfkuchaři. Šéfkuchař se narodil v roce 1970 v Praze. V letech 1990-1995 studoval vaření na hotelové škole. Od roku 1995 se živil jako kuchař. V roce 2000 založil vlastní restauraci. V roce 2005 získal cenu Anděl za nejlepšího kuchaře. V roce 2010 vydal vlastní kuchařku. V roce 2015 otevřel další restauraci.",
+      "LOCAL_WRITER": "Tento článek je o současném známém spisovateli. Spisovatel se narodil v roce 1980 v Praze. V letech 2000-2005 studoval literaturu na FFUK. Od roku 2005 se živil jako spisovatel. V roce 2010 vydal svoji první knihu. V roce 2015 získal cenu Anděl za nejlepšího spisovatele. V roce 2020 vydal další knihu.",
+      "LOCAL_AUTHOR": "Tento článek je o současném známém autorovi. Autor se narodil v roce 1975 v Praze. V letech 1995-2000 studoval literaturu na FFUK. Od roku 2000 se živil jako autor. V roce 2005 založil vlastní nakladatelství. V roce 2010 vydal svoji první knihu. V roce 2015 získal cenu Anděl za nejlepšího autora. V roce 2020 vydal další knihu."
+    },
     "image": "Obrázek",
     "locale": "Jazyk výstupu",
-    "localePlaceholder": "cs, en, sk"
+    "localePlaceholder": "cs, en, sk",
+    "summarizationResultLength": "Délka shrnutí",
+    "summarizationResultLengthPlaceholder": "Zadejte délku shrnutí",
+    "summarize": "Shrnout",
+    "summarizePlaceholder": "Zadejte délku shrnutí",
+    "summarizeDescription": "Zadejte délku shrnutí článku",
+    "summarizeUsingAi": "Shrnout pomocí AI",
+    "summarizedResult": "Shrnutý text",
+    "clickAtSummarizeToSeeResult": "Klikněte na tlačítko Shrnout pomocí AI pro zobrazení výsledku"
   },
+  "generateArticleSummaryPromptTitle": "Shrnutí článku pomocí AI",
+  "generateArticleSummaryPromptDescription": "Nechte si shrnout jakýkoliv článek pomocí umělé inteligence. Stačí vložit text článku a AI vám vytvoří jeho shrnutí.",
   "image": {
     "placeholder": "Přesuňte sem obrázek nebo klikněte pro nahrání",
     "urlPlaceholder": "Nebo vložte URL obrázku"
@@ -204,7 +228,10 @@
     },
     "manageSubscriptionToupgrade": "Spravovat předplatné a upgradovat",
     "trialExpired": "Zkušební doba vypršela",
-    "trialExpiredDescription": "Vaše 14denní zkušební doba vypršela. Pro pokračování v používání AIsteinu si prosím vyberte některý z našich placených plánů."
+    "trialExpiredDescription": "Vaše 14denní zkušební doba vypršela. Pro pokračování v používání AIsteinu si prosím vyberte některý z našich placených plánů.",
+    "youHaveATrial": "Máte aktivní zkušební verzi ZDARMA",
+    "trialDescription": "Během zkušební doby můžete využívat všechna funkce AIsteinu zdarma.",
+    "trialRemains": "Do konce zkušební doby zbývá {remains} dní."
   },
   "auth": {
     "continueWithGoogle": "Přihlásit se přes Google",
@@ -308,7 +335,9 @@
     "subscription": "Předplatné",
     "post-generator": "Generátor příspěvků",
     "image-social-post-generator": "Generátor obrázkových příspěvků",
-    "users": "Uživatelé"
+    "social-media-post-ideas-assistant": "AI chat",
+    "users": "Uživatelé",
+    "article-summarizer": "Shrnutí článku"
   },
   "promptTemplates": {
     "listing": {
@@ -375,5 +404,13 @@
       "prompt": "Navrhni sérii 3 příspěvků na LinkedIn o důležitosti digitální transformace",
       "description": "Tento příklad demonstruje, jak vytvořit souvislou sérii příspěvků na profesní síť."
     }
-  }
+  },
+  "articleSummarizerPromptTitle": "Shrnutí článku pomocí AI",
+  "articleSummarizerPromptDescription": "Nechte si shrnout jakýkoliv článek pomocí umělé inteligence. Do Zprávy jsme vám již připravili příklad.",
+  "social": {
+    "shareOnX": "Sdílet na X (Twitter)",
+    "shareOnFacebook": "Sdílet na FB",
+    "shareOnLinkedin": "Sdílet na LinkedIn"
+  },
+  "generatedbyAIStein": "Vygenerováno pomocí AIstein"
 }

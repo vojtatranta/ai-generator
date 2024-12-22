@@ -16,6 +16,10 @@
       "login": "Prihlásenie",
       "logout": "Odhlásiť sa",
       "subscription": "Predplatné"
+    },
+    "chatAssistant": "AI Chat",
+    "assistantChat": {
+      "assistantChatMetaTitle": "AI chat - váš osobný asistent pre tvorbu obsahu"
     }
   },
   "metadata": {
@@ -147,18 +151,24 @@
     "welcomeBack": "Vitajte späť v AIsteine!",
     "download": "Stiahnuť",
     "overview": "Prehľad",
-    "mainHeadingText": "V tejto aplikácii môžete generovať obsah pre vaše sociálne siete alebo pre vaše internetové stránky",
-    "mainDescriptionText": "Ak máte problém vymyslieť text pre váš web, o vašom produkte alebo príspevok na sociálne médiá, použite našu umelú inteligenciu, ktorá vám s tým rada pomôže!",
+    "mainHeadingText": "V tejto aplikácii môžete vygenerovať obsah pre vaše sociálne siete alebo pre vaše internetové stránky",
+    "mainDescriptionText": "Ak máte problém vymyslieť text pre váš web, o vašom produkte alebo post na sociálne médiá, použite našu umelú inteligenciu, ktorá vám s tým rada pomôže!",
     "subscription": "Predplatné",
     "from": "od",
     "to": "do",
     "remainingAnswers": "Zostávajúce odpovede",
     "remainingAnswersDescription": "Počet odpovedí, ktoré môžete ešte vygenerovať",
     "subscriptionNotPaid": "Vaše predplatné je vyčerpané, upgradujte svoj plán!",
-    "recentAnswers": "Nedávne odpovede",
-    "recentAnswersDescription": "Vaše najnovšie vygenerované odpovede",
+    "recentGenerations": "Nedávne generovanie",
+    "recentGenerationsDescription": "Vaše najnovšie vygenerované odpovede AI",
+    "generatePostCTA": "Vytvoriť príspevok",
+    "generateImagePostCTA": "Vytvoriť príspevok s obrázkom",
+    "summarizeArticleCTA": "Zhrnúť článok",
+    "generateSocialPostContentCTA": "Vytvoriť obsah pre sociálne siete",
+    "generateSocialPostImageContentCTA": "Vytvoriť obsah s obrázkom pre sociálne siete",
     "barChart": {
       "answersLabel": "Odpovede",
+      "generationsLabel": "AI Generácie",
       "title": "Prehľad odpovedí",
       "description": "Vaše odpovede vo zvolenom období"
     },
@@ -171,6 +181,7 @@
   "generateSocialPostImageContentPromptTitle": "Použite obrázky pre vytvorenie obsahu pre vaše sociálne siete",
   "generateSocialPostContentPromptDescription": "Napíšte nápad na obsah pre vaše sociálne siete a náš systém vám pomôže s jeho vygenerovaním. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
   "generateSocialPostImageContentPromptDescription": "Nahrajte obrázok, ku ktorému chcete vygenerovať text. Prípadne môžete nechať AI upraviť obrázok alebo si môžete kompletne z textu nechať vygenerovať obrázok. Do poľa pre správu sme pre vás pripravili ukážkovú správu, aby ste videli, ako systém funguje.",
+  "summarizeArticlePromptDescription": "Nechajte si zhrnúť akýkoľvek článok pomocou umelej inteligencie. Stačí vložiť text článku a AI vám vytvorí jeho zhrnutie.",
   "prompt": {
     "title": "Generovať obsah",
     "message": "Správa",
@@ -206,7 +217,22 @@
       "editTheImageWithContemporaryFilters": "Upravte tento obrázok pomocou moderných filtrov",
       "makeTheImageLookLikeMadeOfFood": "Transformujte tento obrázok tak, aby vyzeral ako z jedla"
     },
-    "image": "Obrázok"
+    "image": "Obrázok",
+    "summarizationResultLength": "Dĺžka zhrnutia",
+    "summarizationResultLengthPlaceholder": "Zadajte dĺžku zhrnutia",
+    "articleToSummarize": "Článok na zhrnutie",
+    "summarizeUsingAi": "Zhrnutie pomocou AI",
+    "summarizedResult": "Zhrnutý výsledok",
+    "clickAtSummarizeToSeeResult": "Kliknite na Zhrnúť pre zobrazenie výsledku",
+    "randomArticle": {
+      "LOCAL_SINGER": "Karel Gott bol český spevák, ktorého často nazývali \"Zlatý hlas z Prahy\". Počas svojej kariéry trvajúcej viac ako päť desaťročí vydal takmer 300 albumov a predal desiatky miliónov platní po celom svete, čím sa stal najúspešnejším mužským spevákom v českej histórii.",
+      "LOCAL_ACTOR": "Vladimír Menšík bol jedným z najpopulárnejších českých hercov a komikov. Účinkoval v mnohých filmoch a televíznych reláciách počas svojej kariéry a stal sa známym menom v Československu. Napriek zdravotným problémom pokračoval vo vystupovaní až do svojej smrti v roku 1988.",
+      "LOCAL_ACTRESS": "Jiřina Bohdalová je známa česká herečka s kariérou trvajúcou viac ako sedem desaťročí. Účinkovala v mnohých filmoch, televíznych reláciách a divadelných predstaveniach a stala sa jednou z najrozpoznateľnejších tvárí českej zábavy.",
+      "LOCAL_MUSICIAN": "Bedřich Smetana bol český skladateľ, ktorý sa stal priekopníkom hudobného štýlu, ktorý sa úzko spájal s túžbou jeho krajiny po nezávislosti. Je považovaný za otca českej hudby.",
+      "LOCAL_CHEF": "Zdeněk Pohlreich je český šéfkuchár a televízna osobnosť, známy svojimi vystúpeniami v rôznych kulinárskych reláciách. Významne ovplyvnil modernú českú gastronómiu a vlastní niekoľko úspešných reštaurácií v Prahe.",
+      "LOCAL_WRITER": "Karel Čapek bol český spisovateľ, dramatik a kritik. Je najznámejší svojou sci-fi tvorbou a tým, že prostredníctvom svojej hry R.U.R. zaviedol slovo 'robot' do anglického jazyka a science fiction ako celku.",
+      "LOCAL_AUTHOR": "Božena Němcová bola česká spisovateľka, ktorá napísala klasický román 'Babička'. Je často považovaná za matku českej prózy a zohrala významnú úlohu v českom národnom obrodení."
+    }
   },
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",
@@ -231,8 +257,15 @@
     "planExpiredDescription": "Váš aktuálny plán má vyčerpaný limit generovania. Pre pokračovanie v generovaní prosím upgradujte svoj plán.",
     "usedGenerations": "Použité generovania",
     "planQuota": "Limit plánu",
+    "numberOfGenerations": "aktuálny počet AI generovaní tento mesiac",
     "trialExpired": "Skúšobná doba vypršala",
-    "trialExpiredDescription": "Vaša 14-dňová skúšobná doba vypršala. Pre pokračovanie v používaní AIsteinu si prosím vyberte niektorý z našich platených plánov."
+    "trialExpiredDescription": "Vaša 14-dňová skúšobná doba vypršala. Pre pokračovanie v používaní AIsteinu si prosím vyberte niektorý z našich platených plánov.",
+    "youHaveATrial": "Máte aktívnu skúšobnú verziu ZADARMO",
+    "trialDescription": "Počas skúšobnej doby môžete využívať všetky funkcie AIsteinu zadarmo.",
+    "trialRemains": "Do konca skúšobnej doby zostáva {remains} dní.",
+    "planDoesntHaveFeature": {
+      "AI_CHAT": "Váš aktuálny plán nemá prístup k AI chatu. Pre získanie prístupu prosím upgradujte svoj plán."
+    }
   },
   "assistantChat": {
     "title": "AI chat - váš osobný asistent pre tvorbu obsahu",
@@ -281,7 +314,8 @@
       "columns": {
         "title": "NÁZOV",
         "description": "POPIS"
-      }
+      },
+      "openActionMenu": "Otvoriť menu akcií"
     },
     "tryPrompt": "Vyskúšať prompt"
   },
@@ -294,7 +328,9 @@
     "post-generator": "Generátor príspevkov",
     "image-social-post-generator": "Generátor obrázkových príspevkov",
     "users": "Používatelia",
-    "chat-assistant": "AI chat - váš osobný asistent pre tvorbu obsahu"
+    "chat-assistant": "AI chat - váš osobný asistent pre tvorbu obsahu",
+    "article-summarizer": "Zhrnutie článkov",
+    "social-media-post-ideas-assistant": "AI chat - váš asistent pre tvorbu obsahu"
   },
   "profile": {
     "editProfile": "Upraviť profil",
@@ -346,5 +382,15 @@
     "billing": "Fakturácia",
     "notifications": "Oznámenia",
     "logout": "Odhlásiť sa"
-  }
+  },
+  "generateArticleSummaryPromptTitle": "Zhrnutie článkov pomocou AI",
+  "generateArticleSummaryPromptDescription": "Nechajte si zhrnúť akýkoľvek článok pomocou umelej inteligencie. Do poľa Správa sme pre vás pripravili príklad.",
+  "articleSummarizerPromptTitle": "Zhrnutie článkov pomocou AI",
+  "articleSummarizerPromptDescription": "Nechajte si zhrnúť akýkoľvek článok pomocou umelej inteligencie. Do poľa Správa sme pre vás pripravili príklad.",
+  "social": {
+    "shareOnX": "Zdieľať na X (Twitter)",
+    "shareOnFacebook": "Zdieľať na Facebooku",
+    "shareOnLinkedin": "Zdieľať na LinkedIn"
+  },
+  "generatedbyAIStein": "Vygenerované pomocou AIstein"
 }

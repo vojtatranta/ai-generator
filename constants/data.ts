@@ -4,10 +4,14 @@ import { DEFAULT_PLAN, DEFAULT_PLAN_OBJECT } from "./plan";
 
 export const POST_GENERATOR = "post-generator" as const;
 export const POST_IMAGE_GENERATOR = "image-social-post-generator" as const;
+export const ARTICLE_SUMMARIZER = "article-summarizer" as const;
+
+export const AI_CHAT_PROMPT_SLUG = "social-media-post-ideas-assistant";
 
 export const PROMPTS = {
   POST_GENERATOR,
   POST_IMAGE_GENERATOR,
+  ARTICLE_SUMMARIZER,
 } as const;
 
 export const DEFAULT_LANGUAGE = "cs" as const;
@@ -37,6 +41,14 @@ export const USED_PROMPTS = [
     defaultLength: 200,
     image: true,
   },
+  {
+    id: ARTICLE_SUMMARIZER,
+    prompt: ARTICLE_SUMMARIZER,
+    title: "articleSummarizerPromptTitle",
+    description: "articleSummarizerPromptDescription",
+    defaultLength: 300,
+    image: false,
+  },
 ] as const;
 
 export type UsedPromptType = (typeof USED_PROMPTS)[number];
@@ -58,17 +70,30 @@ export const RANDOM_TOPICS = (t: (key: string) => string) => [
   t("prompt.randomTopic.CURRENT_LOCAL_REALITY_SHOW_HOST"),
 ];
 
+export const RANDOM_ARTICLES = (t: (key: string) => string) => [
+  t("prompt.randomArticle.LOCAL_SINGER"),
+  t("prompt.randomArticle.LOCAL_ACTOR"),
+  t("prompt.randomArticle.LOCAL_ACTRESS"),
+  t("prompt.randomArticle.LOCAL_MUSICIAN"),
+  t("prompt.randomArticle.LOCAL_CHEF"),
+  t("prompt.randomArticle.LOCAL_WRITER"),
+  t("prompt.randomArticle.LOCAL_AUTHOR"),
+];
+
 export const RANDOM_IMAGE_TOPICS = (t: (key: string) => string) => [
   t("prompt.randomTopic.describeImage"),
   t("prompt.randomTopic.createSocialPostFromImage"),
 ];
 
-export const getNavItems = (t: (key: string) => string): NavItem[] => [
+export const getNavItems = (
+  t: (key: string) => string,
+  currentPath: string = "",
+): NavItem[] => [
   {
     title: t("menu.dashboard"),
     url: "/overview",
     icon: "dashboard",
-    isActive: false,
+    isActive: currentPath.includes("overview"),
     shortcut: ["d", "d"],
     items: [],
   },
@@ -77,15 +102,39 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     url: "/prompts",
     icon: "wandSparkles",
     shortcut: ["t", "t"],
-    isActive: false,
+    isActive:
+      currentPath.includes("/prompt") || currentPath.includes("/prompts"),
     items: [],
+    // items: [
+    //   {
+    //     title: t(`breadCrumbs.${POST_GENERATOR}`),
+    //     url: `/prompt/${POST_GENERATOR}`,
+    //     icon: "userPen",
+    //     isActive: currentPath.includes(`/prompt/${POST_GENERATOR}`),
+    //     shortcut: ["p", "p"],
+    //   },
+    //   {
+    //     title: t(`breadCrumbs.${POST_IMAGE_GENERATOR}`),
+    //     url: `/prompt/${POST_IMAGE_GENERATOR}`,
+    //     isActive: currentPath.includes(`/prompt/${POST_IMAGE_GENERATOR}`),
+    //     icon: "userPen",
+    //     shortcut: ["i", "i"],
+    //   },
+    //   {
+    //     title: t(`breadCrumbs.${ARTICLE_SUMMARIZER}`),
+    //     url: `/prompt/${ARTICLE_SUMMARIZER}`,
+    //     isActive: currentPath.includes(`/prompt/${ARTICLE_SUMMARIZER}`),
+    //     icon: "userPen",
+    //     shortcut: ["a", "a"],
+    //   },
+    // ],
   },
   {
     title: t("menu.chatAssistant"),
     url: "/chat-assistant",
     icon: "bot",
     shortcut: ["c", "c"],
-    isActive: false,
+    isActive: currentPath.includes("/chat-assistant"),
     items: [],
   },
   // {
@@ -130,9 +179,12 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
   // },
   {
     title: t("menu.account.title"),
-    url: "#",
+    url: "/profile",
     icon: "badgeCheck",
-    isActive: true,
+    isActive:
+      currentPath.includes("/profile") ||
+      currentPath.includes("/login") ||
+      currentPath.includes("/subscription"),
     items: [
       {
         title: t("menu.account.profile"),

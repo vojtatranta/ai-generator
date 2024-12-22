@@ -203,7 +203,11 @@ export const langtailRouter = router({
   invokePrompt: protectedProcedure
     .input(
       z.object({
-        prompt: z.enum([PROMPTS.POST_GENERATOR, PROMPTS.POST_IMAGE_GENERATOR]),
+        prompt: z.enum([
+          PROMPTS.POST_GENERATOR,
+          PROMPTS.POST_IMAGE_GENERATOR,
+          PROMPTS.ARTICLE_SUMMARIZER,
+        ]),
         message: z.string(),
         locale: z.string().optional(),
         length: z.number().optional(),
