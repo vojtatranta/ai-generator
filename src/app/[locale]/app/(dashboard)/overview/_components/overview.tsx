@@ -8,9 +8,9 @@ import {
 import PageContainer from "@/web/components/layout/page-container";
 import { RecentGenerations } from "./recent-generations";
 import { Button } from "@/web/components/ui/button";
-import DrawingEinsteinPic from "../../../../../../public/ai-stein-drawinig.webp";
-import PostingEinsteinPic from "../../../../../../public/aistein-posting.webp";
-import DrawingEinsteinWritingArticle from "../../../../../../public/esintein-writing.jpg";
+import DrawingEinsteinPic from "../../../../../../../public/ai-stein-drawinig.webp";
+import PostingEinsteinPic from "../../../../../../../public/aistein-posting.webp";
+import DrawingEinsteinWritingArticle from "../../../../../../../public/esintein-writing.jpg";
 import {
   Card,
   CardContent,
@@ -29,7 +29,7 @@ import { getTranslations } from "next-intl/server";
 import { getSureUserPlan, getUsedNumberOfGenerations } from "@/lib/stripe";
 import Link from "next/link";
 import { PROMPTS } from "@/constants/data";
-import { getPromptLink } from "@/lib/private-links";
+import { getPromptLink, getSubscriptionLink } from "@/lib/private-links";
 import { getPlanQuota } from "@/constants/plan";
 import { Icons } from "@/components/icons";
 
@@ -178,7 +178,7 @@ export default async function OverViewPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col">
                       <div className="text-2xl font-bold">
-                        <Link href="/subscription">
+                        <Link href={getSubscriptionLink()}>
                           {userData.plan.product.name}
                         </Link>
                       </div>

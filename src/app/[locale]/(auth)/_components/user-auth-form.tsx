@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";
 import { useTranslations } from "next-intl";
+import { getBaseAppLink } from "@/lib/private-links";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Enter a valid email address" }),
@@ -56,7 +57,8 @@ export default function UserAuthForm({
         redirectTo:
           `${window.location.origin}/api/google-supabase-signin?` +
           new URLSearchParams({
-            callbackUrl: callbackUrl ?? `${window.location.origin}/overview`,
+            callbackUrl:
+              callbackUrl ?? `${window.location.origin}/${getBaseAppLink()}`,
           }).toString(),
       },
     });

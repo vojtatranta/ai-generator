@@ -20,6 +20,7 @@ import { AssistantAIChatContainer } from "./assistant-chat-container/AssistantCh
 import { PlanFeatureLimitation } from "@/components/plan-restriction";
 import { getSureUserPlan } from "@/lib/stripe";
 import { FEATURES } from "@/constants/plan";
+import { getSubscriptionLink } from "@/lib/private-links";
 
 type TSocketsListingPage = {};
 
@@ -62,7 +63,7 @@ export default async function AssistantChatPage({}: TSocketsListingPage) {
                     </div>
                     <div>
                       <Link
-                        href="/subscription"
+                        href={getSubscriptionLink()}
                         className="text-primary-foreground underline"
                       >
                         {t("subscription.manageSubscriptionToupgrade")}

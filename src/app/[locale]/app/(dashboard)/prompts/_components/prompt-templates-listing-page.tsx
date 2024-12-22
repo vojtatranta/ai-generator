@@ -45,14 +45,6 @@ export default async function PromptTemplatesListingPage({}: TSocketsListingPage
             title={`${t("promptTemplates.listing.title")} (${totalPromptTemplates})`}
             description={t("promptTemplates.listing.description")}
           />
-
-          {/* <Link
-            href={"/quizes/new"}
-            className={cn(buttonVariants({ variant: "default" }))}
-          >
-            <Plus className="mr-2 h-4 w-4" />{" "}
-            {t("promptTemplate.listing.addNew")}
-          </Link> */}
         </div>
         <Separator />
         <PromptTemplatesTable

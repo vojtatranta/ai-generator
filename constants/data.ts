@@ -91,7 +91,7 @@ export const getNavItems = (
 ): NavItem[] => [
   {
     title: t("menu.dashboard"),
-    url: "/overview",
+    url: "/app/overview",
     icon: "dashboard",
     isActive: currentPath.includes("overview"),
     shortcut: ["d", "d"],
@@ -99,7 +99,7 @@ export const getNavItems = (
   },
   {
     title: t("menu.promptTemplates"),
-    url: "/prompts",
+    url: "/app/prompts",
     icon: "wandSparkles",
     shortcut: ["t", "t"],
     isActive:
@@ -131,7 +131,7 @@ export const getNavItems = (
   },
   {
     title: t("menu.chatAssistant"),
-    url: "/chat-assistant",
+    url: "/app/chat-assistant",
     icon: "bot",
     shortcut: ["c", "c"],
     isActive: currentPath.includes("/chat-assistant"),
@@ -139,7 +139,7 @@ export const getNavItems = (
   },
   // {
   //   title: t("menu.categories"),
-  //   url: "/product-categories",
+  //   url: "/app/product-categories",
   //   icon: "shoppingBasket",
   //   shortcut: ["x", "x"],
   //   isActive: false,
@@ -147,7 +147,7 @@ export const getNavItems = (
   // },
   // {
   //   title: t("menu.products"),
-  //   url: "/products",
+  //   url: "/app/products",
   //   icon: "package",
   //   shortcut: ["p", "p"],
   //   isActive: false,
@@ -155,7 +155,7 @@ export const getNavItems = (
   // },
   // {
   //   title: t("menu.answers"),
-  //   url: "/answers",
+  //   url: "/app/answers",
   //   icon: "notebookPen",
   //   shortcut: ["a", "a"],
   //   isActive: false,
@@ -163,7 +163,7 @@ export const getNavItems = (
   // },
   // {
   //   title: t("menu.productAttributes"),
-  //   url: "/product-attributes ",
+  //   url: "/app/product-attributes ",
   //   icon: "tag",
   //   shortcut: ["t", "t"],
   //   isActive: false,
@@ -171,7 +171,7 @@ export const getNavItems = (
   // },
   // {
   //   title: t("menu.users"),
-  //   url: "/users",
+  //   url: "/app/users",
   //   icon: "user",
   //   shortcut: ["u", "u"],
   //   isActive: false,
@@ -179,7 +179,7 @@ export const getNavItems = (
   // },
   {
     title: t("menu.account.title"),
-    url: "/profile",
+    url: "/app/profile",
     icon: "badgeCheck",
     isActive:
       currentPath.includes("/profile") ||
@@ -188,14 +188,14 @@ export const getNavItems = (
     items: [
       {
         title: t("menu.account.profile"),
-        url: "/profile",
+        url: "/app/profile",
         icon: "userPen",
         shortcut: ["m", "m"],
       },
 
       {
         title: t("menu.account.subscription"),
-        url: "/subscription",
+        url: "/app/subscription",
         icon: "userPen",
         shortcut: ["m", "m"],
       },
@@ -203,7 +203,7 @@ export const getNavItems = (
       {
         title: t("menu.account.login"),
         shortcut: ["l", "l"],
-        url: "/login",
+        url: "/app/login",
         icon: "login",
       },
     ],

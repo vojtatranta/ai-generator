@@ -19,6 +19,7 @@ import {
 } from "@/web/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { getProfileLink, getSubscriptionLink } from "@/lib/private-links";
 
 export function UserNav({ user }: { user: User }) {
   const { signOut } = useSignOut();
@@ -51,10 +52,10 @@ export function UserNav({ user }: { user: User }) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <Link href="/profile">
+            <Link href={getProfileLink()}>
               <DropdownMenuItem>{t("menu.account.profile")}</DropdownMenuItem>
             </Link>
-            <Link href="/subscription">
+            <Link href={getSubscriptionLink()}>
               <DropdownMenuItem>
                 {t("menu.account.subscription")}
               </DropdownMenuItem>

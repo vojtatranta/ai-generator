@@ -9,6 +9,7 @@ import { UsedPromptType } from "@/constants/data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import { getPromptLink } from "@/lib/private-links";
 
 export const usePromptTemplatesColumns = () => {
   const t = useTranslations();
@@ -37,7 +38,7 @@ export const usePromptTemplatesColumns = () => {
       accessorKey: "try",
       header: "",
       cell: ({ row }) => (
-        <Link href={`/prompt/${row.original.id}`}>
+        <Link href={getPromptLink(row.original.id)}>
           <Button type="button" size="sm" className="mx-4">
             <Icons.wandSparkles className="h-4 w-4 mr-2" />
             <span className="whitespace-nowrap">

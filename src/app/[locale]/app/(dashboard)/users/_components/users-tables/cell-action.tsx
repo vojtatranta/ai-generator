@@ -1,4 +1,5 @@
 "use client";
+import { getUserDetailLink } from "@/lib/private-links";
 import { AlertModal } from "@/web/components/modal/alert-modal";
 import { Button } from "@/web/components/ui/button";
 import {
@@ -42,7 +43,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem onClick={() => router.push(`/users/${data.id}`)}>
+          <DropdownMenuItem
+            onClick={() => router.push(getUserDetailLink(data.id))}
+          >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>

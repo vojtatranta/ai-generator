@@ -42,12 +42,12 @@ export default async function UsersListingPage({}: TUsersListingPage) {
             description={t("users.listing.description")}
           />
 
-          <Link
+          {/* <Link
             href={"/users/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> {t("users.listing.addNew")}
-          </Link>
+          </Link> */}
         </div>
         <Separator />
         <UsersTable

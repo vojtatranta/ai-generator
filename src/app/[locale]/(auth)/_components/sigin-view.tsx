@@ -4,6 +4,7 @@ import { buttonVariants } from "@/web/components/ui/button";
 import { cn } from "@/web/lib/utils";
 import { getTranslations } from "next-intl/server";
 import { Icons } from "@/components/icons";
+import { getBaseAppLink } from "@/lib/private-links";
 
 export const metadata: Metadata = {
   title: "Authentication",
@@ -20,7 +21,7 @@ export default async function SignInViewPage({
   return (
     <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
-        href="/"
+        href={getBaseAppLink()}
         className={cn(
           buttonVariants({ variant: "ghost" }),
           "absolute right-4 top-4 hidden md:right-8 md:top-8",

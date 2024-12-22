@@ -51,6 +51,7 @@ import { Icons } from "../icons";
 import { useSignOut } from "@/web/lib/use-sign-out";
 import { User } from "@/lib/supabase-server";
 import { useTranslations } from "next-intl";
+import { getProfileLink, getSubscriptionLink } from "@/lib/private-links";
 
 export const company = {
   name: "AIstein",
@@ -198,13 +199,13 @@ export default function AppSidebar({ user }: { user: User }) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <Link href="/profile">
+                  <Link href={getProfileLink()}>
                     <DropdownMenuItem>
                       <BadgeCheck className="mr-2" />
                       {t("userNav.account")}
                     </DropdownMenuItem>
                   </Link>
-                  <Link href="/subscription">
+                  <Link href={getSubscriptionLink()}>
                     <DropdownMenuItem>
                       <CreditCard className="mr-2" />
                       {t("userNav.billing")}

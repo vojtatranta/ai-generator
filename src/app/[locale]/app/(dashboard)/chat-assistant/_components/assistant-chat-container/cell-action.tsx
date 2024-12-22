@@ -1,5 +1,6 @@
 "use client";
 import { UsedPromptType } from "@/constants/data";
+import { getPromptLink } from "@/lib/private-links";
 import { useSupabase } from "@/lib/supabase-client";
 import { AlertModal } from "@/web/components/modal/alert-modal";
 import { Button } from "@/web/components/ui/button";
@@ -65,7 +66,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>{commontT("common.actions")}</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/prompt/${data.prompt}/`)}
+            onClick={() => router.push(getPromptLink(data.prompt))}
           >
             <Edit className="mr-2 h-4 w-4" /> {t("tryPrompt")}
           </DropdownMenuItem>
