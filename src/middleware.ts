@@ -43,6 +43,7 @@ export default async function authMiddleware(request: NextRequest) {
 
   const { hostname } = request.nextUrl;
 
+  console.log("request.nextUrl", request.nextUrl);
   // Detekce subdomeny
   if (hostname.startsWith("app.")) {
     request.nextUrl.pathname = `/app${request.nextUrl.pathname}`;
