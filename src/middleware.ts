@@ -38,6 +38,9 @@ function isPublicPath(path: string): boolean {
 }
 
 export default async function authMiddleware(request: NextRequest) {
+  // First apply i18n middleware
+  let response = i18nMiddleware(request);
+
   const { hostname } = request.nextUrl;
 
   // Detekce subdomeny
@@ -45,9 +48,6 @@ export default async function authMiddleware(request: NextRequest) {
     request.nextUrl.pathname = `/app${request.nextUrl.pathname}`;
     return NextResponse.rewrite(request.nextUrl);
   }
-
-  // First apply i18n middleware
-  let response = i18nMiddleware(request);
 
   console.log("middleware RequestUrl:", request.nextUrl.toString());
 
