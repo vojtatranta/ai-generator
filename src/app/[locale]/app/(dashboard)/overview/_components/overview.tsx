@@ -11,6 +11,7 @@ import { Button } from "@/web/components/ui/button";
 import DrawingEinsteinPic from "../../../../../../../public/ai-stein-drawinig.webp";
 import PostingEinsteinPic from "../../../../../../../public/aistein-posting.webp";
 import DrawingEinsteinWritingArticle from "../../../../../../../public/esintein-writing.jpg";
+import DrawingEinsteinChatting from "../../../../../../../public/aisteinchat.jpg";
 import {
   Card,
   CardContent,
@@ -28,7 +29,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { getSureUserPlan, getUsedNumberOfGenerations } from "@/lib/stripe";
 import Link from "next/link";
-import { PROMPTS } from "@/constants/data";
+import { AI_CHAT_PROMPT_SLUG, PROMPTS } from "@/constants/data";
 import { getPromptLink, getSubscriptionLink } from "@/lib/private-links";
 import { getPlanQuota } from "@/constants/plan";
 import { Icons } from "@/components/icons";
@@ -152,6 +153,37 @@ export default async function OverViewPage() {
                         <Button type="button">
                           <Icons.notebookPen className="mr-2 h-4 w-4" />
                           {t("overview.summarizeArticleCTA")}
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {t("overview.chatWithAISocialAssistant")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-row items-center justify-between gap-2">
+                      <div className="max-w-[180px]">
+                        <Image
+                          src={DrawingEinsteinChatting}
+                          alt="Aistein writing"
+                          className="rounded-lg"
+                          height="700"
+                        />
+                      </div>
+                      <div className="text-muted-foreground">
+                        {t("overview.chatWithAISocialAssistantDescription")}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex flex-row justify-end">
+                      <Link href={getPromptLink(AI_CHAT_PROMPT_SLUG)}>
+                        <Button type="button">
+                          <Icons.notebookPen className="mr-2 h-4 w-4" />
+                          {t("overview.chatWithAISocialAssistantCTA")}
                         </Button>
                       </Link>
                     </div>

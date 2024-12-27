@@ -126,6 +126,9 @@
     "generatePostCTA": "Vytvořit příspěvek",
     "generateImagePostCTA": "Vytvořit příspěvek s obrázkem",
     "summarizeArticleCTA": "Shrnout článek",
+    "chatWithAISocialAssistant": "Chat s AI expertem na sociální sítě",
+    "chatWithAISocialAssistantDescription": "Proberte s AI vaše nápady o obsahu na sociální sítě a webové stránky. Nechte si poradit od AI assistenta, který je natrénován, aby se choval jako zkušený správce sociálních sítí.",
+    "chatWithAISocialAssistantCTA": "Chatovat s AI",
     "barChart": {
       "generationsLabel": "Generování AI",
       "title": "Přehled generování",
