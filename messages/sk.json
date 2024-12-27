@@ -399,7 +399,8 @@
       "features": "Funkcie",
       "pricing": "Cenník",
       "contact": "Kontakt",
-      "openApp": "Otvoriť AIstein"
+      "openApp": "Otvoriť AIstein",
+      "getStarted": "Do aplikácie"
     },
     "hero": {
       "title": "Vytvárajte obsah rýchlejšie s AI",
@@ -440,47 +441,61 @@
     "pricing": {
       "title": "Jednoduchý, transparentný cenník",
       "starter": {
-        "title": "Starter",
-        "price": "0€",
-        "period": "Navždy zadarmo",
+        "title": "Zadarmo",
+        "price": "0 €",
+        "period": "14 dní",
         "features": {
-          "generations": "20 AI generovaní/mesiac",
-          "templates": "Základné šablóny",
+          "generations": "100 AI generovaní/mesiac",
+          "templates": "Všetky šablóny",
+          "models": "Všetky AI modely",
           "support": "Komunitná podpora"
         }
       },
       "pro": {
         "title": "Pro",
-        "price": "29€",
+        "price": "10 €",
         "period": "mesačne",
         "features": {
-          "generations": "Neobmedzené generovanie",
-          "templates": "Premium šablóny",
-          "support": "Prioritná podpora"
+          "generations": "100 AI generovaní/mesiac",
+          "templates": "Obmedzené šablóny",
+          "models": "Základné AI modely",
+          "support": "Komunitná podpora"
+        }
+      },
+      "business": {
+        "title": "Business",
+        "price": "25 €",
+        "period": "mesačne",
+        "features": {
+          "generations": "1000 AI generovaní/mesiac",
+          "templates": "Všetky šablóny",
+          "models": "Základné AI modely",
+          "support": "Prioritná osobná podpora"
         }
       },
       "enterprise": {
         "title": "Enterprise",
         "price": "Individuálne",
-        "period": "Kontaktujte obchod",
+        "period": "Neobmedzene",
         "features": {
-          "solutions": "Vlastné riešenia",
-          "api": "API prístup",
+          "generations": "Neobmedzené generovanie",
+          "templates": "Všetky šablóny",
+          "models": "Pokročilé AI modely",
           "support": "Dedikovaná podpora"
         }
       },
       "getStarted": "Začať",
-      "contactSales": "Kontaktovať obchod"
+      "contactSales": "Kontaktujte nás"
     },
     "contact": {
       "title": "Kontaktujte nás",
       "email": {
         "title": "Email",
-        "value": "support@aistein.com"
+        "value": "vojta.tranta@gmail.com"
       },
       "phone": {
         "title": "Telefón",
-        "value": "+1 (555) 123-4567"
+        "value": "+420 604 927 521"
       },
       "form": {
         "name": "Meno",

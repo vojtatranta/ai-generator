@@ -393,7 +393,8 @@
       "features": "Features",
       "pricing": "Pricing",
       "contact": "Contact",
-      "openApp": "Open AIstein"
+      "openApp": "Open AIstein",
+      "getStarted": "To App"
     },
     "hero": {
       "title": "Create Content Faster with AI",
@@ -432,34 +433,48 @@
       }
     },
     "pricing": {
-      "title": "Simple, Transparent Pricing",
+      "title": "Simple, transparent pricing",
       "starter": {
-        "title": "Starter",
+        "title": "Free",
         "price": "$0",
-        "period": "Free forever",
+        "period": "14 days",
         "features": {
-          "generations": "20 AI generations/month",
-          "templates": "Basic templates",
+          "generations": "100 AI generations/month",
+          "templates": "All templates",
+          "models": "All AI models",
           "support": "Community support"
         }
       },
       "pro": {
         "title": "Pro",
-        "price": "$29",
-        "period": "per month",
+        "price": "$10",
+        "period": "monthly",
         "features": {
-          "generations": "Unlimited generations",
-          "templates": "Premium templates",
-          "support": "Priority support"
+          "generations": "100 AI generations/month",
+          "templates": "Limited templates",
+          "models": "Basic AI models",
+          "support": "Community support"
+        }
+      },
+      "business": {
+        "title": "Business",
+        "price": "$25",
+        "period": "monthly",
+        "features": {
+          "generations": "1000 AI generations/month",
+          "templates": "All templates",
+          "models": "Basic AI models",
+          "support": "Priority personal support"
         }
       },
       "enterprise": {
         "title": "Enterprise",
         "price": "Custom",
-        "period": "Contact sales",
+        "period": "Unlimited",
         "features": {
-          "solutions": "Custom solutions",
-          "api": "API access",
+          "generations": "Unlimited generations",
+          "templates": "All templates",
+          "models": "Advanced AI models",
           "support": "Dedicated support"
         }
       },
@@ -469,12 +484,12 @@
     "contact": {
       "title": "Get in Touch",
       "email": {
-        "title": "Email Us",
-        "value": "support@aistein.com"
+        "title": "Email",
+        "value": "vojta.tranta@gmail.com"
       },
       "phone": {
-        "title": "Call Us",
-        "value": "+1 (555) 123-4567"
+        "title": "Phone",
+        "value": "+420 604 927 521"
       },
       "form": {
         "name": "Name",
