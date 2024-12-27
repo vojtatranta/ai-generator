@@ -10,10 +10,10 @@ export const getBaseData = (locale: string, t: (str: string) => string) => ({
     authors: ["Vojtěch Tranta"],
     url: "https://aistein.cz/",
     siteName: "AI Generator",
-    image: "https://aistein.cz/aistein.webp",
+    image: "https://aistein.cz/aistein.jpg",
     images: [
       {
-        url: "https://aistein.cz/aistein.webp",
+        url: "https://aistein.cz/aistein.jpg",
         width: 1600,
         height: 700,
       },

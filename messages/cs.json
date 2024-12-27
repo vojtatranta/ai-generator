@@ -266,10 +266,10 @@
     }
   },
   "seo": {
-    "title": "AIstein - Lepší produktová doporučení",
-    "description": "Vytvářejte personalizovaná produktová doporučení pro vaše zákazníky pomocí našeho inteligentního kvízového systému",
-    "ogTitle": "AIstein - Inteligentní produktová doporučení",
-    "ogDescription": "Transformujte své podnikání s personalizovanými produktovými doporučeními. Vytvářejte poutavé kvízy, které pomohou zákazníkům najít perfektní produkty.",
+    "title": "AIstein - Obsah pro web a sociální sítě pomocí AI",
+    "description": "Vytvářejte obsah pro vaše sociální sítě za pomoci AI.",
+    "ogTitle": "AIstein - Inteligentní obsah pro web a sociální sítě",
+    "ogDescription": "Vytvářejte obsah pro vaše sociální sítě pomocí inteligentního chatu a AI. Zajistuje to, aby vaše zákazníky nalezli výsledky, které se podobujou svým hledanému.",
     "author": {
       "name": "Vojtěch Tranta",
       "url": "https://twitter.com/vojtatranta"

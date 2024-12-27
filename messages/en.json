@@ -316,10 +316,10 @@
     "failedToCopy": "Failed to copy"
   },
   "seo": {
-    "title": "AIstein - Better Product Recommendations",
-    "description": "Create personalized product recommendations for your customers using our intelligent quiz system",
-    "ogTitle": "AIstein - Smart Product Recommendations",
-    "ogDescription": "Transform your business with personalized product recommendations. Create engaging quizzes that help customers find perfect products.",
+    "title": "AIstein - Web and Social Media Content with AI",
+    "description": "Create content for your social media using AI.",
+    "ogTitle": "AIstein - Intelligent Content for Web and Social Media",
+    "ogDescription": "Create content for your social media using intelligent chat and AI. Ensures that your customers find results similar to what they're looking for.",
     "author": {
       "name": "Vojtěch Tranta",
       "url": "https://twitter.com/vojtatranta"
