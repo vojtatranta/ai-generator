@@ -6,8 +6,10 @@ export interface FileInputProps {
   currentImageUrl?: string;
   placeholder?: string;
   children?: React.ReactNode;
+  value?: string;
   accept?: string;
   onFileSelect?: (file: File | null, base64: string) => void;
+  onFileOnlySelect?: (file: File | null) => void;
 }
 
 export const FileInput = React.forwardRef<HTMLDivElement, FileInputProps>(
@@ -16,9 +18,11 @@ export const FileInput = React.forwardRef<HTMLDivElement, FileInputProps>(
       accept = "image/*",
       className,
       currentImageUrl,
+      value,
       placeholder,
       children,
       onFileSelect,
+      onFileOnlySelect,
     },
     ref,
   ) => {
@@ -26,18 +30,15 @@ export const FileInput = React.forwardRef<HTMLDivElement, FileInputProps>(
 
     const handleFile = React.useCallback(
       (file: File) => {
-        if (!file.type.startsWith("image/")) {
-          return;
-        }
-
         const reader = new FileReader();
+        onFileOnlySelect?.(file);
         reader.onload = (e) => {
           const base64 = e.target?.result as string;
           onFileSelect?.(file, base64);
         };
         reader.readAsDataURL(file);
       },
-      [onFileSelect],
+      [onFileSelect, onFileOnlySelect],
     );
 
     const onDrop = React.useCallback(
@@ -86,35 +87,45 @@ export const FileInput = React.forwardRef<HTMLDivElement, FileInputProps>(
             accept={accept}
           />
 
-          {currentImageUrl && (
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <button
-                  onClick={() => onFileSelect?.(null, "")}
-                  className="absolute -right-2 -top-2 z-10 rounded-full bg-destructive p-1 text-white hover:bg-destructive/90"
-                  type="button"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
+          {currentImageUrl ||
+            (value && (
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      onFileSelect?.(null, "");
+                      onFileOnlySelect?.(null);
+                    }}
+                    className="absolute -right-2 -top-2 z-10 rounded-full bg-destructive p-1 text-white hover:bg-destructive/90"
+                    type="button"
                   >
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-                <div
-                  className="h-12 w-12 rounded-full bg-cover bg-center bg-gray-100"
-                  style={{
-                    backgroundImage: `url(${currentImageUrl})`,
-                  }}
-                />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <div
+                    className="h-12 w-12 rounded-full bg-cover bg-center bg-gray-100"
+                    style={{
+                      backgroundImage: `url(${currentImageUrl})`,
+                    }}
+                  />
+                  {value && (
+                    <div className="text-ellipsis overflow-hidden text-sm font-medium">
+                      {value.slice(0, 15)}
+                      {value.length > 15 ? "..." : ""}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            ))}
           <p className="text-muted-foreground w-full text-center">
             {placeholder ?? "Drag and drop an image or click to select"}
           </p>

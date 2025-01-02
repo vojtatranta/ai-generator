@@ -14,6 +14,8 @@ import { getLoginLink } from "@/lib/public-links";
 export const POST_GENERATOR = "post-generator" as const;
 export const POST_IMAGE_GENERATOR = "image-social-post-generator" as const;
 export const ARTICLE_SUMMARIZER = "article-summarizer" as const;
+export const DOCUMENT_CHAT = "document-chat" as const;
+export const TEXT_DATA_FINDER = "text-data-finder" as const;
 
 export const AI_CHAT_PROMPT_SLUG = "social-media-post-ideas-assistant";
 
@@ -21,6 +23,7 @@ export const PROMPTS = {
   POST_GENERATOR,
   POST_IMAGE_GENERATOR,
   ARTICLE_SUMMARIZER,
+  TEXT_DATA_FINDER,
 } as const;
 
 export const DEFAULT_LANGUAGE = "cs" as const;
@@ -55,6 +58,14 @@ export const USED_PROMPTS = [
     prompt: ARTICLE_SUMMARIZER,
     title: "articleSummarizerPromptTitle",
     description: "articleSummarizerPromptDescription",
+    defaultLength: 300,
+    image: false,
+  },
+  {
+    id: DOCUMENT_CHAT,
+    prompt: DOCUMENT_CHAT,
+    title: "documentChatPromptTitle",
+    description: "documentChatPromptDescription",
     defaultLength: 300,
     image: false,
   },

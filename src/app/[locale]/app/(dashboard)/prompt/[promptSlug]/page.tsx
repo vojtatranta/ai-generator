@@ -6,6 +6,7 @@ import { PromptQueryPage } from "../_components/PromptQueryPage";
 import { notFound } from "next/navigation";
 import {
   ARTICLE_SUMMARIZER,
+  DOCUMENT_CHAT,
   RANDOM_IMAGE_TOPICS,
   RANDOM_TOPICS,
   USED_PROMPTS,
@@ -13,6 +14,8 @@ import {
 import { PromptImageQueryPage } from "../_components/PromptImageQueryPage";
 import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
 import { PromptArticleSummarizerPage } from "../_components/PromptArticleSummarizerPage";
+import { PromptDocumentPage } from "../_components/PromptDocumentPage";
+import { uploadFileAction } from "@/lib/upload-file-action";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -71,6 +74,17 @@ export default async function Page({ searchParams, params }: pageProps) {
         aiResults={lastResults ?? []}
         prompt={usedPrompt}
         randomNumberFromTopics={randomNumberFromTopics}
+      />
+    );
+  }
+
+  if (usedPrompt.id === DOCUMENT_CHAT) {
+    return (
+      <PromptDocumentPage
+        aiResults={lastResults ?? []}
+        prompt={usedPrompt}
+        randomNumberFromTopics={0}
+        onUploadFileAction={uploadFileAction}
       />
     );
   }

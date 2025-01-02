@@ -10,8 +10,7 @@ import { getLocale } from "next-intl/server";
 import { NextResponse } from "next/server";
 import { type ChatCompletion } from "openai/resources/chat/completions";
 import { waitUntil } from "@vercel/functions";
-
-const AI_CHAT_PROMPT_SLUG = "social-media-post-ideas-assistant";
+import { AI_CHAT_PROMPT_SLUG } from "@/constants/data";
 
 export async function POST(request: Request) {
   const user = await getUser();

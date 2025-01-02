@@ -1,13 +1,16 @@
-import { AIResult, User } from "@/web/lib/supabase-server";
+import { AIResult, getUser, User } from "@/web/lib/supabase-server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { NextRequest } from "next/server";
 import { Langtail } from "langtail";
+import { pc, PINECODE_EMBEDDINGS_MODEL } from "@/lib/pinecode";
+import fs from "fs/promises";
 import {
   createSupabaseServerClient,
   getMaybeUserWithClient,
 } from "@/web/lib/supabase-server";
 import xmlConverter from "xml-js";
+import pdf from "pdf-parse";
 
 import {
   answerFormStateSchema,
@@ -25,8 +28,12 @@ import {
 } from "@/lib/stripe";
 import z from "zod";
 import { PROMPTS } from "@/constants/data";
-import { Json } from "@/database.types";
+import { Database, Json } from "@/database.types";
 import { getLocale } from "next-intl/server";
+import { textChunker } from "@/lib/pinecode";
+import { zfd } from "zod-form-data";
+import { SupabaseClient } from "@supabase/supabase-js";
+import path from "path";
 
 // Create context type
 type Context = {
@@ -200,6 +207,82 @@ const langtail = new Langtail({
 });
 
 export const langtailRouter = router({
+  askDocument: protectedProcedure
+    .input(
+      z.object({
+        message: z.string(),
+        locale: z.string(),
+        length: z.number(),
+        fileId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data: file } = await ctx.supabase
+        .from("files")
+        .select("*")
+        .eq("user_id", ctx.user.id)
+        .eq("id", input.fileId)
+        .single();
+
+      if (!file) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "File not found",
+        });
+      }
+
+      const embedding =
+        (
+          await pc.inference.embed(PINECODE_EMBEDDINGS_MODEL, [input.message], {
+            inputType: "passage",
+            truncate: "END",
+          })
+        ).data[0]?.values ?? [];
+
+      console.log("embedding", embedding);
+
+      const { data: embeddings, error: embeddingsError } =
+        await ctx.supabase.rpc("match_documents", {
+          query_embedding: `[${embedding.join(",")}]`, // Pass the query embeddingembedding, // Pass the embedding you want to compare
+          match_threshold: 0.78, // Choose an appropriate threshold for your data
+          match_count: 10, // Choose the number of matches
+          file_id: input.fileId, // Pass the file_id you want to compare
+        });
+
+      if (embeddingsError) {
+        console.warn("embeddings error", embeddingsError);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Could not get embeddings",
+        });
+      }
+
+      console.log("embeddings", embeddings);
+
+      const embeddingsText =
+        embeddings?.map(({ chunk }) => chunk).join("...") ?? "";
+
+      console.log("embeddingsText", embeddingsText);
+
+      const response = await langtail.prompts.invoke({
+        prompt: PROMPTS.TEXT_DATA_FINDER,
+        user: ctx.user.id,
+        variables: {
+          ...(input.locale ? { language: input.locale } : {}),
+          ...(input.length ? { length: String(input.length) } : {}),
+          ...(embeddingsText ? { embeddings: embeddingsText } : {}),
+        },
+        messages: [
+          {
+            role: "user",
+            content: input.message,
+          },
+        ],
+      });
+
+      return response;
+    }),
+
   invokePrompt: protectedProcedure
     .input(
       z.object({
@@ -349,12 +432,162 @@ export const langtailRouter = router({
     }),
 });
 
+async function getFileContent(filePath: string) {
+  const readFile = await fs.readFile(filePath);
+
+  const extName = path.extname(filePath);
+
+  if (extName.toLowerCase() === ".pdf") {
+    const { text } = await pdf(readFile);
+    console.log("text", text);
+    return text;
+  }
+
+  if (extName.toLowerCase() === ".txt") {
+    return readFile.toString("utf-8");
+  }
+}
+
+async function handleUploadedFileContent(
+  filePath: string,
+  fileName: string,
+  fileContent: string,
+  supabase: SupabaseClient<Database>,
+  fileUrl?: string,
+) {
+  console.log("fileContent", fileContent);
+  const user = await getUser();
+  const { data: addedFile, error: fileError } = await supabase
+    .from("files")
+    .insert([
+      {
+        user_id: user.id,
+        filename: fileName,
+        url: fileUrl ?? null,
+        local_file_path: filePath ?? null,
+      },
+    ])
+    .select("*")
+    .single();
+
+  if (!addedFile) {
+    console.warn("file addition error:", fileError);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Could not create file",
+    });
+  }
+
+  const chunks = textChunker(fileContent);
+
+  const chunkData = await Promise.all(
+    chunks.map(async (chunk) => ({
+      user_id: user.id,
+      chunk: chunk,
+      file: addedFile.id,
+      embeddings: `[${(
+        await pc.inference.embed(PINECODE_EMBEDDINGS_MODEL, [chunk], {
+          inputType: "passage",
+          truncate: "END",
+        })
+      ).data
+        .flatMap(({ values }) => values)
+        .join(",")}]`,
+      embedding_type: PINECODE_EMBEDDINGS_MODEL,
+    })),
+  );
+
+  const { data: documents, error: documentError } = await supabase
+    .from("documents")
+    .insert(chunkData)
+    .select("*");
+
+  if (documentError) {
+    console.warn("document chunking error", documentError);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: documentError.message,
+    });
+  }
+
+  return documents;
+}
+
+const filesRouter = router({
+  handleUploadedFile: protectedProcedure
+    .input(
+      z.object({
+        filePath: z.string(),
+        originalFileName: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log("input", input);
+
+      const readFile = await getFileContent(input.filePath);
+      const { data: file, error } = await ctx.supabase.storage
+        .from("documents")
+        .upload(input.filePath, readFile, {
+          cacheControl: "3600000000000",
+          upsert: true,
+        });
+
+      if (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+
+      const result = await handleUploadedFileContent(
+        input.filePath,
+        input.originalFileName,
+        readFile,
+        ctx.supabase,
+        file.path,
+      );
+
+      console.log("result", result);
+
+      await fs.rm(input.filePath);
+
+      return result;
+    }),
+
+  uploadText: protectedProcedure
+    .input(
+      z.object({
+        text: z.string(),
+        name: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return handleUploadedFileContent(
+        input.name,
+        input.name,
+        input.text,
+        ctx.supabase,
+      );
+    }),
+
+  listFiles: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.user.id;
+    const { data: files } = await ctx.supabase
+      .from("files")
+      .select("*")
+      .eq("user_id", userId);
+
+    return files;
+  }),
+});
+
 // export const publicProcedure = t.procedure;
 
 // Create the root router
 export const appRouter = router({
   subscription: subscriptionRouter,
   langtail: langtailRouter,
+  filesRouter,
 });
 
 // Export type router type signature
