@@ -36,11 +36,11 @@ export const PromptResultHistory = memo(function PromptResultHistory({
   const t = useTranslations();
 
   return (
-    <Card className="max-w-[500px]">
+    <Card className="max-w-[700px]">
       <CardContent className="py-6">
         {Maybe.fromFirst(allResults)
           .andThen(() => (
-            <div>
+            <div className="flex-1">
               <div className="text-sm text-gray-500 mb-2">
                 {t("prompt.olderResults")}
               </div>
@@ -51,7 +51,7 @@ export const PromptResultHistory = memo(function PromptResultHistory({
                     key={`${result.id}`}
                     className="flex flex-col items-center space-x-2"
                   >
-                    <div>
+                    <div className="flex-1 w-full">
                       <div className="mb-1">
                         <div className="inline-block items-center justify-center w-6 h-6 mr-2 text-center bg-primary-foreground text-primary rounded-full">
                           {index + 1}

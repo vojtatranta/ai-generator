@@ -148,9 +148,9 @@ export const PromptQueryPage = memo(function PromptQueryPage({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-[1fr_auto] md:grid-cols-[2fr_auto] gap-2"
+          className="grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-2"
         >
-          <Card className="h-full">
+          <Card className="h-full w-full">
             <CardHeader>
               <CardTitle className="text-left text-2xl font-bold">
                 {t(prompt.title)}
@@ -160,7 +160,7 @@ export const PromptQueryPage = memo(function PromptQueryPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid lg:grid-cols-2 gap-4">
                 <div className="w-full space-y-2">
                   <FormField
                     control={form.control}

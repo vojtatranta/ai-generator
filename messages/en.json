@@ -153,6 +153,7 @@
     "result": "Click Generate to see the result",
     "locale": "Output Language",
     "localePlaceholder": "cs, en, sk",
+    "cantGenerateImagePostTryAgain": "Failed to create post with image, please try again.",
     "randomTopic": {
       "NAME": "Article about a current famous actor",
       "POLITICS": "Article about politics",

@@ -232,7 +232,8 @@
       "LOCAL_CHEF": "Zdeněk Pohlreich je český šéfkuchár a televízna osobnosť, známy svojimi vystúpeniami v rôznych kulinárskych reláciách. Významne ovplyvnil modernú českú gastronómiu a vlastní niekoľko úspešných reštaurácií v Prahe.",
       "LOCAL_WRITER": "Karel Čapek bol český spisovateľ, dramatik a kritik. Je najznámejší svojou sci-fi tvorbou a tým, že prostredníctvom svojej hry R.U.R. zaviedol slovo 'robot' do anglického jazyka a science fiction ako celku.",
       "LOCAL_AUTHOR": "Božena Němcová bola česká spisovateľka, ktorá napísala klasický román 'Babička'. Je často považovaná za matku českej prózy a zohrala významnú úlohu v českom národnom obrodení."
-    }
+    },
+    "cantGenerateImagePostTryAgain": "Nepodarilo sa vytvoriť príspevok s obrázkom, skúste to znovu."
   },
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",

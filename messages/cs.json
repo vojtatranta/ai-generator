@@ -147,6 +147,7 @@
   "prompt": {
     "title": "Generovat obsah",
     "message": "Zpráva",
+    "cantGenerateImagePostTryAgain": "Nepodařilo se vytvořit příspěvek s obrázkem, zkuste to znovu.",
     "articleToSummarize": "Článek k shrnutí",
     "postGenerationResultsEmptyStateText": "Tady se zobrazí výsledky předchozího generování, abyste si mohli vybrat post, který je pro vás nejlepší.",
     "postGenerationCurrentResulsEmptyStateText": "Tady se zobrazí výsledek AI generování.",
