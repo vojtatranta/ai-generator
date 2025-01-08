@@ -22,6 +22,7 @@ import { getLocale } from "next-intl/server";
 import { textChunker } from "@/lib/pinecode";
 import { SupabaseClient } from "@supabase/supabase-js";
 import path from "path";
+import { PdfReader } from "pdfreader";
 
 // Create context type
 type Context = {
@@ -479,12 +480,20 @@ async function getFileContent(filePath: string) {
   const extName = path.extname(filePath);
 
   if (extName.toLowerCase() === ".pdf") {
-    // @ts-expect-error: wrong typing
-    const pdfModule = await import("pdf-parse/lib/pdf-parse.js");
-
-    const { text } = await pdfModule.default(readFile);
-    console.log("text", text);
-    return text;
+    return await new Promise<string>((resolve, reject) => {
+      let pdfText = "";
+      new PdfReader().parseFileItems(filePath, (err, item) => {
+        if (err) {
+          reject(err);
+        } else if (!item) {
+          console.warn("end of file", pdfText);
+          resolve(pdfText);
+        } else if (item.text) {
+          console.log("pdf text chunk", pdfText);
+          pdfText += item.text;
+        }
+      });
+    });
   }
 
   if (extName.toLowerCase() === ".txt") {

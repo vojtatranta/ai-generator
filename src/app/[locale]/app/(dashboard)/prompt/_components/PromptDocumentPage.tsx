@@ -144,6 +144,11 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
         setSelectedFiles(new Set([addedFile.id]));
         toast.success(t("prompt.fileUploadSuccess"));
       },
+      onError: (error) => {
+        setFileToUpload(null);
+        setFileUploading(false);
+        toast.error(error.message);
+      },
     });
 
   const invokeMutation = trpcApi.langtail.askDocument.useMutation({
@@ -269,7 +274,7 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+            <ScrollArea className="h-[200px] w-full rounded-md border px-2">
               {[...(fileList ?? [])].reverse().map((file) => (
                 <div key={file.id} className="flex items-center space-x-2 py-2">
                   <Checkbox
@@ -386,6 +391,7 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
                       } catch (error) {
                         console.log("fiel upload error", error);
                         setFileToUpload(null);
+                        setFileUploading(false);
                         toast.error(
                           t("prompt.cantGenerateImagePostTryAgain", {
                             error:

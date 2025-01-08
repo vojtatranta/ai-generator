@@ -17,13 +17,26 @@ export async function uploadFileAction(formData: FormData) {
     return null;
   }
 
-  const uploadFolderPath = path.join("/tmp/ai-generator-uploads");
+  const uploadFolderPath = path.join(
+    process.cwd(),
+    "public/tmp/ai-generator-uploads",
+  );
   const fileExt = path.extname(file.name);
   const nextFileName = `${uuidv4()}${fileExt}`;
-  await fs.mkdir(uploadFolderPath, { recursive: true });
+  try {
+    await fs.mkdir(uploadFolderPath, { recursive: true });
+  } catch (error) {
+    console.error("upload error, failed to create folder", error);
+    return null;
+  }
 
   const arrayBuffer = await file.arrayBuffer();
   const completeFilePath = path.join(uploadFolderPath, nextFileName);
-  await fs.writeFile(completeFilePath, Buffer.from(arrayBuffer));
+  try {
+    await fs.writeFile(completeFilePath, Buffer.from(arrayBuffer));
+  } catch (error) {
+    console.error("upload error, failed to write file", error);
+    return null;
+  }
   return completeFilePath;
 }

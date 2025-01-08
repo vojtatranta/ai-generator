@@ -140,7 +140,7 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@testing-library/dom@8.20.1)(@types/babel__core@7.20.5)(ts-node@10.9.1(@types/node@22.10.2)(typescript@5.7.2))(type-fest@0.21.3)
       ai:
-        specifier: ^2.2.31
+        specifier: ^2.2.37
         version: 2.2.37(react@18.3.1)(solid-js@1.9.3)(svelte@4.2.19)(vue@3.5.13(typescript@5.7.2))
       autoprefixer:
         specifier: 10.4.20
@@ -196,9 +196,15 @@ importers:
       openai:
         specifier: ^4.77.0
         version: 4.77.0(encoding@0.1.13)(zod@3.24.1)
+      pdf-lib:
+        specifier: ^1.17.1
+        version: 1.17.1
       pdf-parse:
         specifier: ^1.1.1
         version: 1.1.1
+      pdfreader:
+        specifier: ^3.0.6
+        version: 3.0.6
       postcss:
         specifier: 8.4.49
         version: 8.4.49
@@ -270,7 +276,7 @@ importers:
         version: 11.0.3
       vercel:
         specifier: ^39.2.6
-        version: 39.2.6(encoding@0.1.13)(rollup@2.79.2)
+        version: 39.2.6(encoding@0.1.13)(rollup@3.29.5)
       xml-js:
         specifier: ^1.6.11
         version: 1.6.11
@@ -2637,6 +2643,18 @@ packages:
     resolution:
       {
         integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==,
+      }
+
+  "@pdf-lib/standard-fonts@1.0.0":
+    resolution:
+      {
+        integrity: sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==,
+      }
+
+  "@pdf-lib/upng@1.0.1":
+    resolution:
+      {
+        integrity: sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==,
       }
 
   "@pinecone-database/pinecone@4.0.0":
@@ -11295,6 +11313,12 @@ packages:
         integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==,
       }
 
+  pako@1.0.11:
+    resolution:
+      {
+        integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==,
+      }
+
   param-case@3.0.4:
     resolution:
       {
@@ -11444,12 +11468,35 @@ packages:
       }
     engines: { node: ">=8" }
 
+  pdf-lib@1.17.1:
+    resolution:
+      {
+        integrity: sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==,
+      }
+
   pdf-parse@1.1.1:
     resolution:
       {
         integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==,
       }
     engines: { node: ">=6.8.1" }
+
+  pdf2json@3.1.4:
+    resolution:
+      {
+        integrity: sha512-rS+VapXpXZr+5lUpHmRh3ugXdFXp24p1RyG24yP1DMpqP4t0mrYNGpLtpSbWD42PnQ59GIXofxF+yWb7M+3THg==,
+      }
+    engines: { node: ">=18.12.1", npm: ">=8.19.2" }
+    hasBin: true
+    bundledDependencies:
+      - "@xmldom/xmldom"
+
+  pdfreader@3.0.6:
+    resolution:
+      {
+        integrity: sha512-l1HqEYtoFTiVumYCMR9YO6EST/w4gfenfnKG7n7ENJNc1GOTzI8hjodvziWPHeoL6jsDli4QiS1v3ITtmNiadw==,
+      }
+    engines: { node: ">=14" }
 
   pend@1.2.0:
     resolution:
@@ -17180,6 +17227,14 @@ snapshots:
 
   "@panva/hkdf@1.2.1": {}
 
+  "@pdf-lib/standard-fonts@1.0.0":
+    dependencies:
+      pako: 1.0.11
+
+  "@pdf-lib/upng@1.0.1":
+    dependencies:
+      pako: 1.0.11
+
   "@pinecone-database/pinecone@4.0.0":
     dependencies:
       encoding: 0.1.13
@@ -17811,14 +17866,6 @@ snapshots:
       "@types/estree": 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.1
-      rollup: 2.79.2
-
-  "@rollup/pluginutils@5.1.4(rollup@2.79.2)":
-    dependencies:
-      "@types/estree": 1.0.6
-      estree-walker: 2.0.2
-      picomatch: 4.0.2
-    optionalDependencies:
       rollup: 2.79.2
 
   "@rollup/pluginutils@5.1.4(rollup@3.29.5)":
@@ -18836,18 +18883,18 @@ snapshots:
       "@vercel/static-config": 3.0.0
       ts-morph: 12.0.0
 
-  "@vercel/next@4.4.2(encoding@0.1.13)(rollup@2.79.2)":
+  "@vercel/next@4.4.2(encoding@0.1.13)(rollup@3.29.5)":
     dependencies:
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
     transitivePeerDependencies:
       - encoding
       - rollup
       - supports-color
 
-  "@vercel/nft@0.27.10(encoding@0.1.13)(rollup@2.79.2)":
+  "@vercel/nft@0.27.10(encoding@0.1.13)(rollup@3.29.5)":
     dependencies:
       "@mapbox/node-pre-gyp": 2.0.0-rc.0(encoding@0.1.13)
-      "@rollup/pluginutils": 5.1.4(rollup@2.79.2)
+      "@rollup/pluginutils": 5.1.4(rollup@3.29.5)
       acorn: 8.14.0
       acorn-import-attributes: 1.9.5(acorn@8.14.0)
       async-sema: 3.1.1
@@ -18863,7 +18910,7 @@ snapshots:
       - rollup
       - supports-color
 
-  "@vercel/node@5.0.2(encoding@0.1.13)(rollup@2.79.2)":
+  "@vercel/node@5.0.2(encoding@0.1.13)(rollup@3.29.5)":
     dependencies:
       "@edge-runtime/node-utils": 2.3.0
       "@edge-runtime/primitives": 4.1.0
@@ -18871,7 +18918,7 @@ snapshots:
       "@types/node": 16.18.11
       "@vercel/build-utils": 9.0.1
       "@vercel/error-utils": 2.0.3
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
       "@vercel/static-config": 3.0.0
       async-listen: 3.0.0
       cjs-module-lexer: 1.2.3
@@ -18894,9 +18941,9 @@ snapshots:
 
   "@vercel/python@4.6.0": {}
 
-  "@vercel/redwood@2.1.12(encoding@0.1.13)(rollup@2.79.2)":
+  "@vercel/redwood@2.1.12(encoding@0.1.13)(rollup@3.29.5)":
     dependencies:
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
       "@vercel/routing-utils": 5.0.0
       "@vercel/static-config": 3.0.0
       semver: 6.3.1
@@ -18906,10 +18953,10 @@ snapshots:
       - rollup
       - supports-color
 
-  "@vercel/remix-builder@5.0.2(encoding@0.1.13)(rollup@2.79.2)":
+  "@vercel/remix-builder@5.0.2(encoding@0.1.13)(rollup@3.29.5)":
     dependencies:
       "@vercel/error-utils": 2.0.3
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
       "@vercel/static-config": 3.0.0
       ts-morph: 12.0.0
     transitivePeerDependencies:
@@ -23535,6 +23582,8 @@ snapshots:
 
   package-json-from-dist@1.0.1: {}
 
+  pako@1.0.11: {}
+
   param-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
@@ -23612,12 +23661,25 @@ snapshots:
 
   path-type@4.0.0: {}
 
+  pdf-lib@1.17.1:
+    dependencies:
+      "@pdf-lib/standard-fonts": 1.0.0
+      "@pdf-lib/upng": 1.0.1
+      pako: 1.0.11
+      tslib: 1.14.1
+
   pdf-parse@1.1.1:
     dependencies:
       debug: 3.2.7
       node-ensure: 0.0.0
     transitivePeerDependencies:
       - supports-color
+
+  pdf2json@3.1.4: {}
+
+  pdfreader@3.0.6:
+    dependencies:
+      pdf2json: 3.1.4
 
   pend@1.2.0: {}
 
@@ -25722,17 +25784,17 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vercel@39.2.6(encoding@0.1.13)(rollup@2.79.2):
+  vercel@39.2.6(encoding@0.1.13)(rollup@3.29.5):
     dependencies:
       "@vercel/build-utils": 9.0.1
       "@vercel/fun": 1.1.2(encoding@0.1.13)
       "@vercel/go": 3.2.1
       "@vercel/hydrogen": 1.0.11
-      "@vercel/next": 4.4.2(encoding@0.1.13)(rollup@2.79.2)
-      "@vercel/node": 5.0.2(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/next": 4.4.2(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/node": 5.0.2(encoding@0.1.13)(rollup@3.29.5)
       "@vercel/python": 4.6.0
-      "@vercel/redwood": 2.1.12(encoding@0.1.13)(rollup@2.79.2)
-      "@vercel/remix-builder": 5.0.2(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/redwood": 2.1.12(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/remix-builder": 5.0.2(encoding@0.1.13)(rollup@3.29.5)
       "@vercel/ruby": 2.1.0
       "@vercel/static-build": 2.5.41
       chokidar: 4.0.0

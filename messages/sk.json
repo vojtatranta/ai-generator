@@ -152,7 +152,13 @@
     "download": "Stiahnuť",
     "overview": "Prehľad",
     "mainHeadingText": "V tejto aplikácii môžete vygenerovať obsah pre vaše sociálne siete alebo pre vaše internetové stránky",
-    "mainDescriptionText": "Ak máte problém vymyslieť text pre váš web, o vašom produkte alebo post na sociálne médiá, použite našu umelú inteligenciu, ktorá vám s tým rada pomôže!",
+    "chatWithTheDocument": "Chat s dokumentom",
+    "chatWithTheDocumentDescription": "Nahrajte svoj dokument a pýtajte sa na jeho obsah. AI vám pomôže porozumieť textu a nájsť odpovede na vaše otázky.",
+    "chatWithDocumentCtaCTA": "Začať chatovať",
+    "chatWithAISocialAssistant": "Chat s AI asistentom pre sociálne siete",
+    "chatWithAISocialAssistantDescription": "Získajte pomoc s tvorbou obsahu, brainstormingom nápadov a vylepšením vašej stratégie pre sociálne siete s našim AI asistentom.",
+    "chatWithAISocialAssistantCTA": "Začať chatovať",
+    "mainDescriptionText": "Ak máte problém vymyslieť text pre váš web, o vašom produkte alebo post na sociálne médiá, použite našu umelú inteligenciu, ktorá vám rada pomôže!",
     "subscription": "Predplatné",
     "from": "od",
     "to": "do",
@@ -253,6 +259,8 @@
     "askDocumentSuccess": "Odpoveď bola úspešne vygenerovaná",
     "orPasteLargeText": "alebo vložte rozsiahly text na spracovanie"
   },
+  "documentChatPromptTitle": "Chat s dokumentom",
+  "documentChatPromptDescription": "Nahrajte svoj dokument a pýtajte sa na jeho obsah. AI vám pomôže porozumieť textu a nájsť odpovede na vaše otázky.",
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",
     "urlPlaceholder": "Alebo vložte URL obrázku"
@@ -284,7 +292,10 @@
     "trialRemains": "Do konca skúšobnej doby zostáva {remains} dní.",
     "planDoesntHaveFeature": {
       "AI_CHAT": "Váš aktuálny plán nemá prístup k AI chatu. Pre získanie prístupu prosím upgradujte svoj plán."
-    }
+    },
+    "manageSubscription": "Spravovať predplatné",
+    "manageSubscriptionToupgrade": "Spravovať predplatné pre upgrade",
+    "subscriptionManagement": "Správa predplatného"
   },
   "assistantChat": {
     "title": "AI chat - váš osobný asistent pre tvorbu obsahu",
@@ -332,25 +343,24 @@
       "selectRow": "Vybrať riadok",
       "columns": {
         "title": "NÁZOV",
-        "description": "POPIS"
-      },
-      "openActionMenu": "Otvoriť menu akcií"
+        "description": "POPIS",
+        "actions": "AKCIE"
+      }
     },
+    "openActionMenu": "Otvoriť menu akcií",
     "tryPrompt": "Vyskúšať prompt"
   },
   "breadCrumbs": {
-    "profile": "Profil",
+    "home": "Domov",
+    "dashboard": "Dashboard",
     "overview": "Prehľad",
-    "prompt": "Prompt",
-    "subscription": "Predplatné",
     "prompts": "AI Prompty",
+    "social-media-post-ideas-assistant": "Asistent pre nápady na príspevky na sociálne siete",
+    "chat-assistant": "AI Chat - Váš osobný asistent pre tvorbu obsahu",
+    "document-chat": "Chat s dokumentom",
+    "profile": "Profil",
     "post-generator": "Generátor príspevkov",
-    "image-social-post-generator": "Generátor obrázkových príspevkov",
-    "users": "Používatelia",
-    "chat-assistant": "AI chat - váš osobný asistent pre tvorbu obsahu",
-    "article-summarizer": "AI Zhrnutie článku",
-    "social-media-post-ideas-assistant": "AI chat - váš asistent pre tvorbu obsahu",
-    "document-chat": "Chat s dokumentom"
+    "image-social-post-generator": "Generátor obrázkov pre sociálne siete"
   },
   "profile": {
     "editProfile": "Upraviť profil",
@@ -504,7 +514,7 @@
           "support": "Dedikovaná podpora"
         }
       },
-      "getStarted": "Začať",
+      "getStarted": "Začnite",
       "contactSales": "Kontaktujte nás"
     },
     "contact": {

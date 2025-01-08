@@ -307,6 +307,11 @@
   "articleSummarizerPromptTitle": "Summarize articles with AI",
   "articleSummarizerPromptDescription": "Let AI summarize any article for you. We have prepared an example in the Message field.",
   "breadCrumbs": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "social-media-post-ideas-assistant": "Social Media Post Ideas Assistant",
+    "chat-assistant": "Chat Assistant",
     "profile": "Profile",
     "overview": "Overview",
     "chat-assistant": "AI Chat - Your Personal Content Creation Assistant",

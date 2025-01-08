@@ -34,6 +34,18 @@ export const LangtailMarkdownBlock: FC<LangtailMarkdownBlockProps> = ({
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[rehypeRaw]}
       components={{
+        a({ children, href }) {
+          return (
+            <a
+              href={href}
+              target="_blank"
+              style={{ textDecoration: "underline" }}
+              rel="noopener noreferrer underline"
+            >
+              {children}
+            </a>
+          );
+        },
         p({ children: localChildren }) {
           return <p className="mb-2 last:mb-0">{localChildren}</p>;
         },
