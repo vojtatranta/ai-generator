@@ -96,18 +96,28 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
   const utils = trpcApi.useUtils();
 
   const uploadTextFileMutation = trpcApi.filesRouter.uploadText.useMutation({
-    onSuccess: () => {
+    onSuccess: ({ addedFile }) => {
       utils.filesRouter.listFiles.invalidate();
       setFileText(null);
+      setSelectedFiles((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(addedFile.id);
+        return newSet;
+      });
       toast.success(t("prompt.success"));
     },
   });
 
   const handleUploadedFileContent =
     trpcApi.filesRouter.handleUploadedFile.useMutation({
-      onSuccess: () => {
+      onSuccess: ({ addedFile }) => {
         utils.filesRouter.listFiles.invalidate();
         setFileToUpload(null);
+        setSelectedFiles((prev) => {
+          const newSet = new Set(prev);
+          newSet.add(addedFile.id);
+          return newSet;
+        });
         toast.success(t("prompt.success"));
       },
     });

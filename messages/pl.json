@@ -1,1 +1,567 @@
-{}
+{
+  "assistantChat": {
+    "title": "AI chat - twój osobisty asystent do tworzenia tre ci",
+    "description": "Twórz tre  dla swoich mediów społeczno ciowych lub strony internetowej",
+    "sendMessage": "Wy lij wiadomo ",
+    "sendMessagePlaceholder": "Napisz swoj  wiadomo ..."
+  },
+  "defaultPlanDescription": "Základní plán nabízí 14 dní bezplatného použití AIsteinu pro všechny funkce.",
+  "proPlanDescription": "Pro plán je vhodný pro jednotlivé uživatele, kteří chtějí profi obsah pro své sociální sítě.",
+  "businessPlanDescription": "Business Plan je pro firmy, které spravují sociální sítě pro své klienty a chtějí jim nabídnout profesionální obsah.",
+  "appSidebar": {
+    "overview": "Podsumowanie",
+    "motto": "Twaorz tre ci w prosty sposób!"
+  },
+  "menu": {
+    "dashboard": "Podsumowanie",
+    "users": "U ytkownicy",
+    "promptTemplates": "Szablony AI",
+    "chatAssistant": "Asystent AI",
+    "account": {
+      "title": "Konto",
+      "profile": "Profil",
+      "login": "Logowanie",
+      "logout": "Wyloguj si ",
+      "subscription": "Subskrypcja"
+    }
+  },
+  "common": {
+    "searchPlaceholder": "Wyszukaj wed ug {searchKey}...",
+    "loading": "  czywanie...",
+    "error": "Wyst pi  b  d",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usu ",
+    "edit": "Edytuj",
+    "create": "Utwórz",
+    "search": "Wyszukaj",
+    "filter": "Filtruj",
+    "noResults": "Nie znaleziono wyników",
+    "selectAll": "Wybierz wszystko",
+    "selectRow": "Wybierz wiersz",
+    "actions": "Akcje",
+    "description": "Opis",
+    "descriptionPlaceholder": "Wprowad  opis",
+    "name": "Nazwa",
+    "namePlaceholder": "Wprowad  nazw ",
+    "submit": "Zapisz",
+    "submitting": "Zapisywanie...",
+    "table": {
+      "id": "ID",
+      "name": "NAZWA",
+      "title": "TYTU ",
+      "description": "OPIS",
+      "createdAt": "DATA UTWORZENIA",
+      "updatedAt": "DATA AKTUALIZACJI",
+      "status": "STATUS",
+      "actions": "AKCJE",
+      "price": "CENA",
+      "link": "ODNO NIE",
+      "category": "KATEGORIA",
+      "options": " OPCJE",
+      "text": "TEKST",
+      "type": "TYP",
+      "question": "PYTANIE",
+      "answer": "ODPOWIED ",
+      "correct": "POPRAWNA",
+      "published": "OPUBLIKOWANY",
+      "yes": "Tak",
+      "no": "Nie",
+      "uuid": "UUID",
+      "email": "EMAIL",
+      "role": "ROLE",
+      "xmlId": "XML ID",
+      "showing": "Wy wietlam",
+      "to": "do",
+      "of": "z",
+      "entries": "wpisów",
+      "noEntries": "Nie znaleziono  adnych wpisów",
+      "rowsPerPage": "Wierszy na stron ",
+      "page": "Strona",
+      "noPages": "Nie znaleziono  adnych stron",
+      "goToFirstPage": "Przejd  do pierwszej strony",
+      "goToPreviousPage": "Przejd  do poprzedniej strony",
+      "goToNextPage": "Przejd  do nast pnej strony",
+      "goToLastPage": "Przejd  do ostatniej strony"
+    },
+    "resetFilters": "Resetuj filtry",
+    "form": {
+      "validation": {
+        "required": "Pole jest wymagane",
+        "minChars": "Pole musi mie  co najmniej {0} znaków",
+        "invalidEmail": "Podaj poprawny adres email",
+        "invalidPhone": "Podaj poprawny numer telefonu"
+      }
+    }
+  },
+  "users": {
+    "listing": {
+      "title": "U ytkownicy",
+      "description": "Zarz dzaj u ytkownikami",
+      "addNew": "Dodaj nowego u ytkownika",
+      "columns": {
+        "id": "ID",
+        "name": "NAZWA",
+        "email": "EMAIL",
+        "role": "ROLE",
+        "createdAt": "DATA UTWORZENIA",
+        "status": "STATUS"
+      }
+    }
+  },
+  "overview": {
+    "welcomeBack": "Witamy ponownie w AIsteinie!",
+    "download": "Pobierz",
+    "overview": "Podsumowanie",
+    "mainHeadingText": "W tej aplikacji mo esz wygenerowa  tre  na swoje media spo eczno ciowe lub stron  internetow ",
+    "mainDescriptionText": "Je li masz problem z wymy lieniem tekstu na swój web, o swoim produkcie lub post na median spo eczno ciowych, skorzystaj z naszej sztucznej inteligencji, kt ra chętnie ci pomo e!",
+    "subscription": "Subskrypcja",
+    "from": "od",
+    "to": "do",
+    "remainingAnswers": "Pozosta e odpowiedzi",
+    "remainingAnswersDescription": "Liczba odpowiedzi, które mo esz jeszcze wygenerowa ",
+    "subscriptionNotPaid": "Twoja subskrypcja jest wygaszona, uaktualnij swój plan!",
+    "recentGenerations": "Ostatnie generowanie",
+    "recentGenerationsDescription": "Twoje ostatnie wygenerowane odpowiedzi AI",
+    "generatePostCTA": "Wygeneruj post",
+    "generateImagePostCTA": "Wygeneruj post z obrazem",
+    "summarizeArticleCTA": "Podsumuj artyku ",
+    "chatWithAISocialAssistant": "Porozmawiaj z AI ekspertem na media spo eczno ciowe",
+    "chatWithAISocialAssistantDescription": "Porozmawiaj z AI swoje pomys y na tre  na media spo eczno ciowe i stron  internetow . Pozwól si  doradzi  przez AI eksperta, kt ry jest przeszkolony, aby dzia a  jako do wiadczonego mened era mediów spo eczno ciowych.",
+    "chatWithAISocialAssistantCTA": "Porozmawiaj z AI",
+    "barChart": {
+      "generationsLabel": "Generowanie AI",
+      "title": "Podsumowanie generowania",
+      "description": "Twoje generowanie w wybranym okresie"
+    },
+    "recentSales": {
+      "noEmailAvailable": "Brak dost pnego emaila",
+      "noDateAvailable": "Brak dost pnej daty"
+    }
+  },
+  "generateSocialPostContentPromptTitle": "Wygeneruj si  tre  na swoje media spo eczno ciowe",
+  "generateSocialPostImageContentPromptTitle": "U yj obrazków, aby wygenerowa  tre  na swoje media spo eczno ciowe",
+  "generateSocialPostContentPromptDescription": "Napisz pomys  na tre  na swoje media spo eczno ciowe i nasz system pomo e ci j  wygenerowa . W polu do wiadomo ci przygotowali my przyk adowy tekst, aby  widzie  jak dzia a  system.",
+  "generateSocialPostImageContentPromptDescription": "Dodaj obrazek, do kt rego chcesz wygenerowa  tre  lub pozwalaj naszej sztucznej inteligencji, aby zmodyfikowa a obrazek lub wygenerowa  tre  z tekstu.",
+  "summarizeArticlePromptDescription": "Pozwól si  podsumowa  dowolny artyku  za pomoc  sztucznej inteligencji. Wystarczy wstawi  tekst artyku u i AI wygeneruje jego podsumowanie.",
+  "prompt": {
+    "title": "Generuj tre ",
+    "message": "Wiadomo ",
+    "cantGenerateImagePostTryAgain": "Nie udao si  wygenerowa  postu z obrazem, spr buj ponownie.",
+    "articleToSummarize": "Artyku  do podsumowania",
+    "postGenerationResultsEmptyStateText": "Tu b d  wy wietlone wyniki poprzedniego generowania, aby moesz wybra  post, kt ry jest dla ciebie najlepszy.",
+    "postGenerationCurrentResulsEmptyStateText": "Tu b d  wy wietlony wynik generowania AI.",
+    "resultLength": "D ugo  wyniku",
+    "resultLengthPlaceholder": "Podaj d ugo  wyniku",
+    "generateUsingAi": "Generuj za pomoc  AI",
+    "resultCopied": "Wynik zosta  skopiowany.",
+    "olderResults": "Starsze wyniki",
+    "success": "Tre  zosta  wygenerowany",
+    "result": "Kliknij na Generuj, aby zobaczy  wynik",
+    "randomTopic": {
+      "NAME": "Artyku  o znanym aktorze",
+      "POLITICS": "Artyku  o polityce",
+      "LOCAL_SINGER": "Artyku  o znanym piosenkarzu",
+      "LOCAL_ACTOR": "Artyku  o znanym aktorze",
+      "LOCAL_ACTRESS": "Artyku  o znanym aktorce",
+      "LOCAL_MUSICIAN": "Artyku  o znanym muzyku",
+      "LOCAL_CHEF": "Artyku  o znanym szefie kuchni",
+      "LOCAL_WRITER": "Artyku  o znanym pisarzu",
+      "LOCAL_AUTHOR": "Artyku  o znanym autorze",
+      "RAPPER": "Artyku  o znanym raperze",
+      "ARTIST": "Artyku  o znanym artysta",
+      "SCANDALOUS_CELEBRITY": "Artyku  o kontrowersyjnej gwiazdzie",
+      "CURRENT_LOCAL_REALITY_SHOW": "Artyku  o aktualnym znanym reality show",
+      "CURRENT_LOCAL_REALITY_SHOW_HOST": "Artyku  o aktualnym znanym gospodarzu reality show",
+      "CURRENT_LOCAL_REALITY_SHOW_GUEST": "Artyku  o aktualnym znanym g oscie reality show",
+      "describeImage": "Opisz, co widzisz na tym obrazku",
+      "createSocialPostFromImage": "Stwórz post na mediach spo eczno ciowych na podstawie tego obrazu",
+      "editTheImageWithContemporaryFilters": "Edytuj ten obrazek za pomoc  nowoczesnych filtrów",
+      "makeTheImageLookLikeMadeOfFood": "Przekszta  ten obrazek tak, aby wygl da  jakby by  zrobiony z jedzenia"
+    },
+    "randomArticle": {
+      "LOCAL_SINGER": "Ten artyku  jest o znanej polskiej piosenkarce. Piosenkarka urodzi a si  w 1980 roku w Warszawie. W latach 2000-2005 studiowa a aktorstwo w PWST. Od 2005 roku  y a si  jako muzyk. W 2010 roku za ozy a zespó , z kt rym nagra a trzy albumy. W 2015 roku rozpocz a karier  solow . W 2018 roku otrzyma a nagrod  Fryderyka za najlepszego piosenkarza. W 2020 roku wyda a kolejne album.",
+      "LOCAL_ACTOR": "Ten artyku  jest o znanej polskiej aktorce. Aktorka urodzi a si  w 1970 roku w Warszawie. W latach 1990-1995 studiowa a aktorstwo w PWST. Od 1995 roku  y a si  jako aktorka. W 2000 roku za ozy a zespó , z kt rym nagra a trzy albumy. W 2005 roku rozpocz a karier  solow . W 2010 roku otrzyma a nagrod  Fryderyka za najlepszego aktora. W 2015 roku wyda a kolejne album.",
+      "LOCAL_ACTRESS": "Ten artyku  jest o znanej polskiej aktorce. Aktorka urodzi a si  w 1975 roku w Warszawie. W latach 1995-2000 studiowa a aktorstwo w PWST. Od 2000 roku  y a si  jako aktorka. W 2005 roku za ozy a zespó , z kt rym nagra a trzy albumy. W 2010 roku rozpocz a karier  solow . W 2015 roku otrzyma a nagrod  Fryderyka za najlepszego aktora. W 2020 roku wyda a kolejne album.",
+      "LOCAL_MUSICIAN": "Ten artyku  jest o znanej polskiej muzykce. Muzyk urodzi a si  w 1985 roku w Warszawie. W latach 2005-2010 studiowa a kompozycj  na Uniwersytecie Muzycznym. Od 2010 roku  y a si  jako muzyk. W 2015 roku za ozy a zespó , z kt rym nagra a trzy albumy. W 2018 roku rozpocz a karier  solow . W 2020 roku otrzyma a nagrod  Fryderyka za najlepszego muzyka. W 2020 roku wyda a kolejne album.",
+      "LOCAL_CHEF": "Ten artyku  jest o znanej polskiej szefowej kuchni. Szefowa kuchni urodzi a si  w 1970 roku w Warszawie. W latach 1990-1995 studiowa a gotowanie w szkole hotelarskiej. Od 1995 roku  y a si  jako szefowa kuchni. W 2000 roku za ozy a restauracj . W 2005 roku otrzyma a nagrod  Gault & Millau za najlepszego szefa kuchni. W 2010 roku wyda a własny przepis. W 2015 roku otev a drug  restauracj .",
+      "LOCAL_WRITER": "Ten artyku  jest o znanej polskiej pisarce. Pisarka urodzi a si  w 1980 roku w Warszawie. W latach 2000-2005 studiowa a literatur  na Uniwersytecie Warszawskim. Od 2005 roku  y a si  jako pisarka. W 2010 roku wyda a swoj  pierwsz  ksi k . W 2015 roku otrzyma a nagrod  Nike za najlepszego pisarza. W 2020 roku wyda a kolejn  ksi k .",
+      "LOCAL_AUTHOR": "Ten artyku  jest o znanej polskiej autorce. Autorka urodzi a si  w 1975 roku w Warszawie. W latach 1995-2000 studiowa a literatur  na Uniwersytecie Warszawskim. Od 2000 roku  y a si  jako autorka. W 2005 roku za ozy a własne wydawnictwo. W 2010 roku wyda a swoj  pierwsz  ksi k . W 2015 roku otrzyma a nagrod  Nike za najlepszego autora. W 2020 roku wyda a kolejn  ksi k ."
+    },
+    "image": "Obraz",
+    "locale": "J zyk wyj cia",
+    "localePlaceholder": "pl, en, cs",
+    "summarizationResultLength": "D ugo  shrnut ",
+    "summarizationResultLengthPlaceholder": "Podaj d ugo  shrnut ",
+    "summarize": "Podsumuj",
+    "summarizePlaceholder": "Podaj d ugo  shrnut ",
+    "summarizeDescription": "Podaj d ugo  shrnut  artyku u",
+    "summarizeUsingAi": "Podsumuj za pomoc  AI",
+    "summarizedResult": "Podsumowany tekst",
+    "clickAtSummarizeToSeeResult": "Kliknij w przycisk Podsumuj, aby zobaczy  wynik",
+    "fileToUpload": "Tekst do za adowania",
+    "uploadFile": "Za aduj plik",
+    "upload": "Za aduj",
+    "noFilesUploaded": "Nie za adowano  adnych plików",
+    "askAQuestionAboutTheDocument": "Zapytaj o dokument",
+    "addQuestionAboutTheDocuemntLabel": "Twoje pytanie",
+    "addQuestionAboutTheDocuemntPlaceholder": "Co chcesz zapyta  o dokument?",
+    "askDocumentSubmitButtonTitle": "Zapytaj o dokument",
+    "documentChatDocumentList": "Lista dokumentów",
+    "aiResponseFromWithTheDocumentContextTitle": "Odpowied  AI",
+    "noDocumentChatAnswerYet": "Nie ma  adnej odpowiedzi. Zapytaj o co  w dokumentu.",
+    "uploadDocument": "Za aduj dokument",
+    "uploadFileInputLabel": "Wybierz plik",
+    "noFileSelected": "Brak wybranego pliku",
+    "uploadTextPlaceholder": "Wklej tekst, kt ry chcesz za adowa ...",
+    "uploadText": "Za aduj tekst",
+    "uploadTextSuccess": "Tekst zosta  pomy lnie za adowany",
+    "fileUploadSuccess": "Plik zosta  pomy lnie za adowany",
+    "askDocumentSuccess": "Odpowied  zosta a pomy lnie wygenerowana",
+    "orPasteText": "lub wklej tekst"
+  },
+  "generateArticleSummaryPromptTitle": "Podsumuj artyku  za pomoc  AI",
+  "generateArticleSummaryPromptDescription": "Nechaj si podsumowa  dowolny artyku  za pomoc  sztucznej inteligencji. Wystarczy wkleić tekst artyku u i AI stworzy jego podsumowanie.",
+  "image": {
+    "placeholder": "Przenie  obrazek tutaj lub kliknij, aby przes a ",
+    "urlPlaceholder": "Lub wklej URL obrazka"
+  },
+  "subscription": {
+    "allSubscriptions": "Wszystkie subskrypcje",
+    "plansHeading": "Plany subskrypcji",
+    "quotaLabel": "wygenerowanych odpowiedzi w miesi cu",
+    "perPeriod": "w miesi cu",
+    "numberOfGenerations": "aktualna liczba generowa  AI w tym miesi cu",
+    "plansDescription": "Wybierz plan, kt ry najlepiej odpowiada Twoim potrzebom",
+    "currentPlan": "Aktualny plan",
+    "cancelSubscriptionButton": "Anuluj subskrypcj ",
+    "subscribeButtonText": "Subskrybuj",
+    "upgradeButtonText": "Ulepsz",
+    "successToast": "Pomy lnie zarejestrowano si  w planie",
+    "notAuthorized": "Nie masz uprawnie  do wy wietlania tej strony",
+    "noSubscriptionIdReturned": "Nie zwrócono ID subskrypcji Stripe",
+    "missingParametersInSuccessRedirect": "Brak parametr w w adresie URL, niemo liwe uko czenie procesu subskrypcji.",
+    "subscriptionNotPaid": "P atno  nie by a pomy lnie zrealizowana. Prosz  spróbuj ponownie pó niej.",
+    "databaseError": "Wyst pi  b ad podczas zapisu zmian w bazie danych.",
+    "planExceeded": "Przekroczy e limit generowania",
+    "planExpiredDescription": "Twój aktualny plan osi gn  limitu generowania. Aby kontynuowa  generowanie, prosz  ulepsz swój plan.",
+    "usedGenerations": "U yte generowania",
+    "planQuota": "Limit planu",
+    "planDoesntHaveFeature": {
+      "AI_CHAT": "Twój aktualny plan nie ma dost pu do czatu AI. Aby uzyska  dost p, prosz  ulepsz swój plan."
+    },
+    "manageSubscriptionToupgrade": "Zarz dzaj subskrypcj  i ulepsz",
+    "trialExpired": "Czas próbny wygas ",
+    "trialExpiredDescription": "Twoja 14-dniowa wersja próbna wygas a. Aby kontynuowa  korzystanie z AIsteinu, prosz  wybierz jeden z naszych plan w płatnych.",
+    "youHaveATrial": "Posiadasz aktywn  wersj  próbn ",
+    "trialDescription": "Podczas wersji próbnej mo esz korzysta  z wszystkich funkcji AIsteinu za darmo.",
+    "trialRemains": "Do ko ca wersji próbnej pozosta o {remains} dni."
+  },
+  "auth": {
+    "continueWithGoogle": "Zaloguj si  przez Google",
+    "form": {
+      "email": "Adres e-mail",
+      "emailPlaceholder": "Wprowadz swój adres e-mail...",
+      "continueWithEmail": "Kontynuuj z emailem",
+      "orContinueWith": "Kontynuuj z",
+      "errors": {
+        "invalidEmail": "Nieprawid owy adres e-mail"
+      }
+    },
+    "errors": {
+      "googleSignIn": "B ad przy logowaniu przez Google: {error}"
+    },
+    "success": {
+      "signedIn": "Zalogowano pomy lnie!"
+    },
+    "login": "Logowanie",
+    "logo": "AIstein.pl",
+    "tagline": "Twórz tre ci bez stresu.",
+    "founder": {
+      "name": "Vojt ch Tranta",
+      "title": "za oczyciel"
+    },
+    "createAccount": {
+      "title": "Utwórz konto",
+      "description": "Wprowadz swój adres e-mail, aby utworzy  konto"
+    },
+    "terms": {
+      "agreement": "Klikaj c na dalej, zgadzasz si  z naszymi warunkami i polityk  prywatno ci."
+    }
+  },
+  "seo": {
+    "title": "AIstein - Tre ci dla Twojej firmy",
+    "description": "Generuj tre ci za pomoc  AI.",
+    "ogTitle": "AIstein - Inteligentne tre ci dla Twojej firmy",
+    "ogDescription": "Generuj tre ci za pomoc  inteligentnego chatu i AI. Zajmuje si , aby Twoi klienci znale li wyniki, kt re si  podobaj  do ich wyszukiwa .",
+    "author": {
+      "name": "Vojt ch Tranta",
+      "url": "https://twitter.com/vojtatranta"
+    },
+    "publisher": "AIstein",
+    "twitter": {
+      "site": "@AIsteinapp",
+      "creator": "@vojtatranta"
+    }
+  },
+  "metadata": {
+    "dashboard": {
+      "overview": "Przegląd",
+      "users": "Użytkownicy",
+      "subscription": "Subskrypcja",
+      "paymentSuccess": "Płatność zakończona sukcesem",
+      "profile": "Profil"
+    },
+    "auth": {
+      "signIn": "Logowanie",
+      "signInDescription": "Strona logowania do autoryzacji."
+    },
+    "promptTemplates": {
+      "promptTemplatesMetaTitle": "AIstein - Szablony"
+    },
+    "promptMetadataTitle": "AIstein - Generowanie treści",
+    "assistantChat": {
+      "assistantChatMetaTitle": "AI chat - Twój asystent do tworzenia treści"
+    }
+  },
+  "notFound": {
+    "title": "Nic nie znaleziono",
+    "description": "Przepraszamy, ale strona, kt r  szukasz, nie istnieje lub zosta a przeniesiona.",
+    "goBack": "Wróc",
+    "backToHome": "Wróc do strony g wnej"
+  },
+  "userNav": {
+    "upgradeToPro": "Uaktualnij do Pro",
+    "account": "Konto",
+    "billing": "Faktura",
+    "notifications": "Powiadomienia",
+    "logout": "Wyloguj si "
+  },
+  "import": {
+    "success": {
+      "noChanges": "Import zako czy  si  powodzeniem. Ale nic nie zosta o zaktualizowane.",
+      "summary": "Import zako czy  si  powodzeniem. Oto podsumowanie:",
+      "error": "Import zako czy  si  niepowodzeniem. Lista b ed w:"
+    }
+  },
+  "copyButton": {
+    "copy": "Kopiuj",
+    "copied": "Skopiowano",
+    "copyDisabled": "Niewidoczne kopiowanie",
+    "failedToCopy": "Kopiowanie si  nie powiod o"
+  },
+  "breadCrumbs": {
+    "profile": "Profil",
+    "overview": "Podsumowanie",
+    "chat-assistant": "AI chat - Twój asystent do tworzenia tre ci",
+    "prompt": "Prompt",
+    "prompts": "AI Prompty",
+    "subscription": "Subskrypcja",
+    "post-generator": "Generuj post",
+    "image-social-post-generator": "Generuj post z obrazem",
+    "social-media-post-ideas-assistant": "AI chat",
+    "users": "U ytkownicy",
+    "article-summarizer": "AI Podsumowanie artyku u",
+    "document-chat": "Chat z dokumentem"
+  },
+  "promptTemplates": {
+    "listing": {
+      "title": "AI Szablony",
+      "description": "Zarz dzaj AI szablonami do generowania tre ci",
+      "selectAll": "Wybierz wszystko",
+      "selectRow": "Wybierz rząd",
+      "columns": {
+        "title": "TYTU ",
+        "description": "OPIS"
+      }
+    },
+    "openActionMenu": "Otwórz menu akcji",
+    "tryPrompt": "Sprawd  prompt"
+  },
+  "profile": {
+    "editProfile": "Edytuj profil",
+    "createProfile": "Utwórz profil",
+    "editProfileDescription": "Edytuj informacje o profilu",
+    "createProfileDescription": "Utwórz informacje o profilu",
+    "profileUpdated": "Profil zosta  zaktualizowany",
+    "profileCreated": "Profil zosta  utworzony",
+    "saveChanges": "Zapisz zmiany",
+    "create": "Utwórz",
+    "step1": "Krok 1",
+    "personalInformation": "Informacje osobiste",
+    "submitProfileFormText": "Wy lij",
+    "fields": {
+      "name": "Imi ",
+      "namePlaceholder": "Wpisz swoje imi ",
+      "email": "Email",
+      "emailPlaceholder": "Wpisz swój email",
+      "contactno": "Numer kontaktowy",
+      "contactnoPlaceholder": "Wpisz swój numer kontaktowy"
+    },
+    "form": {
+      "validation": {
+        "minChars": "Musisz wpisa  co najmniej {count} znak w"
+      }
+    }
+  },
+  "graphs": {
+    "areaChart": {
+      "title": "Wykres powierzchniowy - Warstwowy",
+      "description": "Wy wietlacz ogólnej liczby odwiedzin w ci gu ostatnich 6 miesi cy",
+      "trendingUp": "Trend ro ni si  o {value}% w tym miesi cu",
+      "dateRange": "Stycze - Czerwiec 2024"
+    }
+  },
+  "aiChatExampleMessages": {
+    "1-example": {
+      "prompt": "Wygeneruj mi obrazek nowoczesnej kawiarni w Warszawie w stylu minimalistycznym",
+      "description": "Ten przyk ad pokazuje, jak mo na generowa  obrazy z konkretnym stylem artystycznym i lokalizacj ."
+    },
+    "2-example": {
+      "prompt": "Zaprojektuj mi pomys  na post na Instagramie o nowym menu wega skim w restauracji",
+      "description": "Ten przyk ad pomo e Ci stworzy  atrakcyjny tre  na media spo eczno ci o tematyce gastronomicznej."
+    },
+    "3-example": {
+      "prompt": "Wygeneruj mi obrazek produktowej fotografii kosmetyków naturalnych",
+      "description": "Przyk ad pokazuje, jak stworzy  profesjonalnie wygl daj cy obrazek produktowy."
+    },
+    "4-example": {
+      "prompt": "Zaprojektuj mi serię 3 post w na LinkedIn o wa nych trendach w digitalizacji",
+      "description": "Ten przyk ad demonstruje, jak stworzy  spójn  serię post w na media spo eczno ci o tematyce profesjonalnej."
+    }
+  },
+  "articleSummarizerPromptTitle": "Podsumuj artyku  za pomoc  AI",
+  "articleSummarizerPromptDescription": "Pozwól si  podsumowa  dowolny artyku  za pomoc  sztucznej inteligencji. W polu do wiadomo ci przygotowali my przyk adowy tekst, aby  widzie  jak dzia a  system.",
+  "social": {
+    "shareOnX": "Udost pnij na X (Twitter)",
+    "shareOnFacebook": "Udost pnij na Facebooku",
+    "shareOnLinkedin": "Udost pnij na LinkedIn"
+  },
+  "generatedbyAIStein": "Wygenerowane za pomoc  AIstein",
+  "landingPage": {
+    "navigation": {
+      "home": "Strona g wna",
+      "features": "Funkcje",
+      "pricing": "Cennik",
+      "contact": "Kontakt",
+      "openApp": "Otwórz AIstein",
+      "getStarted": "Rozpocz  za 14 dni za darmo"
+    },
+    "hero": {
+      "title": "Twórz tre ci szybciej z AI",
+      "description": "Generuj tre ci na media spo eczno ciowe, artyku y i obrazy w ci gu sekund z AI platform  AIstein",
+      "getStarted": "Rozpocz  za 14 dni za darmo",
+      "watchDemo": "Zobacz demo"
+    },
+    "features": {
+      "title": "Wszystko, czego potrzebujesz do tworzenia tre ci",
+      "aiPost": {
+        "title": "Generowanie tre ci za pomoc  AI",
+        "description": "Generuj atrakcyjne tre ci na media spo eczno ciowe z AI, kt ra rozumie Twojemu stylowi"
+      },
+      "imageCreation": {
+        "title": "Tworzenie obraz w",
+        "description": "Twórz własne obrazy do swoich tre ci za pomoc  naszej AI"
+      },
+      "articleWriting": {
+        "title": "Pisanie artyku w",
+        "description": "Pisz i sumarizuj artyku y automatycznie za pomoc  AI"
+      }
+    },
+    "howItWorks": {
+      "title": "Jak AIstein dzia a",
+      "step1": {
+        "title": "Wybierz zadanie",
+        "description": "Wybierz si  z wi kszej liczby narz dzia  do generowania tre ci za pomoc  AI"
+      },
+      "step2": {
+        "title": "Opisz swoje potrzeby",
+        "description": "Podaj krótki opis lub za aduj obraz"
+      },
+      "step3": {
+        "title": "Otrzymaj wyniki",
+        "description": "Otrzymasz tre  generowany za pomoc  AI w ci gu sekund"
+      }
+    },
+    "pricing": {
+      "title": "Prosty, transparentny cennik",
+      "starter": {
+        "title": "Za darmo",
+        "price": "0 CZK",
+        "period": "14 dni",
+        "features": {
+          "generations": "100 generowania sztucznej inteligencji/miesi c",
+          "templates": "Wszystkie szablony",
+          "models": "Wszystkie modele sztucznej inteligencji",
+          "support": "Wsparcie spo eczno ci"
+        }
+      },
+      "pro": {
+        "title": "Pro",
+        "price": "200 CZK",
+        "period": "miesi cznie",
+        "features": {
+          "generations": "100 generowania sztucznej inteligencji/miesi c",
+          "templates": "Ograniczone szablony",
+          "models": "Podstawowe modele sztucznej inteligencji",
+          "support": "Wsparcie spo eczno ci"
+        }
+      },
+      "business": {
+        "title": "Business",
+        "price": "500 CZK",
+        "period": "miesi cznie",
+        "features": {
+          "generations": "1000 generowania sztucznej inteligencji/miesi c",
+          "templates": "Wszystkie szablony",
+          "models": "Podstawowe modele sztucznej inteligencji",
+          "support": "Wsparcie osobiste priorytetowe"
+        }
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "price": "Indywidualne",
+        "period": "Nieograniczone",
+        "features": {
+          "generations": "Nieograniczone generowanie",
+          "templates": "Wszystkie szablony",
+          "models": "Zaawansowane modele sztucznej inteligencji",
+          "support": "Wsparcie dedykowane"
+        }
+      },
+      "getStarted": "Rozpocz  za 14 dni za darmo",
+      "contactSales": "Kontakt z nami"
+    },
+    "contact": {
+      "title": "Kontakt",
+      "email": {
+        "title": "Email",
+        "value": "vojta.tranta@gmail.com"
+      },
+      "phone": {
+        "title": "Telefon",
+        "value": "+420 604 927 521"
+      },
+      "form": {
+        "name": "Imi ",
+        "email": "Email",
+        "message": "Wiadomo ",
+        "submit": "Wy li wiadomo "
+      }
+    },
+    "cta": {
+      "title": "Zacznij tworzy  lepszy kontent dzisiaj",
+      "description": "Do adaj si  do grona tysi cy marketinguw, ktorzy oszcz dzaj  czas z AIstein",
+      "button": "Sprawd  AIstein za darmo"
+    },
+    "footer": {
+      "links": {
+        "terms": "Warunki",
+        "privacy": "Prywatno ",
+        "contact": "Kontakt"
+      }
+    }
+  },
+  "documentChatPromptTitle": "Czat z dokumentem",
+  "documentChatPromptDescription": "Wgraj dokument i pytaj o jego zawarto  za pomoc  sztucznej inteligencji"
+}

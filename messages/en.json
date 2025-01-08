@@ -108,7 +108,13 @@
     "welcomeBack": "Welcome back to AIstein!",
     "download": "Download",
     "overview": "Overview",
-    "mainHeadingText": "In this application you can generate content for your social media or your website",
+    "mainHeadingText": "In this app you can generate content for your social media or website",
+    "chatWithTheDocument": "Chat with Document",
+    "chatWithTheDocumentDescription": "Upload your document and ask questions about its content. AI will help you understand the text and find answers to your questions.",
+    "chatWithDocumentCtaCTA": "Start Chatting",
+    "chatWithAISocialAssistant": "Chat with AI Social Assistant",
+    "chatWithAISocialAssistantDescription": "Get help with content creation, brainstorming ideas, and improving your social media strategy with our AI assistant.",
+    "chatWithAISocialAssistantCTA": "Start Chatting",
     "mainDescriptionText": "If you have trouble coming up with text for your website, about your product, or social media post, use our artificial intelligence that will be happy to help you!",
     "subscription": "Subscription",
     "from": "from",
@@ -132,6 +138,10 @@
     "recentSales": {
       "noEmailAvailable": "Not available",
       "noDateAvailable": "Not available"
+    },
+    "documentChat": {
+      "title": "Document Chat",
+      "description": "Chat with your documents and get answers to your questions."
     }
   },
   "generateSocialPostContentPromptTitle": "Create content for your social media",
@@ -190,7 +200,23 @@
       "LOCAL_CHEF": "Zdeněk Pohlreich is a Czech chef and television personality, known for his appearances on various cooking shows. He has significantly influenced modern Czech gastronomy and owns several successful restaurants in Prague.",
       "LOCAL_WRITER": "Karel Čapek was a Czech writer, playwright and critic. He is best known for his science fiction work and for introducing the word 'robot' to the English language and science fiction as a whole through his play R.U.R.",
       "LOCAL_AUTHOR": "Božena Němcová was a Czech writer who wrote the classic novel 'Babička' (The Grandmother). She is often regarded as the mother of Czech prose and played a significant role in the Czech National Revival movement."
-    }
+    },
+    "askAQuestionAboutTheDocument": "Ask about document",
+    "addQuestionAboutTheDocuemntLabel": "Your question",
+    "addQuestionAboutTheDocuemntPlaceholder": "What would you like to know about the document?",
+    "askDocumentSubmitButtonTitle": "Ask AI",
+    "documentChatDocumentList": "Document List",
+    "aiResponseFromWithTheDocumentContextTitle": "AI Response",
+    "noDocumentChatAnswerYet": "No answer yet. Ask something about the document.",
+    "uploadDocument": "Upload Document",
+    "uploadFileInputLabel": "Choose File",
+    "noFileSelected": "No file selected",
+    "uploadTextPlaceholder": "Paste your text here...",
+    "uploadText": "Upload Text",
+    "uploadTextSuccess": "Text uploaded successfully",
+    "fileUploadSuccess": "File uploaded successfully",
+    "askDocumentSuccess": "Answer generated successfully",
+    "orPasteText": "or paste text"
   },
   "generateArticleSummaryPromptTitle": "Summarize articles with AI",
   "generateArticleSummaryPromptDescription": "Let AI summarize any article for you. We have prepared an example in the Message field.",
@@ -288,7 +314,8 @@
     "post-generator": "Post Generator",
     "image-social-post-generator": "Image Post Generator",
     "users": "Users",
-    "article-summarizer": "Article Summarizer"
+    "article-summarizer": "AI Article Summary",
+    "document-chat": "Document Chat"
   },
   "metadata": {
     "dashboard": {

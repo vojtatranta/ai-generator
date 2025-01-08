@@ -233,7 +233,23 @@
       "LOCAL_WRITER": "Karel Čapek bol český spisovateľ, dramatik a kritik. Je najznámejší svojou sci-fi tvorbou a tým, že prostredníctvom svojej hry R.U.R. zaviedol slovo 'robot' do anglického jazyka a science fiction ako celku.",
       "LOCAL_AUTHOR": "Božena Němcová bola česká spisovateľka, ktorá napísala klasický román 'Babička'. Je často považovaná za matku českej prózy a zohrala významnú úlohu v českom národnom obrodení."
     },
-    "cantGenerateImagePostTryAgain": "Nepodarilo sa vytvoriť príspevok s obrázkom, skúste to znovu."
+    "cantGenerateImagePostTryAgain": "Nepodarilo sa vytvoriť príspevok s obrázkom, skúste to znovu.",
+    "askAQuestionAboutTheDocument": "Opýtať sa na dokument",
+    "addQuestionAboutTheDocuemntLabel": "Vaša otázka",
+    "addQuestionAboutTheDocuemntPlaceholder": "Na čo sa chcete opýtať ohľadom dokumentu?",
+    "askDocumentSubmitButtonTitle": "Opýtať sa AI",
+    "documentChatDocumentList": "Zoznam dokumentov",
+    "aiResponseFromWithTheDocumentContextTitle": "Odpoveď AI",
+    "noDocumentChatAnswerYet": "Zatiaľ žiadna odpoveď. Opýtajte sa niečo ohľadom dokumentu.",
+    "uploadDocument": "Nahrať dokument",
+    "uploadFileInputLabel": "Vybrať súbor",
+    "noFileSelected": "Žiadny súbor nie je vybraný",
+    "uploadTextPlaceholder": "Vložte text, ktorý chcete nahrať...",
+    "uploadText": "Nahrať text",
+    "uploadTextSuccess": "Text bol úspešne nahraný",
+    "fileUploadSuccess": "Súbor bol úspešne nahraný",
+    "askDocumentSuccess": "Odpoveď bola úspešne vygenerovaná",
+    "orPasteText": "alebo vložte text"
   },
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",
@@ -330,8 +346,9 @@
     "image-social-post-generator": "Generátor obrázkových príspevkov",
     "users": "Používatelia",
     "chat-assistant": "AI chat - váš osobný asistent pre tvorbu obsahu",
-    "article-summarizer": "Zhrnutie článkov",
-    "social-media-post-ideas-assistant": "AI chat - váš asistent pre tvorbu obsahu"
+    "article-summarizer": "AI Zhrnutie článku",
+    "social-media-post-ideas-assistant": "AI chat - váš asistent pre tvorbu obsahu",
+    "document-chat": "Chat s dokumentom"
   },
   "profile": {
     "editProfile": "Upraviť profil",

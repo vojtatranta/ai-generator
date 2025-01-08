@@ -16,7 +16,7 @@ import {
   stripe,
 } from "@/lib/stripe";
 import z from "zod";
-import { PROMPTS } from "@/constants/data";
+import { PROMPTS, RAG_QUERY_IMPROVER } from "@/constants/data";
 import { Database, Json } from "@/database.types";
 import { getLocale } from "next-intl/server";
 import { textChunker } from "@/lib/pinecode";
@@ -205,9 +205,9 @@ export const langtailRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const fileId = input.fileIds[0];
+      console.log("file ids", input.fileIds);
 
-      if (!fileId) {
+      if (!input.fileIds.length) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Noe file selecte",
@@ -218,7 +218,7 @@ export const langtailRouter = router({
         .from("files")
         .select("*")
         .eq("user_id", ctx.user.id)
-        .eq("id", fileId)
+        .in("id", input.fileIds)
         .single();
 
       if (!file) {
@@ -227,6 +227,20 @@ export const langtailRouter = router({
           message: "Files not found",
         });
       }
+
+      const improveQuestionPromise = langtail.prompts.invoke({
+        prompt: RAG_QUERY_IMPROVER,
+        user: ctx.user.id,
+        variables: {
+          ...(input.locale ? { language: input.locale } : {}),
+        },
+        messages: [
+          {
+            role: "user",
+            content: input.message,
+          },
+        ],
+      });
 
       const embedding =
         (
@@ -239,11 +253,11 @@ export const langtailRouter = router({
       console.log("embedding", embedding);
 
       const { data: embeddings, error: embeddingsError } =
-        await ctx.supabase.rpc("match_documents", {
+        await ctx.supabase.rpc("match_documents2", {
           query_embedding: `[${embedding.join(",")}]`, // Pass the query embeddingembedding, // Pass the embedding you want to compare
-          match_threshold: 0.78, // Choose an appropriate threshold for your data
-          match_count: 10, // Choose the number of matches
-          file_id: file.id, // Pass the file_id you want to compare
+          match_threshold: 0.75, // Choose an appropriate threshold for your data
+          match_count: 20, // Choose the number of matches
+          file_ids: input.fileIds, // Pass the file_id you want to compare
         });
 
       if (embeddingsError) {
@@ -254,10 +268,38 @@ export const langtailRouter = router({
         });
       }
 
-      console.log("embeddings", embeddings);
+      let rawEmbeddings = embeddings?.map(({ chunk }) => chunk.trim()) ?? [];
 
-      const embeddingsText =
-        embeddings?.map(({ chunk }) => chunk).join("...") ?? "";
+      console.log("db embeddings", rawEmbeddings);
+
+      if (!rawEmbeddings.length || rawEmbeddings.join("").length < 100) {
+        const { data: chunks, error: chunksError } = await ctx.supabase
+          .from("documents")
+          .select("chunk")
+          .eq("user_id", ctx.user.id)
+          .not("chunk", "is", null)
+          .in("file", input.fileIds)
+          .limit(10);
+
+        if (!chunks || !chunks.length) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message:
+              "Document not found, chunks error: " + chunksError?.message,
+          });
+        }
+        console.log("db chunks random", chunks);
+
+        rawEmbeddings = chunks.map(({ chunk }) => (chunk ?? "").trim());
+      }
+
+      console.log("rawEmbeddings", rawEmbeddings);
+
+      const embeddingsText = `
+      Source file: ${file.filename}
+      Following is the chunks from the file:
+        ${rawEmbeddings.join("...") ?? ""}
+      `;
 
       console.log("embeddingsText", embeddingsText);
 
@@ -272,7 +314,9 @@ export const langtailRouter = router({
         messages: [
           {
             role: "user",
-            content: input.message,
+            content:
+              (await improveQuestionPromise).choices[0].message?.content ??
+              input.message,
           },
         ],
       });
@@ -510,7 +554,7 @@ async function handleUploadedFileContent(
     });
   }
 
-  return documents;
+  return { addedFile, documents };
 }
 
 const filesRouter = router({
@@ -547,6 +591,10 @@ const filesRouter = router({
         });
       }
 
+      if (!fileContent) {
+        console.log("problem no file content", fileContent);
+      }
+
       const result = await handleUploadedFileContent(
         input.filePath,
         input.originalFileName,
@@ -555,7 +603,7 @@ const filesRouter = router({
         file.path,
       );
 
-      console.log("result", result);
+      console.log("upload file result", result);
 
       await fs.rm(input.filePath);
 

@@ -202,12 +202,12 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      match_documents: {
+      match_documents2: {
         Args: {
           query_embedding: string;
           match_threshold: number;
           match_count: number;
-          file_id: number;
+          file_ids: number[];
         };
         Returns: {
           id: number;

@@ -129,6 +129,9 @@
     "chatWithAISocialAssistant": "Chat s AI expertem na sociální sítě",
     "chatWithAISocialAssistantDescription": "Proberte s AI vaše nápady o obsahu na sociální sítě a webové stránky. Nechte si poradit od AI assistenta, který je natrénován, aby se choval jako zkušený správce sociálních sítí.",
     "chatWithAISocialAssistantCTA": "Chatovat s AI",
+    "chatWithTheDocument": "Chatování s dokumentem",
+    "chatWithTheDocumentDescription": "Nahrajte svůj dokument a ptejte se na jeho obsah. AI vám pomůže porozumět textu a najít odpovědi na vaše otázky.",
+    "chatWithDocumentCtaCTA": "Začít chatovat s dokumentem",
     "barChart": {
       "generationsLabel": "Generování AI",
       "title": "Přehled generování",
@@ -202,7 +205,23 @@
     "fileToUpload": "Text k nahrání",
     "uploadFile": "Nahrát soubor",
     "upload": "Nahrát",
-    "noFilesUploaded": "Zatím nebyly nahrány žádné soubory"
+    "noFilesUploaded": "Zatím nebyly nahrány žádné soubory",
+    "askAQuestionAboutTheDocument": "Zeptat se na dokument",
+    "addQuestionAboutTheDocuemntLabel": "Vaše otázka",
+    "addQuestionAboutTheDocuemntPlaceholder": "Na co se chcete zeptat ohledně dokumentu?",
+    "askDocumentSubmitButtonTitle": "Zeptat se AI",
+    "documentChatDocumentList": "Seznam dokumentů",
+    "aiResponseFromWithTheDocumentContextTitle": "Odpověď AI",
+    "noDocumentChatAnswerYet": "Zatím žádná odpověď. Zeptejte se na něco ohledně dokumentu.",
+    "uploadDocument": "Nahrát dokument",
+    "uploadFileInputLabel": "Vybrat soubor",
+    "noFileSelected": "Žádný soubor není vybrán",
+    "uploadTextPlaceholder": "Vložte text, který chcete nahrát...",
+    "uploadText": "Nahrát text",
+    "uploadTextSuccess": "Text byl úspěšně nahrán",
+    "fileUploadSuccess": "Soubor byl úspěšně nahrán",
+    "askDocumentSuccess": "Odpověď byla úspěšně vygenerována",
+    "orPasteText": "nebo vložte text"
   },
   "generateArticleSummaryPromptTitle": "Shrnutí článku pomocí AI",
   "generateArticleSummaryPromptDescription": "Nechte si shrnout jakýkoliv článek pomocí umělé inteligence. Stačí vložit text článku a AI vám vytvoří jeho shrnutí.",
@@ -277,7 +296,7 @@
     "title": "AIstein - Obsah pro web a sociální sítě pomocí AI",
     "description": "Vytvářejte obsah pro vaše sociální sítě za pomoci AI.",
     "ogTitle": "AIstein - Inteligentní obsah pro web a sociální sítě",
-    "ogDescription": "Vytvářejte obsah pro vaše sociální sítě pomocí inteligentního chatu a AI. Zajistuje to, aby vaše zákazníky nalezli výsledky, které se podobují svým hledanému.",
+    "ogDescription": "Vytvářejte obsah pro vaše sociální sítě pomocí inteligentního chatu a AI. Zajistuje to, aby vaše zákazníky nalezli výsledky, které se podobají svým hledanému.",
     "author": {
       "name": "Vojtěch Tranta",
       "url": "https://twitter.com/vojtatranta"

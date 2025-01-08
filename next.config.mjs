@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = withNextIntl({
   experimental: {
     reactCompiler: true,
+    serverActions: {
+      bodySizeLimit: "20mb",
+    },
   },
   images: {
     remotePatterns: [

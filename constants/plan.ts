@@ -36,12 +36,13 @@ export const DEFAULT_PLAN_ID = "default-plan-id";
 
 export const FEATURES = {
   AI_CHAT: "AI_CHAT",
+  DOC_CHAT: "DOC_CHAT",
 } as const;
 
 export const PLAN_FEATURES = {
-  [DEFAULT_PLAN]: [FEATURES.AI_CHAT],
+  [DEFAULT_PLAN]: [FEATURES.AI_CHAT, FEATURES.DOC_CHAT],
   [PRO_PLAN]: [],
-  [BUSINESS_PLAN]: [FEATURES.AI_CHAT],
+  [BUSINESS_PLAN]: [FEATURES.AI_CHAT, FEATURES.DOC_CHAT],
 };
 
 export const getPlanFeatures = (planNickname: string | null) => {

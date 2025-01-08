@@ -16,6 +16,7 @@ import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
 import { PromptArticleSummarizerPage } from "../_components/PromptArticleSummarizerPage";
 import { PromptDocumentPage } from "../_components/PromptDocumentPage";
 import { uploadFileAction } from "@/lib/upload-file-action";
+import { V0DocumentPage } from "../_components/V0DocumentPage";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -80,7 +81,7 @@ export default async function Page({ searchParams, params }: pageProps) {
 
   if (usedPrompt.id === DOCUMENT_CHAT) {
     return (
-      <PromptDocumentPage
+      <V0DocumentPage
         aiResults={lastResults ?? []}
         prompt={usedPrompt}
         randomNumberFromTopics={0}
