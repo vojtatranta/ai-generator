@@ -18,6 +18,7 @@ export const AIGeneratedImage = memo(function AIGeneratedImage({
   const [effectiveSrc, setEffectiveSrc] = useState<string | null>(
     unstableUrl ?? stableUrl ?? "",
   );
+  const [imageError, setImageError] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
 
   const preloadAnImage = (url: string) => {
@@ -38,6 +39,12 @@ export const AIGeneratedImage = memo(function AIGeneratedImage({
       });
     }
   }, [unstableUrl, stableUrl, effectiveSrc]);
+
+  useEffect(() => {
+    if (effectiveSrc) {
+      setImageError(false);
+    }
+  }, [effectiveSrc]);
 
   if (!effectiveSrc) {
     return (
@@ -64,6 +71,39 @@ export const AIGeneratedImage = memo(function AIGeneratedImage({
     );
   }
 
+  if (imageError) {
+    return (
+      <div
+        style={{
+          width: width ? `${width}` : "100%",
+          height: height ? `${height}` : "auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#ddd",
+          backgroundImage:
+            "linear-gradient(135deg, #ccc 25%, transparent 25%), linear-gradient(45deg, #ccc 25%, transparent 25%)",
+          backgroundSize: "20px 20px",
+          backgroundPosition: "0 0, 10px 10px",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "2.5em",
+            color: "#888",
+          }}
+        >
+          <span role="img" aria-label="broken image"></span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <img
       ref={imageRef}
@@ -72,6 +112,9 @@ export const AIGeneratedImage = memo(function AIGeneratedImage({
       alt={alt}
       width={width}
       height={height}
+      onError={() => {
+        setImageError(true);
+      }}
     />
   );
 });

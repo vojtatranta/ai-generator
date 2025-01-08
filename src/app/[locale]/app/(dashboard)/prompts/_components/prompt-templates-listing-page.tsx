@@ -8,7 +8,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import PromptTemplatesTable from "./prompt-templates-tables";
 import { getTranslations } from "next-intl/server";
-import { USED_PROMPTS } from "@/constants/data";
+import { DOCUMENT_CHAT, USED_PROMPTS } from "@/constants/data";
 
 type TSocketsListingPage = {};
 
@@ -24,7 +24,9 @@ export default async function PromptTemplatesListingPage({}: TSocketsListingPage
     limit: pageLimit,
     ...(search && { search }),
   };
-  const promptTemplates = USED_PROMPTS.filter((p) => {
+  const promptTemplates = USED_PROMPTS.filter(
+    (p) => p.id !== DOCUMENT_CHAT,
+  ).filter((p) => {
     if (filters.search) {
       return (
         p.prompt.toLowerCase().includes(filters.search) ||
