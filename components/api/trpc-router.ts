@@ -9,18 +9,7 @@ import {
   createSupabaseServerClient,
   getMaybeUserWithClient,
 } from "@/web/lib/supabase-server";
-import xmlConverter from "xml-js";
-import pdf from "pdf-parse";
 
-import {
-  answerFormStateSchema,
-  createEvaluationFromTheAnswerFormState,
-  quizQuestionSchema,
-} from "@/lib/parsers";
-import {
-  createProductAttributeConnectionHash,
-  PRODUCT_PARSERS,
-} from "@/lib/xml-product-parsers";
 import {
   createUserDefaultSubscription,
   getUserPlan,
@@ -31,7 +20,6 @@ import { PROMPTS } from "@/constants/data";
 import { Database, Json } from "@/database.types";
 import { getLocale } from "next-intl/server";
 import { textChunker } from "@/lib/pinecode";
-import { zfd } from "zod-form-data";
 import { SupabaseClient } from "@supabase/supabase-js";
 import path from "path";
 
@@ -213,21 +201,30 @@ export const langtailRouter = router({
         message: z.string(),
         locale: z.string(),
         length: z.number(),
-        fileId: z.number(),
+        fileIds: z.array(z.number()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const fileId = input.fileIds[0];
+
+      if (!fileId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Noe file selecte",
+        });
+      }
+
       const { data: file } = await ctx.supabase
         .from("files")
         .select("*")
         .eq("user_id", ctx.user.id)
-        .eq("id", input.fileId)
+        .eq("id", fileId)
         .single();
 
       if (!file) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "File not found",
+          message: "Files not found",
         });
       }
 
@@ -246,7 +243,7 @@ export const langtailRouter = router({
           query_embedding: `[${embedding.join(",")}]`, // Pass the query embeddingembedding, // Pass the embedding you want to compare
           match_threshold: 0.78, // Choose an appropriate threshold for your data
           match_count: 10, // Choose the number of matches
-          file_id: input.fileId, // Pass the file_id you want to compare
+          file_id: file.id, // Pass the file_id you want to compare
         });
 
       if (embeddingsError) {
@@ -290,6 +287,7 @@ export const langtailRouter = router({
           PROMPTS.POST_GENERATOR,
           PROMPTS.POST_IMAGE_GENERATOR,
           PROMPTS.ARTICLE_SUMMARIZER,
+          PROMPTS.DOCUMENT_CHAT,
         ]),
         message: z.string(),
         locale: z.string().optional(),
@@ -434,11 +432,13 @@ export const langtailRouter = router({
 
 async function getFileContent(filePath: string) {
   const readFile = await fs.readFile(filePath);
-
   const extName = path.extname(filePath);
 
   if (extName.toLowerCase() === ".pdf") {
-    const { text } = await pdf(readFile);
+    // @ts-expect-error: wrong typing
+    const pdfModule = await import("pdf-parse/lib/pdf-parse.js");
+
+    const { text } = await pdfModule.default(readFile);
     console.log("text", text);
     return text;
   }
@@ -524,14 +524,22 @@ const filesRouter = router({
     .mutation(async ({ ctx, input }) => {
       console.log("input", input);
 
-      const readFile = await getFileContent(input.filePath);
       const { data: file, error } = await ctx.supabase.storage
         .from("documents")
-        .upload(input.filePath, readFile, {
+        .upload(input.filePath, await fs.readFile(input.filePath), {
           cacheControl: "3600000000000",
           upsert: true,
         });
-
+      let fileContent: string | undefined;
+      try {
+        fileContent = await getFileContent(input.filePath);
+      } catch (err) {
+        console.error("error get file content", err);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: String(err),
+        });
+      }
       if (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -542,7 +550,7 @@ const filesRouter = router({
       const result = await handleUploadedFileContent(
         input.filePath,
         input.originalFileName,
-        readFile,
+        fileContent ?? "",
         ctx.supabase,
         file.path,
       );

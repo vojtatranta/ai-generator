@@ -118,6 +118,7 @@ export type Database = {
           created_at: string;
           filename: string | null;
           id: number;
+          local_file_path: string | null;
           url: string | null;
           user_id: string;
           uuid: string;
@@ -126,6 +127,7 @@ export type Database = {
           created_at?: string;
           filename?: string | null;
           id?: number;
+          local_file_path?: string | null;
           url?: string | null;
           user_id: string;
           uuid?: string;
@@ -134,6 +136,7 @@ export type Database = {
           created_at?: string;
           filename?: string | null;
           id?: number;
+          local_file_path?: string | null;
           url?: string | null;
           user_id?: string;
           uuid?: string;
@@ -206,7 +209,11 @@ export type Database = {
           match_count: number;
           file_id: number;
         };
-        Returns: Record<string, unknown>;
+        Returns: {
+          id: number;
+          chunk: string;
+          similarity: number;
+        }[];
       };
     };
     Enums: {

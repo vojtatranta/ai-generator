@@ -11,7 +11,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/web/components/ui/dropdown-menu";
-import { Question, Quiz } from "@/web/lib/supabase-server";
 import { useDeleteMutation } from "@supabase-cache-helpers/postgrest-react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";

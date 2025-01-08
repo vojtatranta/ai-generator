@@ -24,6 +24,7 @@ export const PROMPTS = {
   POST_IMAGE_GENERATOR,
   ARTICLE_SUMMARIZER,
   TEXT_DATA_FINDER,
+  DOCUMENT_CHAT,
 } as const;
 
 export const DEFAULT_LANGUAGE = "cs" as const;

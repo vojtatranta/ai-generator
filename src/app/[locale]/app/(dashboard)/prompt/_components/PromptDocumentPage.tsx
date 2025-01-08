@@ -82,6 +82,7 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
   randomNumberFromTopics: number;
   onUploadFileAction: (formData: FormData) => Promise<string | null>;
 }) {
+  const [selectedFiles, setSelectedFiles] = useState<Set<number>>(new Set());
   const t = useTranslations();
   const locale = useLocale();
   const [promptResults, setPromptResults] = useState<ResultType[]>([]);
@@ -132,7 +133,7 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
       message: data.message,
       locale: data.locale,
       length: Number(data.length || DEFAULT_LENGTH),
-      fileId: 14,
+      fileIds: Array.from(selectedFiles.values()),
     });
   };
 
@@ -228,11 +229,35 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
                         </div>
                       </div>
                       <div className="flex flex-col space-y-2 border rounded p-2 max-h-[200px] overflow-auto">
-                        {fileList?.map((file) => (
+                        {[...(fileList ?? [])].reverse().map((file) => (
                           <div
                             key={file.id}
                             className="flex items-center space-x-2"
                           >
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              checked={selectedFiles.has(file.id)}
+                              onChange={() => {
+                                if (selectedFiles.has(file.id)) {
+                                  setSelectedFiles(
+                                    new Set(
+                                      Array.from(selectedFiles.values()).filter(
+                                        (id) => id !== file.id,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  setSelectedFiles(
+                                    new Set([
+                                      ...Array.from(selectedFiles.values()),
+                                      file.id,
+                                    ]),
+                                  );
+                                }
+                              }}
+                            />
+
                             <span className="text-sm">{file.filename}</span>
                           </div>
                         ))}

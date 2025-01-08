@@ -6,7 +6,7 @@ export interface FileInputProps {
   currentImageUrl?: string;
   placeholder?: string;
   children?: React.ReactNode;
-  value?: string;
+  value?: string | null;
   accept?: string;
   onFileSelect?: (file: File | null, base64: string) => void;
   onFileOnlySelect?: (file: File | null) => void;

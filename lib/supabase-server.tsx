@@ -34,25 +34,8 @@ export async function createSupabaseServerClient() {
 
 export type AIResult = Database["public"]["Tables"]["ai_results"]["Row"];
 
-export type Answer = Database["public"]["Tables"]["answers"]["Row"];
 export type PlanSubscription =
   Database["public"]["Tables"]["subscriptions"]["Row"];
-export type QuizResult = Database["public"]["Tables"]["quiz_results"]["Row"];
-export type ProductAttribute =
-  Database["public"]["Tables"]["product_attributes"]["Row"];
-export type ProductAttributeConnection =
-  Database["public"]["Tables"]["attribute_product_connection"]["Row"];
-export type ProductAttributeConnectionInsert =
-  Database["public"]["Tables"]["attribute_product_connection"]["Insert"];
-export type ProductAttributeConnectionUpdate =
-  Database["public"]["Tables"]["attribute_product_connection"]["Update"];
-export type Question = Database["public"]["Tables"]["questions"]["Row"];
-export type Product = Database["public"]["Tables"]["products"]["Row"];
-export type ProductInsert = Database["public"]["Tables"]["products"]["Insert"];
-export type ProductUpdate = Database["public"]["Tables"]["products"]["Update"];
-export type Quiz = Database["public"]["Tables"]["quizes"]["Row"];
-export type ProductCategory =
-  Database["public"]["Tables"]["product_categories"]["Row"];
 
 export type User = NonNullable<
   Awaited<

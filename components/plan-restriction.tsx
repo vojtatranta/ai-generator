@@ -19,12 +19,12 @@ export function PlanRestriction({
   plan,
   children,
   withValidPlanContent,
-  numberOfAnswers,
+  numberOfGenerations,
 }: {
   plan: PlanWithProduct | undefined;
   children: PlanRestrictionChildren;
   withValidPlanContent?: React.ReactNode;
-  numberOfAnswers?: number;
+  numberOfGenerations?: number;
 }) {
   if (!plan) {
     return null;
@@ -37,9 +37,9 @@ export function PlanRestriction({
   }
 
   if (
-    typeof numberOfAnswers !== "undefined" &&
+    typeof numberOfGenerations !== "undefined" &&
     withValidPlanContent &&
-    numberOfAnswers < planRange.to
+    numberOfGenerations < planRange.to
   ) {
     return withValidPlanContent;
   }
@@ -48,7 +48,7 @@ export function PlanRestriction({
     ? children({
         plan,
         planRange,
-        numberOfMonthlyAnswers: numberOfAnswers ?? Infinity,
+        numberOfMonthlyAnswers: numberOfGenerations ?? Infinity,
       })
     : children;
 }
@@ -62,14 +62,14 @@ export async function PlanRestrictionWrapper({
 }) {
   const user = await getUser();
   const supabaseClient = await createSupabaseServerClient();
-  const [userPlan, numberOfAnswers] = await Promise.all([
+  const [userPlan, numberOfGenerations] = await Promise.all([
     getUserPlan(),
     supabaseClient
-      .from("answers")
-      .select("*, quizes ( user )", {
+      .from("ai_results")
+      .select("*", {
         count: "exact",
       })
-      .eq("quizes.user", user.id)
+      .eq("user", user.id)
       .gte(
         "created_at",
         new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -79,7 +79,7 @@ export async function PlanRestrictionWrapper({
   return (
     <PlanRestriction
       plan={userPlan?.plan}
-      numberOfAnswers={numberOfAnswers.count ?? Infinity}
+      numberOfGenerations={numberOfGenerations.count ?? Infinity}
       withValidPlanContent={withValidPlanContent}
     >
       {children}
