@@ -233,23 +233,25 @@
       "LOCAL_WRITER": "Karel Čapek bol český spisovateľ, dramatik a kritik. Je najznámejší svojou sci-fi tvorbou a tým, že prostredníctvom svojej hry R.U.R. zaviedol slovo 'robot' do anglického jazyka a science fiction ako celku.",
       "LOCAL_AUTHOR": "Božena Němcová bola česká spisovateľka, ktorá napísala klasický román 'Babička'. Je často považovaná za matku českej prózy a zohrala významnú úlohu v českom národnom obrodení."
     },
-    "cantGenerateImagePostTryAgain": "Nepodarilo sa vytvoriť príspevok s obrázkom, skúste to znovu.",
+    "cantGenerateImagePostTryAgain": "Nepodarilo sa vytvoriť príspevok s obrázkom, skúste to znova.",
     "askAQuestionAboutTheDocument": "Opýtať sa na dokument",
     "addQuestionAboutTheDocuemntLabel": "Vaša otázka",
     "addQuestionAboutTheDocuemntPlaceholder": "Na čo sa chcete opýtať ohľadom dokumentu?",
+    "documentChatNoFileSelectedPlaceholder": "Najprv vyberte dokument, s ktorým chcete chatovať.",
     "askDocumentSubmitButtonTitle": "Opýtať sa AI",
+    "documentChatNoFilesEmptyStateText": "Zatiaľ neboli nahrané žiadne dokumenty. Nahrajte dokument pre začatie chatu.",
     "documentChatDocumentList": "Zoznam dokumentov",
     "aiResponseFromWithTheDocumentContextTitle": "Odpoveď AI",
     "noDocumentChatAnswerYet": "Zatiaľ žiadna odpoveď. Opýtajte sa niečo ohľadom dokumentu.",
     "uploadDocument": "Nahrať dokument",
     "uploadFileInputLabel": "Vybrať súbor",
     "noFileSelected": "Žiadny súbor nie je vybraný",
-    "uploadTextPlaceholder": "Vložte text, ktorý chcete nahrať...",
+    "uploadTextPlaceholder": "Sem vložte rozsiahly text, ktorý chcete nahrať...",
     "uploadText": "Nahrať text",
     "uploadTextSuccess": "Text bol úspešne nahraný",
     "fileUploadSuccess": "Súbor bol úspešne nahraný",
     "askDocumentSuccess": "Odpoveď bola úspešne vygenerovaná",
-    "orPasteText": "alebo vložte text"
+    "orPasteLargeText": "alebo vložte rozsiahly text na spracovanie"
   },
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",

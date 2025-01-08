@@ -1,4 +1,13 @@
 "use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Upload, FileText, Send, Book, MessageSquare, Bot } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
 import { Icons } from "@/components/icons";
 import PageContainer from "@/components/layout/page-container";
 import { trpcApi } from "@/components/providers/TRPCProvider";
@@ -8,6 +17,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -19,9 +29,9 @@ import {
 } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -33,7 +43,6 @@ import {
 } from "@/web/components/ui/form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Input } from "@/components/ui/input";
 import { Maybe } from "actual-maybe";
 import { CopyableText } from "@/components/CopyableText";
 import { CopyButton } from "@/components/CopyButton";
@@ -41,6 +50,9 @@ import { AIResult } from "@/lib/supabase-server";
 import { InvokeOutput, ResultType } from "./PromptResultHistory";
 import { XPost } from "@/components/social";
 import { FileInput } from "@/components/ui/fileinput";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SelectedFilesDisplay } from "@/src/components/SelectedFilesDisplay";
+import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
 
 const DEFAULT_LENGTH = 200;
 
@@ -65,13 +77,13 @@ const getDefaultValues = (
   locale: string,
 ): QueryFormType => {
   return {
-    message: RANDOM_ARTICLES(t)[randomNumberFromTopics] ?? "",
+    message: "",
     length: prompt.defaultLength ?? DEFAULT_LENGTH,
     locale,
   };
 };
 
-export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
+export const PromptDocumentPage = memo(function PromptDocumentPage({
   aiResults,
   prompt,
   onUploadFileAction,
@@ -87,38 +99,50 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
   const locale = useLocale();
   const [promptResults, setPromptResults] = useState<ResultType[]>([]);
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
-  const [fileText, setFileText] = useState<string | null>(null);
+  const [fileUploading, setFileUploading] = useState<boolean>(false);
+  const firstSelected = useRef<boolean>(false);
   const form = useForm<QueryFormType>({
     resolver: zodResolver(QueryFormSchema),
     defaultValues: getDefaultValues(t, randomNumberFromTopics, prompt, locale),
   });
-  const { data: fileList } = trpcApi.filesRouter.listFiles.useQuery();
+  const { data: fileList, isInitialLoading: filesLoading } =
+    trpcApi.filesRouter.listFiles.useQuery();
   const utils = trpcApi.useUtils();
+
+  useEffect(() => {
+    if (
+      selectedFiles.size === 0 &&
+      fileList &&
+      fileList.length > 0 &&
+      !firstSelected.current
+    ) {
+      firstSelected.current = true;
+      Maybe.of(fileList?.at(-1)).andThen((file) =>
+        setSelectedFiles(new Set([file.id])),
+      );
+    }
+  }, [fileList, selectedFiles.size]);
 
   const uploadTextFileMutation = trpcApi.filesRouter.uploadText.useMutation({
     onSuccess: ({ addedFile }) => {
       utils.filesRouter.listFiles.invalidate();
-      setFileText(null);
       setSelectedFiles((prev) => {
         const newSet = new Set(prev);
         newSet.add(addedFile.id);
         return newSet;
       });
-      toast.success(t("prompt.success"));
+      toast.success(t("prompt.uploadTextSuccess"));
     },
   });
 
   const handleUploadedFileContent =
     trpcApi.filesRouter.handleUploadedFile.useMutation({
-      onSuccess: ({ addedFile }) => {
-        utils.filesRouter.listFiles.invalidate();
+      onSuccess: async ({ addedFile }) => {
+        await utils.filesRouter.listFiles.invalidate();
+        setFileUploading(false);
         setFileToUpload(null);
-        setSelectedFiles((prev) => {
-          const newSet = new Set(prev);
-          newSet.add(addedFile.id);
-          return newSet;
-        });
-        toast.success(t("prompt.success"));
+        setSelectedFiles(new Set([addedFile.id]));
+        toast.success(t("prompt.fileUploadSuccess"));
       },
     });
 
@@ -129,7 +153,10 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
 
         return [...prev, { ...(last ?? {}), result: data }];
       });
-      toast.success(t("prompt.success"));
+      toast.success(t("prompt.askDocumentSuccess"));
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -161,269 +188,276 @@ export const PromptDocumentPage = memo(function PromptArticleSummarizerPage({
 
   return (
     <PageContainer>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto] gap-2"
-        >
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle className="text-left text-2xl font-bold">
-                {t(prompt.title)}
-              </CardTitle>
-              <CardDescription className="max-w-[480px]">
-                {t(prompt.description)}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <div className="space-y-2">
-                      <div>
-                        <FormLabel>{t("prompt.fileToUpload")}</FormLabel>
-                        <div className="space-y-2">
-                          <Textarea
-                            className="min-h-[200px]"
-                            placeholder={t("prompt.fileToUpload")}
-                            value={fileText ?? ""}
-                            onChange={(e) => setFileText(e.target.value)}
-                          />
-                          <FileInput
-                            accept="application/pdf"
-                            value={fileToUpload?.name ?? ""}
-                            placeholder={t("prompt.uploadFile")}
-                            onFileOnlySelect={(file) => {
-                              setFileToUpload(file);
-                            }}
-                          >
-                            <Button
-                              type="button"
-                              variant="outline"
-                              className="self-end"
-                              disabled={!fileToUpload && !fileText}
-                              onClick={() => {
-                                Maybe.of(fileText).map((text) =>
-                                  uploadTextFileMutation.mutateAsync({
-                                    text,
-                                    name: "uploaded file",
-                                  }),
-                                );
-
-                                Maybe.of(fileToUpload).map(async (file) => {
-                                  const formData = new FormData();
-                                  console.log("file", file);
-                                  formData.append("file", file);
-                                  formData.append("name", file.name);
-
-                                  const result =
-                                    await onUploadFileAction(formData);
-
-                                  console.log("result", result);
-
-                                  return handleUploadedFileContent.mutateAsync({
-                                    filePath: result ?? "",
-                                    originalFileName: file.name,
-                                  });
-                                });
-                              }}
-                            >
-                              {handleUploadedFileContent.isLoading ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              ) : (
-                                <Upload className="mr-2 h-4 w-4" />
-                              )}
-                              {t("prompt.upload")}
-                            </Button>
-                          </FileInput>
-                        </div>
-                      </div>
-                      <div className="flex flex-col space-y-2 border rounded p-2 max-h-[200px] overflow-auto">
-                        {[...(fileList ?? [])].reverse().map((file) => (
-                          <div
-                            key={file.id}
-                            className="flex items-center space-x-2"
-                          >
-                            <input
-                              type="checkbox"
-                              className="mr-2"
-                              checked={selectedFiles.has(file.id)}
-                              onChange={() => {
-                                if (selectedFiles.has(file.id)) {
-                                  setSelectedFiles(
-                                    new Set(
-                                      Array.from(selectedFiles.values()).filter(
-                                        (id) => id !== file.id,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  setSelectedFiles(
-                                    new Set([
-                                      ...Array.from(selectedFiles.values()),
-                                      file.id,
-                                    ]),
-                                  );
-                                }
-                              }}
-                            />
-
-                            <span className="text-sm">{file.filename}</span>
-                          </div>
-                        ))}
-                        {(fileList?.length ?? 0) === 0 && (
-                          <div className="flex text-center items-center space-x-2">
-                            <span className="text-sm text-center">
-                              {t("prompt.noFilesUploaded")}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-2">
+        <Card className="lg:col-span-2">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between text-lg">
+                  <div className="flex items-center">
+                    <MessageSquare className="w-5 h-5 mr-2" />
+                    {t("prompt.askAQuestionAboutTheDocument")}
                   </div>
-                  <div className="w-full space-y-2">
-                    <FormField
-                      control={form.control}
-                      name="message"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            {t("prompt.articleToSummarize")}
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              className="min-h-[200px]"
-                              placeholder={t("prompt.articleToSummarize")}
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div>
-                      <div className="flex items-end justify-between">
-                        <FormField
-                          control={form.control}
-                          name="length"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">
-                                {t("prompt.summarizationResultLength")}
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="number"
-                                  className="max-w-[100px]"
-                                  placeholder={t(
-                                    "prompt.summarizationResultLengthPlaceholder",
-                                  )}
-                                  {...field}
-                                  value={field.value}
-                                  onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>,
-                                  ) => field.onChange(Number(e.target.value))}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="locale"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">
-                                {t("prompt.locale")}
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="text"
-                                  className="max-w-[100px]"
-                                  placeholder={t("prompt.localePlaceholder")}
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button
-                          variant="primary"
-                          type="submit"
-                          className={cn("flex items-center space-x-2", {
-                            "opacity-50 cursor-not-allowed text-nowrap":
-                              form.formState.isSubmitting,
-                          })}
-                          disabled={
-                            form.formState.isSubmitting ||
-                            invokeMutation.isLoading
-                          }
-                        >
-                          {invokeMutation.isLoading ? (
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          ) : (
-                            <Icons.wandSparkles className="h-4 w-4 mr-2" />
-                          )}
-                          {t("prompt.summarizeUsingAi")}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="length"
-                    render={() => (
-                      <FormItem>
-                        <div className="flex flex-row  justify-between items-center">
-                          <FormLabel>{t("prompt.summarizedResult")}</FormLabel>
-                          <CopyButton
-                            className="ml-2 max-h-[23px]"
-                            variant="outline"
-                            size="xs"
-                            value={lastPromptResult}
-                          />
-                        </div>
-                        <FormControl>
-                          <Textarea
-                            defaultValue={lastPromptResult}
-                            placeholder={t(
-                              "prompt.clickAtSummarizeToSeeResult",
-                            )}
-                            className="min-h-[250px]"
-                            onClick={(
-                              event: React.MouseEvent<HTMLTextAreaElement>,
-                            ) =>
-                              Maybe.fromLast(
-                                promptResults.filter((result) => result.result),
-                              ).andThen(async (result) => {
-                                try {
-                                  await navigator.clipboard.writeText(
-                                    getPromptResultData(result) ?? "",
-                                  );
-                                  toast.success(t("prompt.resultCopied"));
-                                } catch (error) {
-                                  toast.error(`
-                                  ${t("prompt.resultCopyFailed")}, ${String(error)}`);
-                                }
-                              })
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                  <SelectedFilesDisplay
+                    selectedFiles={selectedFiles}
+                    fileList={fileList ?? []}
                   />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor={field.name}>
+                        {t("prompt.addQuestionAboutTheDocuemntLabel")}
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          className="min-h-[100px]"
+                          disabled={selectedFiles.size === 0}
+                          placeholder={
+                            selectedFiles.size === 0
+                              ? t(
+                                  "prompt.documentChatNoFileSelectedPlaceholder",
+                                )
+                              : t(
+                                  "prompt.addQuestionAboutTheDocuemntPlaceholder",
+                                )
+                          }
+                          {...field}
+                          id={field.name}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+              <CardFooter>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className={cn("flex items-center space-x-2", {
+                    "opacity-50 cursor-not-allowed text-nowrap":
+                      form.formState.isSubmitting,
+                  })}
+                  disabled={
+                    form.formState.isSubmitting ||
+                    invokeMutation.isLoading ||
+                    selectedFiles.size === 0 ||
+                    !form.watch("message")
+                  }
+                >
+                  {invokeMutation.isLoading ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Icons.wandSparkles className="h-4 w-4 mr-2" />
+                  )}
+                  {t("prompt.askDocumentSubmitButtonTitle")}
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center text-lg">
+              <Book className="w-5 h-5 mr-2" />
+              {t("prompt.documentChatDocumentList")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+              {[...(fileList ?? [])].reverse().map((file) => (
+                <div key={file.id} className="flex items-center space-x-2 py-2">
+                  <Checkbox
+                    id={String(file.id)}
+                    checked={selectedFiles.has(file.id)}
+                    onCheckedChange={(checked) => {
+                      const newSet = new Set(selectedFiles);
+
+                      if (checked) {
+                        newSet.add(file.id);
+                      } else {
+                        newSet.delete(file.id);
+                      }
+                      setSelectedFiles(newSet);
+                    }}
+                  />
+                  <Label
+                    htmlFor={String(file.id)}
+                    className="text-sm text-gray-700 cursor-pointer"
+                  >
+                    {file.filename}
+                  </Label>
                 </div>
+              ))}
+              {filesLoading && !fileList && (
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="text-center text-sm text-gray-500">
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  </div>
+                </div>
+              )}
+
+              {!fileList && !filesLoading && (
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="text-center text-sm text-gray-500">
+                    {t("prompt.documentChatNoFilesEmptyStateText")}
+                  </div>
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between text-lg">
+              <div className="flex items-center">
+                <Bot className="w-5 h-5 mr-2" />
+                {t("prompt.aiResponseFromWithTheDocumentContextTitle")}
               </div>
-            </CardContent>
-          </Card>
-        </form>
-      </Form>
+
+              <SelectedFilesDisplay
+                selectedFiles={selectedFiles}
+                fileList={fileList ?? []}
+              />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[350px] w-full rounded-md border p-4">
+              {lastPromptResult ? (
+                <p className="text-sm">
+                  <MemoizedLangtailMarkdownBlock>
+                    {lastPromptResult}
+                  </MemoizedLangtailMarkdownBlock>
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {t("prompt.noDocumentChatAnswerYet")}
+                </p>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center text-lg">
+              <Upload className="w-5 h-5 mr-2" />
+              {t("prompt.uploadDocument")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label
+                htmlFor="file-upload"
+                className="text-sm font-medium text-muted-foreground"
+              >
+                {t("prompt.uploadDocument")}
+              </Label>
+              <div className="mt-1 flex">
+                <Input
+                  id="file-upload"
+                  type="file"
+                  accept=".txt,.pdf"
+                  onChange={(input) => {
+                    Maybe.fromFirst(
+                      Array.from(input.currentTarget.files ?? []),
+                    ).map(async (file) => {
+                      setFileToUpload(file);
+                      const formData = new FormData();
+                      console.log("file", file);
+                      formData.append("file", file);
+                      formData.append("name", file.name);
+
+                      try {
+                        setFileUploading(true);
+                        const result = await onUploadFileAction(formData);
+                        console.log("result", result);
+
+                        return handleUploadedFileContent.mutateAsync({
+                          filePath: result ?? "",
+                          originalFileName: file.name,
+                        });
+                      } catch (error) {
+                        console.log("fiel upload error", error);
+                        setFileToUpload(null);
+                        toast.error(
+                          t("prompt.cantGenerateImagePostTryAgain", {
+                            error:
+                              error instanceof Error
+                                ? error.message
+                                : String(error),
+                          }),
+                        );
+                      }
+                    });
+                  }}
+                  className="sr-only"
+                />
+                <Label
+                  htmlFor="file-upload"
+                  className="cursor-pointer bg-background flex flex-row items-center py-2 px-3 border rounded-l-md shadow-sm text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                >
+                  {fileUploading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2 inline-block" />
+                  )}
+                  {t("prompt.uploadFileInputLabel")}
+                </Label>
+                <span className="flex-1 bg-background py-2 px-3 text-sm border border-l-0 rounded-r-md">
+                  {fileToUpload
+                    ? fileToUpload.name
+                    : t("prompt.noFileSelected")}
+                </span>
+              </div>
+            </div>
+            <form
+              onSubmit={(form) => {
+                form.preventDefault();
+                Maybe.of(new FormData(form.currentTarget).get("text")).map(
+                  (text) =>
+                    uploadTextFileMutation.mutateAsync({
+                      text: String(text),
+                      name: String(text).trim().slice(0, 50) + "...",
+                    }),
+                );
+              }}
+            >
+              <Label
+                htmlFor="text-upload"
+                className="text-sm font-medium text-gray-700"
+              >
+                {t("prompt.orPasteLargeText")}
+              </Label>
+              <Textarea
+                id="text-upload"
+                name="text"
+                placeholder={t("prompt.uploadTextPlaceholder")}
+                className="mt-1"
+              />
+              <Button
+                disabled={uploadTextFileMutation.isLoading}
+                type="submit"
+                variant="outline"
+                className="mt-2 w-full"
+              >
+                {uploadTextFileMutation.isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <FileText className="w-4 h-4 mr-2" />
+                )}
+                {t("prompt.uploadText")}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </PageContainer>
   );
 });
