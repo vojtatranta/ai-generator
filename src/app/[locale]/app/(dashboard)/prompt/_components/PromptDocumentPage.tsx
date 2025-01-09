@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  RAG_QUERY_IMPROVER,
   RANDOM_ARTICLES,
   RANDOM_TOPICS,
   UsedPromptType,
@@ -138,6 +139,8 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
     },
   });
 
+  const improveRagMutation = trpcApi.langtail.invokePrompt.useMutation();
+
   const invokeMutation = trpcApi.langtail.askDocument.useMutation({
     onSuccess: (data) => {
       setPromptResults((prev) => {
@@ -152,15 +155,32 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
     },
   });
 
+  const askMessage = form.watch("message");
+
   const onSubmit = async (data: QueryFormType) => {
     setPromptResults((prev) => [
       ...prev,
       { id: uuidv4(), prompt: data.message, result: null },
     ]);
-    // await invokeQuery.refetch();
-    invokeMutation.mutateAsync({
+
+    const improvedMessageResult = await improveRagMutation.mutateAsync({
+      prompt: RAG_QUERY_IMPROVER,
       message: data.message,
       locale: data.locale,
+      length: Number(data.length || DEFAULT_LENGTH),
+      stream: false,
+    });
+
+    // await invokeQuery.refetch();
+    invokeMutation.mutateAsync({
+      message:
+        improvedMessageResult.choices?.[0]?.message.content ?? data.message,
+      locale: data.locale,
+      filename:
+        fileList
+          ?.filter((f) => selectedFiles.has(f.id))
+          .map((f) => f.filename)
+          .join(",") ?? "",
       length: Number(data.length || DEFAULT_LENGTH),
       fileIds: Array.from(selectedFiles.values()),
     });
@@ -238,11 +258,12 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
                   disabled={
                     form.formState.isSubmitting ||
                     invokeMutation.isLoading ||
+                    improveRagMutation.isLoading ||
                     selectedFiles.size === 0 ||
-                    !form.watch("message")
+                    !askMessage
                   }
                 >
-                  {invokeMutation.isLoading ? (
+                  {invokeMutation.isLoading || improveRagMutation.isLoading ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
                     <Icons.wandSparkles className="h-4 w-4 mr-2" />

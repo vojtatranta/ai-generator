@@ -200,58 +200,37 @@ export const langtailRouter = router({
     .input(
       z.object({
         message: z.string(),
+        filename: z.string(),
         locale: z.string(),
         length: z.number(),
-        fileIds: z.array(z.number()),
+        fileIds: z.array(z.number()).min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("file ids", input.fileIds);
+      // const improveQuestionPromise = langtail.prompts.invoke({
+      //   prompt: RAG_QUERY_IMPROVER,
+      //   user: ctx.user.id,
+      //   variables: {
+      //     ...(input.locale ? { language: input.locale } : {}),
+      //   },
+      //   messages: [
+      //     {
+      //       role: "user",
+      //       content: input.message,
+      //     },
+      //   ],
+      // });
 
-      if (!input.fileIds.length) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Noe file selecte",
-        });
-      }
-
-      const { data: file } = await ctx.supabase
-        .from("files")
-        .select("*")
-        .eq("user_id", ctx.user.id)
-        .in("id", input.fileIds)
-        .single();
-
-      if (!file) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Files not found",
-        });
-      }
-
-      const improveQuestionPromise = langtail.prompts.invoke({
-        prompt: RAG_QUERY_IMPROVER,
-        user: ctx.user.id,
-        variables: {
-          ...(input.locale ? { language: input.locale } : {}),
+      const embeddingPromise = pc.inference.embed(
+        PINECODE_EMBEDDINGS_MODEL,
+        [input.message],
+        {
+          inputType: "passage",
+          truncate: "END",
         },
-        messages: [
-          {
-            role: "user",
-            content: input.message,
-          },
-        ],
-      });
+      );
 
-      const embedding =
-        (
-          await pc.inference.embed(PINECODE_EMBEDDINGS_MODEL, [input.message], {
-            inputType: "passage",
-            truncate: "END",
-          })
-        ).data[0]?.values ?? [];
-
-      console.log("embedding", embedding);
+      const embedding = (await embeddingPromise).data[0]?.values ?? [];
 
       const { data: embeddings, error: embeddingsError } =
         await ctx.supabase.rpc("match_documents2", {
@@ -271,8 +250,6 @@ export const langtailRouter = router({
 
       let rawEmbeddings = embeddings?.map(({ chunk }) => chunk.trim()) ?? [];
 
-      console.log("db embeddings", rawEmbeddings);
-
       if (!rawEmbeddings.length || rawEmbeddings.join("").length < 100) {
         const { data: chunks, error: chunksError } = await ctx.supabase
           .from("documents")
@@ -289,22 +266,17 @@ export const langtailRouter = router({
               "Document not found, chunks error: " + chunksError?.message,
           });
         }
-        console.log("db chunks random", chunks);
 
         rawEmbeddings = chunks.map(({ chunk }) => (chunk ?? "").trim());
       }
 
-      console.log("rawEmbeddings", rawEmbeddings);
-
       const embeddingsText = `
-      Source file: ${file.filename}
+      Source file: ${input.filename}
       Following is the chunks from the file:
-        ${rawEmbeddings.join("...") ?? ""}
+        ${rawEmbeddings.join("...").substring(0, 2500) ?? ""}
       `;
 
-      console.log("embeddingsText", embeddingsText);
-
-      const response = await langtail.prompts.invoke({
+      return langtail.prompts.invoke({
         prompt: PROMPTS.TEXT_DATA_FINDER,
         user: ctx.user.id,
         variables: {
@@ -315,14 +287,10 @@ export const langtailRouter = router({
         messages: [
           {
             role: "user",
-            content:
-              (await improveQuestionPromise).choices[0].message?.content ??
-              input.message,
+            content: input.message,
           },
         ],
       });
-
-      return response;
     }),
 
   invokePrompt: protectedProcedure
@@ -333,6 +301,7 @@ export const langtailRouter = router({
           PROMPTS.POST_IMAGE_GENERATOR,
           PROMPTS.ARTICLE_SUMMARIZER,
           PROMPTS.DOCUMENT_CHAT,
+          RAG_QUERY_IMPROVER,
         ]),
         message: z.string(),
         locale: z.string().optional(),
