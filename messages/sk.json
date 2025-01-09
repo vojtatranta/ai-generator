@@ -130,6 +130,21 @@
         "invalidEmail": "Zadajte platnú emailovú adresu",
         "invalidPhone": "Zadajte platné telefónne číslo"
       }
+    },
+    "actions": {
+      "open": "Otvoriť menu",
+      "title": "Akcie",
+      "delete": "Vymazať"
+    },
+    "messages": {
+      "deleteSuccess": "Úspešne vymazané",
+      "deleteError": "Chyba pri vymazávaní"
+    },
+    "deleteModal": {
+      "title": "Ste si istí?",
+      "description": "Túto akciu nie je možné vrátiť späť.",
+      "cancel": "Zrušiť",
+      "confirm": "Vymazať"
     }
   },
   "users": {

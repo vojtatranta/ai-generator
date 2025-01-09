@@ -39,13 +39,15 @@
     "noResults": "Nenalezeny žádné výsledky",
     "selectAll": "Vybrat vše",
     "selectRow": "Vybrat řádek",
-    "actions": "Akce",
-    "description": "Popis",
-    "descriptionPlaceholder": "Zadejte popis",
-    "name": "Název",
-    "namePlaceholder": "Zadejte název",
-    "submit": "Uložit",
-    "submitting": "Ukládám...",
+    "actions": {
+      "open": "Otevřít menu",
+      "title": "Akce",
+      "delete": "Smazat"
+    },
+    "messages": {
+      "deleteSuccess": "Úspěšně smazáno",
+      "deleteError": "Chyba při mazání"
+    },
     "table": {
       "id": "ID",
       "name": "JMÉNO",
@@ -92,7 +94,19 @@
         "invalidEmail": "Zadejte platnou emailovou adresu",
         "invalidPhone": "Zadejte platné telefonní číslo"
       }
+    },
+    "deleteModal": {
+      "title": "Jste si jisti?",
+      "description": "Tuto akci nelze vrátit zpět.",
+      "cancel": "Zrušit",
+      "confirm": "Smazat"
     }
+  },
+  "deleteModal": {
+    "title": "Jste si jisti?",
+    "description": "Tuto akci nelze vrátit zpět.",
+    "cancel": "Zrušit",
+    "confirm": "Smazat"
   },
   "users": {
     "listing": {

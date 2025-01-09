@@ -476,7 +476,6 @@ export async function handleUploadedFileContent(
   supabase: SupabaseClient<Database>,
   fileUrl?: string,
 ) {
-  console.log("fileContent", fileContent);
   const user = await getUser();
   const { data: addedFile, error: fileError } = await supabase
     .from("files")
@@ -597,12 +596,41 @@ const filesRouter = router({
       );
     }),
 
+  deleteFile: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { error: documentError } = await ctx.supabase
+        .from("documents")
+        .delete()
+        .eq("file", input.id)
+        .eq("user_id", ctx.user.id);
+
+      const { data: file, error } = await ctx.supabase
+        .from("files")
+        .delete()
+        .eq("id", input.id)
+        .eq("user_id", ctx.user.id)
+        .select("*");
+
+      if (error || documentError) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error?.message || documentError?.message,
+        });
+      }
+
+      return file;
+    }),
+
   listFiles: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.user.id;
     const { data: files } = await ctx.supabase
       .from("files")
       .select("*")
-      .eq("user_id", userId);
+      .eq("user_id", ctx.user.id);
 
     return files;
   }),

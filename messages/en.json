@@ -34,7 +34,15 @@
     "noResults": "No results found",
     "selectAll": "Select all",
     "selectRow": "Select row",
-    "actions": "Actions",
+    "actions": {
+      "open": "Open menu",
+      "title": "Actions",
+      "delete": "Delete"
+    },
+    "messages": {
+      "deleteSuccess": "Successfully deleted",
+      "deleteError": "Error deleting item"
+    },
     "description": "Description",
     "descriptionPlaceholder": "Enter description",
     "name": "Name",
@@ -88,6 +96,12 @@
         "invalidPhone": "Please enter a valid phone number"
       }
     }
+  },
+  "deleteModal": {
+    "title": "Are you sure?",
+    "description": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete"
   },
   "users": {
     "listing": {

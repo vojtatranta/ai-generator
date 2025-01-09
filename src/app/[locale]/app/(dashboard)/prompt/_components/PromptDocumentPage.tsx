@@ -55,6 +55,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SelectedFilesDisplay } from "@/src/components/SelectedFilesDisplay";
 import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
 import type { uploadFileAction } from "@/lib/upload-file-action";
+import { DocumentFileList } from "./DocumentFileList";
 
 const DEFAULT_LENGTH = 200;
 
@@ -109,8 +110,11 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
     resolver: zodResolver(QueryFormSchema),
     defaultValues: getDefaultValues(t, randomNumberFromTopics, prompt, locale),
   });
-  const { data: fileList, isInitialLoading: filesLoading } =
-    trpcApi.filesRouter.listFiles.useQuery();
+  const {
+    data: fileList,
+    isInitialLoading: filesLoading,
+    refetch: refetchFiles,
+  } = trpcApi.filesRouter.listFiles.useQuery();
   const utils = trpcApi.useUtils();
 
   useEffect(() => {
@@ -282,47 +286,13 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[200px] w-full rounded-md border px-2">
-              {[...(fileList ?? [])].reverse().map((file) => (
-                <div key={file.id} className="flex items-center space-x-2 py-2">
-                  <Checkbox
-                    id={String(file.id)}
-                    checked={selectedFiles.has(file.id)}
-                    onCheckedChange={(checked) => {
-                      const newSet = new Set(selectedFiles);
-
-                      if (checked) {
-                        newSet.add(file.id);
-                      } else {
-                        newSet.delete(file.id);
-                      }
-                      setSelectedFiles(newSet);
-                    }}
-                  />
-                  <Label
-                    htmlFor={String(file.id)}
-                    className="text-sm text-gray-700 cursor-pointer"
-                  >
-                    {file.filename}
-                  </Label>
-                </div>
-              ))}
-              {filesLoading && !fileList && (
-                <div className="flex flex-col items-center justify-center h-full">
-                  <div className="text-center text-sm text-gray-500">
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  </div>
-                </div>
-              )}
-
-              {!fileList && !filesLoading && (
-                <div className="flex flex-col items-center justify-center h-full">
-                  <div className="text-center text-sm text-gray-500">
-                    {t("prompt.documentChatNoFilesEmptyStateText")}
-                  </div>
-                </div>
-              )}
-            </ScrollArea>
+            <DocumentFileList
+              fileList={fileList ?? null}
+              filesLoading={filesLoading}
+              selectedFiles={selectedFiles}
+              onSelectedFilesChange={setSelectedFiles}
+              onRefetch={refetchFiles}
+            />
           </CardContent>
         </Card>
       </div>
