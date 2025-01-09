@@ -53,6 +53,7 @@ import { FileInput } from "@/components/ui/fileinput";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SelectedFilesDisplay } from "@/src/components/SelectedFilesDisplay";
 import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
+import type { uploadFileAction } from "@/lib/upload-file-action";
 
 const DEFAULT_LENGTH = 200;
 
@@ -92,7 +93,9 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
   aiResults: AIResult[];
   prompt: UsedPromptType;
   randomNumberFromTopics: number;
-  onUploadFileAction: (formData: FormData) => Promise<string | null>;
+  onUploadFileAction: (
+    formData: FormData,
+  ) => ReturnType<typeof uploadFileAction>;
 }) {
   const [selectedFiles, setSelectedFiles] = useState<Set<number>>(new Set());
   const t = useTranslations();
@@ -134,22 +137,6 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
       toast.success(t("prompt.uploadTextSuccess"));
     },
   });
-
-  const handleUploadedFileContent =
-    trpcApi.filesRouter.handleUploadedFile.useMutation({
-      onSuccess: async ({ addedFile }) => {
-        await utils.filesRouter.listFiles.invalidate();
-        setFileUploading(false);
-        setFileToUpload(null);
-        setSelectedFiles(new Set([addedFile.id]));
-        toast.success(t("prompt.fileUploadSuccess"));
-      },
-      onError: (error) => {
-        setFileToUpload(null);
-        setFileUploading(false);
-        toast.error(error.message);
-      },
-    });
 
   const invokeMutation = trpcApi.langtail.askDocument.useMutation({
     onSuccess: (data) => {
@@ -384,10 +371,20 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
                         const result = await onUploadFileAction(formData);
                         console.log("result", result);
 
-                        return handleUploadedFileContent.mutateAsync({
-                          filePath: result ?? "",
-                          originalFileName: file.name,
-                        });
+                        if (!result) {
+                          setFileToUpload(null);
+                          setFileUploading(false);
+                          toast.error(
+                            t("prompt.cantGenerateImagePostTryAgain"),
+                          );
+                          return;
+                        }
+
+                        await utils.filesRouter.listFiles.invalidate();
+                        setFileUploading(false);
+                        setFileToUpload(null);
+                        setSelectedFiles(new Set([result.addedFile.id]));
+                        toast.success(t("prompt.fileUploadSuccess"));
                       } catch (error) {
                         console.log("fiel upload error", error);
                         setFileToUpload(null);

@@ -475,14 +475,13 @@ export const langtailRouter = router({
     }),
 });
 
-async function getFileContent(filePath: string) {
-  const readFile = await fs.readFile(filePath);
+async function getFileContent(fileBuffer: Buffer, filePath: string) {
   const extName = path.extname(filePath);
 
   if (extName.toLowerCase() === ".pdf") {
     return await new Promise<string>((resolve, reject) => {
       let pdfText = "";
-      new PdfReader().parseFileItems(filePath, (err, item) => {
+      new PdfReader().parseBuffer(fileBuffer, (err, item) => {
         if (err) {
           reject(err);
         } else if (!item) {
@@ -497,11 +496,11 @@ async function getFileContent(filePath: string) {
   }
 
   if (extName.toLowerCase() === ".txt") {
-    return readFile.toString("utf-8");
+    return fileBuffer.toString("utf-8");
   }
 }
 
-async function handleUploadedFileContent(
+export async function handleUploadedFileContent(
   filePath: string,
   fileName: string,
   fileContent: string,
@@ -566,59 +565,53 @@ async function handleUploadedFileContent(
   return { addedFile, documents };
 }
 
+export async function handleUploadedFile(
+  fileBuffer: Buffer,
+  filePath: string,
+  fileName: string,
+  supabase: SupabaseClient<Database>,
+) {
+  const { data: file, error } = await supabase.storage
+    .from("documents")
+    .upload(filePath, fileBuffer, {
+      cacheControl: "3600000000000",
+      upsert: true,
+    });
+  let fileContent: string | undefined;
+  try {
+    fileContent = await getFileContent(fileBuffer, filePath);
+  } catch (err) {
+    console.error("error get file content", err);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: String(err),
+    });
+  }
+  if (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: error.message,
+    });
+  }
+
+  if (!fileContent) {
+    console.log("problem no file content", fileContent);
+  }
+
+  const result = await handleUploadedFileContent(
+    filePath,
+    fileName,
+    fileContent ?? "",
+    supabase,
+    file.path,
+  );
+
+  console.log("upload file result", result);
+
+  return result;
+}
+
 const filesRouter = router({
-  handleUploadedFile: protectedProcedure
-    .input(
-      z.object({
-        filePath: z.string(),
-        originalFileName: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      console.log("input", input);
-
-      const { data: file, error } = await ctx.supabase.storage
-        .from("documents")
-        .upload(input.filePath, await fs.readFile(input.filePath), {
-          cacheControl: "3600000000000",
-          upsert: true,
-        });
-      let fileContent: string | undefined;
-      try {
-        fileContent = await getFileContent(input.filePath);
-      } catch (err) {
-        console.error("error get file content", err);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: String(err),
-        });
-      }
-      if (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error.message,
-        });
-      }
-
-      if (!fileContent) {
-        console.log("problem no file content", fileContent);
-      }
-
-      const result = await handleUploadedFileContent(
-        input.filePath,
-        input.originalFileName,
-        fileContent ?? "",
-        ctx.supabase,
-        file.path,
-      );
-
-      console.log("upload file result", result);
-
-      await fs.rm(input.filePath);
-
-      return result;
-    }),
-
   uploadText: protectedProcedure
     .input(
       z.object({
