@@ -3,10 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Upload, FileText, Send, Book, MessageSquare, Bot } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Upload, FileText, Book, MessageSquare, Bot } from "lucide-react";
 
 import { Icons } from "@/components/icons";
 import PageContainer from "@/components/layout/page-container";
@@ -16,18 +14,12 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  RAG_QUERY_IMPROVER,
-  RANDOM_ARTICLES,
-  RANDOM_TOPICS,
-  UsedPromptType,
-} from "@/constants/data";
+import { RAG_QUERY_IMPROVER, UsedPromptType } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -45,13 +37,8 @@ import {
 import { toast } from "sonner";
 import { z } from "zod";
 import { Maybe } from "actual-maybe";
-import { CopyableText } from "@/components/CopyableText";
-import { CopyButton } from "@/components/CopyButton";
 import { AIResult } from "@/lib/supabase-server";
 import { InvokeOutput, ResultType } from "./PromptResultHistory";
-import { XPost } from "@/components/social";
-import { FileInput } from "@/components/ui/fileinput";
-import { Checkbox } from "@/components/ui/checkbox";
 import { SelectedFilesDisplay } from "@/src/components/SelectedFilesDisplay";
 import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
 import type { uploadFileAction } from "@/lib/upload-file-action";
@@ -134,11 +121,7 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
   const uploadTextFileMutation = trpcApi.filesRouter.uploadText.useMutation({
     onSuccess: ({ addedFile }) => {
       utils.filesRouter.listFiles.invalidate();
-      setSelectedFiles((prev) => {
-        const newSet = new Set(prev);
-        newSet.add(addedFile.id);
-        return newSet;
-      });
+      setSelectedFiles(new Set([addedFile.id]));
       toast.success(t("prompt.uploadTextSuccess"));
     },
   });

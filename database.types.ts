@@ -116,6 +116,7 @@ export type Database = {
       files: {
         Row: {
           created_at: string;
+          file_summary: string | null;
           filename: string | null;
           id: number;
           local_file_path: string | null;
@@ -125,6 +126,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          file_summary?: string | null;
           filename?: string | null;
           id?: number;
           local_file_path?: string | null;
@@ -134,6 +136,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          file_summary?: string | null;
           filename?: string | null;
           id?: number;
           local_file_path?: string | null;

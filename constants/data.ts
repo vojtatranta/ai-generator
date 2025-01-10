@@ -17,6 +17,7 @@ export const ARTICLE_SUMMARIZER = "article-summarizer" as const;
 export const DOCUMENT_CHAT = "document-chat" as const;
 export const TEXT_DATA_FINDER = "text-data-finder" as const;
 export const RAG_QUERY_IMPROVER = "rag-query-improver" as const;
+export const EMBEDDINGS_SUMMARIZER = "embeddings-summarizer-for-ai" as const;
 
 export const AI_CHAT_PROMPT_SLUG = "social-media-post-ideas-assistant";
 

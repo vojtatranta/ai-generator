@@ -16,7 +16,11 @@ import {
   stripe,
 } from "@/lib/stripe";
 import z from "zod";
-import { PROMPTS, RAG_QUERY_IMPROVER } from "@/constants/data";
+import {
+  EMBEDDINGS_SUMMARIZER,
+  PROMPTS,
+  RAG_QUERY_IMPROVER,
+} from "@/constants/data";
 import { Database, Json } from "@/database.types";
 import { getLocale } from "next-intl/server";
 import { textChunker } from "@/lib/pinecode";
@@ -207,6 +211,14 @@ export const langtailRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      performance.mark("start");
+
+      const filePromise = ctx.supabase
+        .from("files")
+        .select("*")
+        .eq("id", input.fileIds[0])
+        .single();
+
       // const improveQuestionPromise = langtail.prompts.invoke({
       //   prompt: RAG_QUERY_IMPROVER,
       //   user: ctx.user.id,
@@ -231,14 +243,24 @@ export const langtailRouter = router({
       );
 
       const embedding = (await embeddingPromise).data[0]?.values ?? [];
+      performance.mark("embeddings");
+      performance.measure("embeddings", "start", "embeddings");
+      const measure = performance.getEntriesByName("embeddings")[0];
+      console.log(`embeddings: ${measure.duration.toFixed(2)} ms`);
 
       const { data: embeddings, error: embeddingsError } =
         await ctx.supabase.rpc("match_documents2", {
           query_embedding: `[${embedding.join(",")}]`, // Pass the query embeddingembedding, // Pass the embedding you want to compare
-          match_threshold: 0.75, // Choose an appropriate threshold for your data
-          match_count: 20, // Choose the number of matches
+          match_threshold: 0.8, // Choose an appropriate threshold for your data
+          match_count: 10, // Choose the number of matches
           file_ids: input.fileIds, // Pass the file_id you want to compare
         });
+
+      performance.mark("match_query");
+      performance.measure("matchquery", "embeddings", "match_query");
+      console.log(
+        `matchquery: ${performance.getEntriesByName("matchquery")[0].duration.toFixed(2)} ms`,
+      );
 
       if (embeddingsError) {
         console.warn("embeddings error", embeddingsError);
@@ -251,13 +273,14 @@ export const langtailRouter = router({
       let rawEmbeddings = embeddings?.map(({ chunk }) => chunk.trim()) ?? [];
 
       if (!rawEmbeddings.length || rawEmbeddings.join("").length < 100) {
+        console.log("getting raw embeddings");
         const { data: chunks, error: chunksError } = await ctx.supabase
           .from("documents")
           .select("chunk")
           .eq("user_id", ctx.user.id)
           .not("chunk", "is", null)
           .in("file", input.fileIds)
-          .limit(10);
+          .limit(5);
 
         if (!chunks || !chunks.length) {
           throw new TRPCError({
@@ -273,16 +296,18 @@ export const langtailRouter = router({
       const embeddingsText = `
       Source file: ${input.filename}
       Following is the chunks from the file:
-        ${rawEmbeddings.join("...").substring(0, 2500) ?? ""}
+        ${rawEmbeddings.join("...").substring(0, 1000) ?? ""}
       `;
 
-      return langtail.prompts.invoke({
+      const { data: file } = await filePromise;
+      const result = await langtail.prompts.invoke({
         prompt: PROMPTS.TEXT_DATA_FINDER,
         user: ctx.user.id,
         variables: {
           ...(input.locale ? { language: input.locale } : {}),
           ...(input.length ? { length: String(input.length) } : {}),
           ...(embeddingsText ? { embeddings: embeddingsText } : {}),
+          ...(file && file.file_summary ? { summary: file.file_summary } : {}),
         },
         messages: [
           {
@@ -291,6 +316,14 @@ export const langtailRouter = router({
           },
         ],
       });
+
+      performance.mark("prompt");
+      performance.measure("prompt", "match_query", "prompt");
+      console.log(
+        `prompt: ${performance.getEntriesByName("prompt")[0].duration.toFixed(2)} ms`,
+      );
+
+      return result;
     }),
 
   invokePrompt: protectedProcedure
@@ -475,8 +508,22 @@ export async function handleUploadedFileContent(
   fileContent: string,
   supabase: SupabaseClient<Database>,
   fileUrl?: string,
+  locale?: string,
 ) {
   const user = await getUser();
+  const textBegging = fileContent.substring(0, 500);
+
+  const result = await langtail.prompts.invoke({
+    prompt: EMBEDDINGS_SUMMARIZER,
+    user: user.id,
+    stream: false,
+    variables: {
+      length: "300",
+      language: locale ?? "cs",
+      embeddings: `${textBegging}`,
+      filename: fileName,
+    },
+  });
   const { data: addedFile, error: fileError } = await supabase
     .from("files")
     .insert([
@@ -485,6 +532,7 @@ export async function handleUploadedFileContent(
         filename: fileName,
         url: fileUrl ?? null,
         local_file_path: filePath ?? null,
+        file_summary: result.choices?.[0]?.message?.content ?? null,
       },
     ])
     .select("*")
