@@ -232,7 +232,18 @@
     "uploadTextSuccess": "Text uploaded successfully",
     "fileUploadSuccess": "File uploaded successfully",
     "askDocumentSuccess": "Answer generated successfully",
-    "orPasteLargeText": "or paste large text for processing"
+    "orPasteLargeText": "or paste large text for processing",
+    "speechToText": "Speech to Text",
+    "recording": "Recording...",
+    "clickToStartRecording": "Click to start recording",
+    "recordings": "Recordings",
+    "transcription": "Transcription",
+    "transcriptionWillAppearHere": "Your transcription will appear here",
+    "audioUploadSuccess": "Audio uploaded successfully",
+    "audioUploadError": "Error uploading audio",
+    "microphoneAccessError": "Error accessing microphone",
+    "transcriptionSuccess": "Transcription completed successfully",
+    "transcriptionInProgress": "Transcription in progress..."
   },
   "generateArticleSummaryPromptTitle": "Summarize articles with AI",
   "generateArticleSummaryPromptDescription": "Let AI summarize any article for you. We have prepared an example in the Message field.",
@@ -336,7 +347,8 @@
     "image-social-post-generator": "Image Post Generator",
     "users": "Users",
     "article-summarizer": "AI Article Summary",
-    "document-chat": "Document Chat"
+    "document-chat": "Document Chat",
+    "speech-to-text": "Speech to Text"
   },
   "metadata": {
     "dashboard": {

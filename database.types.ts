@@ -113,33 +113,83 @@ export type Database = {
         };
         Relationships: [];
       };
+      file_chunks: {
+        Row: {
+          base64: string;
+          common_file_uuid: string;
+          created_at: string;
+          file_id: number | null;
+          id: number;
+          mime: string;
+          text: string | null;
+          user_id: string;
+          uuid: string;
+        };
+        Insert: {
+          base64: string;
+          common_file_uuid: string;
+          created_at?: string;
+          file_id?: number | null;
+          id?: number;
+          mime: string;
+          text?: string | null;
+          user_id: string;
+          uuid?: string;
+        };
+        Update: {
+          base64?: string;
+          common_file_uuid?: string;
+          created_at?: string;
+          file_id?: number | null;
+          id?: number;
+          mime?: string;
+          text?: string | null;
+          user_id?: string;
+          uuid?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "file_chunks_file_id_fkey";
+            columns: ["file_id"];
+            isOneToOne: false;
+            referencedRelation: "files";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       files: {
         Row: {
+          common_file_uuid: string | null;
           created_at: string;
           file_summary: string | null;
           filename: string | null;
           id: number;
           local_file_path: string | null;
+          type: string | null;
           url: string | null;
           user_id: string;
           uuid: string;
         };
         Insert: {
+          common_file_uuid?: string | null;
           created_at?: string;
           file_summary?: string | null;
           filename?: string | null;
           id?: number;
           local_file_path?: string | null;
+          type?: string | null;
           url?: string | null;
           user_id: string;
           uuid?: string;
         };
         Update: {
+          common_file_uuid?: string | null;
           created_at?: string;
           file_summary?: string | null;
           filename?: string | null;
           id?: number;
           local_file_path?: string | null;
+          type?: string | null;
           url?: string | null;
           user_id?: string;
           uuid?: string;

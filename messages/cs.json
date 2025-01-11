@@ -238,7 +238,18 @@
     "uploadTextSuccess": "Text byl úspěšně nahrán",
     "fileUploadSuccess": "Soubor byl úspěšně nahrán",
     "askDocumentSuccess": "Odpověď byla úspěšně vygenerována",
-    "orPasteLargeText": "nebo vložte rozsáhlý text ke zpracování"
+    "orPasteLargeText": "nebo vložte rozsáhlý text ke zpracování",
+    "speechToText": "Převod řeči na text",
+    "recording": "Nahrávám...",
+    "clickToStartRecording": "Klikněte pro zahájení nahrávání",
+    "recordings": "Nahrávky",
+    "transcription": "Přepis",
+    "transcriptionWillAppearHere": "Zde se objeví váš přepis",
+    "transcriptionSuccess": "Přepis byl úspěšně dokončen",
+    "transcriptionInProgress": "Probíhá přepis...",
+    "audioUploadSuccess": "Audio bylo úspěšně nahráno",
+    "audioUploadError": "Chyba při nahrávání audia",
+    "microphoneAccessError": "Chyba při přístupu k mikrofonu"
   },
   "generateArticleSummaryPromptTitle": "Shrnutí článku pomocí AI",
   "generateArticleSummaryPromptDescription": "Nechte si shrnout jakýkoliv článek pomocí umělé inteligence. Stačí vložit text článku a AI vám vytvoří jeho shrnutí.",
@@ -382,7 +393,8 @@
     "social-media-post-ideas-assistant": "AI chat",
     "users": "Uživatelé",
     "article-summarizer": "AI Shrnutí článku",
-    "document-chat": "Chatování s vlastním textem"
+    "document-chat": "Chatování s vlastním textem",
+    "speech-to-text": "Převod řeči na text"
   },
   "promptTemplates": {
     "listing": {

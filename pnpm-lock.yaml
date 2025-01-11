@@ -276,7 +276,7 @@ importers:
         version: 11.0.3
       vercel:
         specifier: ^39.2.6
-        version: 39.2.6(encoding@0.1.13)(rollup@3.29.5)
+        version: 39.2.6(encoding@0.1.13)(rollup@2.79.2)
       xml-js:
         specifier: ^1.6.11
         version: 1.6.11
@@ -17868,6 +17868,14 @@ snapshots:
       picomatch: 2.3.1
       rollup: 2.79.2
 
+  "@rollup/pluginutils@5.1.4(rollup@2.79.2)":
+    dependencies:
+      "@types/estree": 1.0.6
+      estree-walker: 2.0.2
+      picomatch: 4.0.2
+    optionalDependencies:
+      rollup: 2.79.2
+
   "@rollup/pluginutils@5.1.4(rollup@3.29.5)":
     dependencies:
       "@types/estree": 1.0.6
@@ -18883,18 +18891,18 @@ snapshots:
       "@vercel/static-config": 3.0.0
       ts-morph: 12.0.0
 
-  "@vercel/next@4.4.2(encoding@0.1.13)(rollup@3.29.5)":
+  "@vercel/next@4.4.2(encoding@0.1.13)(rollup@2.79.2)":
     dependencies:
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
     transitivePeerDependencies:
       - encoding
       - rollup
       - supports-color
 
-  "@vercel/nft@0.27.10(encoding@0.1.13)(rollup@3.29.5)":
+  "@vercel/nft@0.27.10(encoding@0.1.13)(rollup@2.79.2)":
     dependencies:
       "@mapbox/node-pre-gyp": 2.0.0-rc.0(encoding@0.1.13)
-      "@rollup/pluginutils": 5.1.4(rollup@3.29.5)
+      "@rollup/pluginutils": 5.1.4(rollup@2.79.2)
       acorn: 8.14.0
       acorn-import-attributes: 1.9.5(acorn@8.14.0)
       async-sema: 3.1.1
@@ -18910,7 +18918,7 @@ snapshots:
       - rollup
       - supports-color
 
-  "@vercel/node@5.0.2(encoding@0.1.13)(rollup@3.29.5)":
+  "@vercel/node@5.0.2(encoding@0.1.13)(rollup@2.79.2)":
     dependencies:
       "@edge-runtime/node-utils": 2.3.0
       "@edge-runtime/primitives": 4.1.0
@@ -18918,7 +18926,7 @@ snapshots:
       "@types/node": 16.18.11
       "@vercel/build-utils": 9.0.1
       "@vercel/error-utils": 2.0.3
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
       "@vercel/static-config": 3.0.0
       async-listen: 3.0.0
       cjs-module-lexer: 1.2.3
@@ -18941,9 +18949,9 @@ snapshots:
 
   "@vercel/python@4.6.0": {}
 
-  "@vercel/redwood@2.1.12(encoding@0.1.13)(rollup@3.29.5)":
+  "@vercel/redwood@2.1.12(encoding@0.1.13)(rollup@2.79.2)":
     dependencies:
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
       "@vercel/routing-utils": 5.0.0
       "@vercel/static-config": 3.0.0
       semver: 6.3.1
@@ -18953,10 +18961,10 @@ snapshots:
       - rollup
       - supports-color
 
-  "@vercel/remix-builder@5.0.2(encoding@0.1.13)(rollup@3.29.5)":
+  "@vercel/remix-builder@5.0.2(encoding@0.1.13)(rollup@2.79.2)":
     dependencies:
       "@vercel/error-utils": 2.0.3
-      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/nft": 0.27.10(encoding@0.1.13)(rollup@2.79.2)
       "@vercel/static-config": 3.0.0
       ts-morph: 12.0.0
     transitivePeerDependencies:
@@ -25784,17 +25792,17 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vercel@39.2.6(encoding@0.1.13)(rollup@3.29.5):
+  vercel@39.2.6(encoding@0.1.13)(rollup@2.79.2):
     dependencies:
       "@vercel/build-utils": 9.0.1
       "@vercel/fun": 1.1.2(encoding@0.1.13)
       "@vercel/go": 3.2.1
       "@vercel/hydrogen": 1.0.11
-      "@vercel/next": 4.4.2(encoding@0.1.13)(rollup@3.29.5)
-      "@vercel/node": 5.0.2(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/next": 4.4.2(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/node": 5.0.2(encoding@0.1.13)(rollup@2.79.2)
       "@vercel/python": 4.6.0
-      "@vercel/redwood": 2.1.12(encoding@0.1.13)(rollup@3.29.5)
-      "@vercel/remix-builder": 5.0.2(encoding@0.1.13)(rollup@3.29.5)
+      "@vercel/redwood": 2.1.12(encoding@0.1.13)(rollup@2.79.2)
+      "@vercel/remix-builder": 5.0.2(encoding@0.1.13)(rollup@2.79.2)
       "@vercel/ruby": 2.1.0
       "@vercel/static-build": 2.5.41
       chokidar: 4.0.0

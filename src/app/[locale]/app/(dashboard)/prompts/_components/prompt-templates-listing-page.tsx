@@ -24,7 +24,9 @@ export default async function PromptTemplatesListingPage({}: TSocketsListingPage
     limit: pageLimit,
     ...(search && { search }),
   };
-  const promptTemplates = USED_PROMPTS.filter((p) => {
+  const promptTemplates = USED_PROMPTS.filter(
+    (p) => "hide" in p && !p.hide,
+  ).filter((p) => {
     if (filters.search) {
       return (
         p.prompt.toLowerCase().includes(filters.search) ||

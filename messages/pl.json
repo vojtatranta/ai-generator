@@ -365,7 +365,8 @@
     "social-media-post-ideas-assistant": "AI chat",
     "users": "U ytkownicy",
     "article-summarizer": "AI Podsumowanie artyku u",
-    "document-chat": "Chat z dokumentem"
+    "document-chat": "Chat z dokumentem",
+    "speech-to-text": "Zamiana mowy na tekst"
   },
   "promptTemplates": {
     "listing": {

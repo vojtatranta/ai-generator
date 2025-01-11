@@ -4,7 +4,6 @@ import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { NextRequest } from "next/server";
 import { Langtail } from "langtail";
 import { pc, PINECODE_EMBEDDINGS_MODEL } from "@/lib/pinecode";
-import fs from "fs/promises";
 import {
   createSupabaseServerClient,
   getMaybeUserWithClient,
@@ -18,15 +17,25 @@ import {
 import z from "zod";
 import {
   EMBEDDINGS_SUMMARIZER,
+  FILE_NAME_GUESSER,
   PROMPTS,
   RAG_QUERY_IMPROVER,
+  SPEECH_TO_TEXT,
 } from "@/constants/data";
 import { Database, Json } from "@/database.types";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { textChunker } from "@/lib/pinecode";
 import { SupabaseClient } from "@supabase/supabase-js";
 import path from "path";
 import { PdfReader } from "pdfreader";
+import OpenAI from "openai";
+import {
+  concatenateAudioChunksToBlob,
+  createAudioStreamFromDBChunks,
+  getBlobFromDBChunk,
+} from "@/lib/stream-from-db";
+import { BlobLike, FileLike } from "openai/uploads.mjs";
+import { getAudioUploadStreamLink } from "@/lib/public-links";
 
 // Create context type
 type Context = {
@@ -335,6 +344,8 @@ export const langtailRouter = router({
           PROMPTS.ARTICLE_SUMMARIZER,
           PROMPTS.DOCUMENT_CHAT,
           RAG_QUERY_IMPROVER,
+          FILE_NAME_GUESSER,
+          SPEECH_TO_TEXT,
         ]),
         message: z.string(),
         locale: z.string().optional(),
@@ -503,12 +514,16 @@ async function getFileContent(fileBuffer: Buffer, filePath: string) {
 }
 
 export async function handleUploadedFileContent(
-  filePath: string,
+  filePath: string | null,
   fileName: string,
   fileContent: string,
   supabase: SupabaseClient<Database>,
-  fileUrl?: string,
-  locale?: string,
+  options: {
+    fileUrl?: string;
+    locale?: string;
+    type?: string;
+    additionalContextForSummarizer?: string;
+  } = {},
 ) {
   const user = await getUser();
   const textBegging = fileContent.substring(0, 500);
@@ -519,9 +534,10 @@ export async function handleUploadedFileContent(
     stream: false,
     variables: {
       length: "300",
-      language: locale ?? "cs",
+      language: options.locale ?? "cs",
       embeddings: `${textBegging}`,
       filename: fileName,
+      additionalContext: options.additionalContextForSummarizer ?? "",
     },
   });
   const { data: addedFile, error: fileError } = await supabase
@@ -530,7 +546,7 @@ export async function handleUploadedFileContent(
       {
         user_id: user.id,
         filename: fileName,
-        url: fileUrl ?? null,
+        url: options.fileUrl ?? null,
         local_file_path: filePath ?? null,
         file_summary: result.choices?.[0]?.message?.content ?? null,
       },
@@ -581,11 +597,118 @@ export async function handleUploadedFileContent(
   return { addedFile, documents };
 }
 
+export async function transcribeAudio(
+  chunkId: number,
+  userId: string,
+  ctx: {
+    supabase: SupabaseClient<Database>;
+  },
+) {
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
+
+  // const localUrl = `/api/audio-stream?commonFileUuid=${commonFileUuid}`;
+
+  // const { data: file, error } = await ctx.supabase
+  //   .from("files")
+  //   .insert([
+  //     {
+  //       filename: commonFileUuid,
+  //       user_id: userId,
+  //       url: localUrl,
+  //       common_file_uuid: commonFileUuid,
+  //     },
+  //   ])
+  //   .select("*")
+  //   .single();
+
+  // if (error) {
+  //   throw new TRPCError({
+  //     code: "INTERNAL_SERVER_ERROR",
+  //     message: error.message,
+  //   });
+  // }
+
+  try {
+    const transcription = await openai.audio.transcriptions.create({
+      file: await getBlobFromDBChunk(chunkId, userId, {
+        supabaseClient: ctx.supabase,
+        expectedMime: "audio/mpeg",
+      }),
+      model: "whisper-1",
+    });
+
+    // Save transcription to the documents table
+    // const documentsPromise = ctx.supabase
+    //   .from("documents")
+    //   .insert([
+    //     {
+    //       user_id: userId,
+    //       chunk: transcription.text,
+    //       file: file.id,
+    //       embedding_type: "whisper-1",
+    //     },
+    //   ])
+    //   .select("*")
+    //   .single();
+
+    // const shortenedTranscript = transcription.text.substring(0, 200);
+
+    // const fileNameGuesserPromise = langtail.prompts.invoke({
+    //   prompt: FILE_NAME_GUESSER,
+    //   user: userId,
+    //   messages: [
+    //     {
+    //       role: "user",
+    //       content: shortenedTranscript,
+    //     },
+    //   ],
+    // });
+    // const fileSummaryPromise = langtail.prompts.invoke({
+    //   prompt: EMBEDDINGS_SUMMARIZER,
+    //   user: userId,
+    //   stream: false,
+    //   variables: {
+    //     length: "300",
+    //     language: "cs",
+    //     embeddings: shortenedTranscript,
+    //   },
+    // });
+
+    // const [fileNameGuesser, fileSummary] = await Promise.all([
+    //   fileNameGuesserPromise,
+    //   fileSummaryPromise,
+    // ]);
+
+    const fileChunkSave = await ctx.supabase
+      .from("file_chunks")
+      .update({ text: transcription.text })
+      .eq("id", chunkId)
+      .select("*")
+      .single();
+
+    return {
+      transcription: transcription.text,
+      fileChunk: fileChunkSave.data,
+    };
+  } catch (err) {
+    console.error("error transcribing audio", err);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: String(err),
+    });
+  }
+}
+
 export async function handleUploadedFile(
   fileBuffer: Buffer,
   filePath: string,
   fileName: string,
   supabase: SupabaseClient<Database>,
+  options: {
+    type?: string;
+  } = {},
 ) {
   const { data: file, error } = await supabase.storage
     .from("documents")
@@ -619,7 +742,10 @@ export async function handleUploadedFile(
     fileName,
     fileContent ?? "",
     supabase,
-    file.path,
+    {
+      fileUrl: file.path,
+      type: options.type,
+    },
   );
 
   console.log("upload file result", result);
@@ -628,6 +754,45 @@ export async function handleUploadedFile(
 }
 
 const filesRouter = router({
+  saveFileChunk: protectedProcedure
+    .input(
+      z.object({
+        chunkBase64: z.string(),
+        commonFileUuid: z.string(),
+        mime: z.string(),
+        transcribe: z.boolean().optional().default(false),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.supabase
+        .from("file_chunks")
+        .insert({
+          user_id: ctx.user.id,
+          base64: input.chunkBase64,
+          common_file_uuid: input.commonFileUuid,
+          mime: input.mime,
+        })
+        .select("*")
+        .single();
+
+      if (!data || error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error?.message,
+        });
+      }
+
+      return {
+        ...data,
+        transcription: input.transcribe
+          ? ((
+              await transcribeAudio(data.id, ctx.user.id, {
+                supabase: ctx.supabase,
+              })
+            )?.transcription ?? "")
+          : "",
+      };
+    }),
   uploadText: protectedProcedure
     .input(
       z.object({
@@ -641,6 +806,9 @@ const filesRouter = router({
         input.name,
         input.text,
         ctx.supabase,
+        {
+          type: "text",
+        },
       );
     }),
 
@@ -684,13 +852,91 @@ const filesRouter = router({
   }),
 });
 
-// export const publicProcedure = t.procedure;
+const speechToTextRouter = router({
+  saveTheCompletedAudio: protectedProcedure
+    .input(
+      z.object({
+        commonFileUuid: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data: chunks } = await ctx.supabase
+        .from("file_chunks")
+        .select("text")
+        .eq("common_file_uuid", input.commonFileUuid)
+        .eq("user_id", ctx.user.id);
+
+      if (!chunks) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No chunks found",
+        });
+      }
+
+      const transcription = chunks?.map(({ text }) => text).join("") || "";
+
+      const shortenedTranscript = transcription.substring(0, 200);
+
+      const fileNameGuesserPromise = langtail.prompts.invoke({
+        prompt: FILE_NAME_GUESSER,
+        user: ctx.user.id,
+        messages: [
+          {
+            role: "user",
+            content: shortenedTranscript,
+          },
+        ],
+      });
+
+      const [fileNameGuesser] = await Promise.all([fileNameGuesserPromise]);
+
+      return handleUploadedFileContent(
+        null,
+        (await fileNameGuesser.choices?.[0]?.message.content) ??
+          `Audio from ${new Date().toISOString()}.mp3`,
+
+        transcription,
+        ctx.supabase,
+        {
+          fileUrl: getAudioUploadStreamLink(input.commonFileUuid),
+          type: "audio",
+          additionalContextForSummarizer:
+            "A transcription of the audio recording",
+        },
+      );
+    }),
+
+  getTranscription: protectedProcedure
+    .input(
+      z.object({
+        commonFileUuid: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { data: document, error } = await ctx.supabase
+        .from("documents")
+        .select("*")
+        .eq("file", input.commonFileUuid)
+        .eq("embedding_type", "whisper-1")
+        .single();
+
+      if (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+
+      return document;
+    }),
+});
 
 // Create the root router
 export const appRouter = router({
   subscription: subscriptionRouter,
   langtail: langtailRouter,
   filesRouter,
+  speechToText: speechToTextRouter,
 });
 
 // Export type router type signature

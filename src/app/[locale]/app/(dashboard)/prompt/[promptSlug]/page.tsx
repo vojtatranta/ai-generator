@@ -9,6 +9,7 @@ import {
   DOCUMENT_CHAT,
   RANDOM_IMAGE_TOPICS,
   RANDOM_TOPICS,
+  SPEECH_TO_TEXT,
   USED_PROMPTS,
 } from "@/constants/data";
 import { PromptImageQueryPage } from "../_components/PromptImageQueryPage";
@@ -16,6 +17,7 @@ import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
 import { PromptArticleSummarizerPage } from "../_components/PromptArticleSummarizerPage";
 import { PromptDocumentPage } from "../_components/PromptDocumentPage";
 import { uploadFileAction } from "@/lib/upload-file-action";
+import { PromptSpeechPage } from "../_components/PromptSpeechPage";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -81,6 +83,17 @@ export default async function Page({ searchParams, params }: pageProps) {
   if (usedPrompt.id === DOCUMENT_CHAT) {
     return (
       <PromptDocumentPage
+        aiResults={lastResults ?? []}
+        prompt={usedPrompt}
+        randomNumberFromTopics={0}
+        onUploadFileAction={uploadFileAction}
+      />
+    );
+  }
+
+  if (usedPrompt.id === SPEECH_TO_TEXT) {
+    return (
+      <PromptSpeechPage
         aiResults={lastResults ?? []}
         prompt={usedPrompt}
         randomNumberFromTopics={0}

@@ -272,7 +272,18 @@
     "uploadTextSuccess": "Text bol úspešne nahraný",
     "fileUploadSuccess": "Súbor bol úspešne nahraný",
     "askDocumentSuccess": "Odpoveď bola úspešne vygenerovaná",
-    "orPasteLargeText": "alebo vložte rozsiahly text na spracovanie"
+    "orPasteLargeText": "alebo vložte rozsiahly text na spracovanie",
+    "speechToText": "Prevod reči na text",
+    "recording": "Nahrávam...",
+    "clickToStartRecording": "Kliknite pre začatie nahrávania",
+    "recordings": "Nahrávky",
+    "transcription": "Prepis",
+    "transcriptionWillAppearHere": "Tu sa objaví váš prepis",
+    "transcriptionSuccess": "Prepis bol úspešne dokončený",
+    "transcriptionInProgress": "Prebieha prepis...",
+    "audioUploadSuccess": "Audio bolo úspešne nahrané",
+    "audioUploadError": "Chyba pri nahrávaní audia",
+    "microphoneAccessError": "Chyba pri prístupe k mikrofónu"
   },
   "documentChatPromptTitle": "Chat s dokumentom",
   "documentChatPromptDescription": "Nahrajte svoj dokument a pýtajte sa na jeho obsah. AI vám pomôže porozumieť textu a nájsť odpovede na vaše otázky.",
@@ -375,7 +386,8 @@
     "document-chat": "Chat s dokumentom",
     "profile": "Profil",
     "post-generator": "Generátor príspevkov",
-    "image-social-post-generator": "Generátor obrázkov pre sociálne siete"
+    "image-social-post-generator": "Generátor obrázkov pre sociálne siete",
+    "speech-to-text": "Prevod reči na text"
   },
   "profile": {
     "editProfile": "Upraviť profil",

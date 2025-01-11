@@ -18,6 +18,8 @@ export const DOCUMENT_CHAT = "document-chat" as const;
 export const TEXT_DATA_FINDER = "text-data-finder" as const;
 export const RAG_QUERY_IMPROVER = "rag-query-improver" as const;
 export const EMBEDDINGS_SUMMARIZER = "embeddings-summarizer-for-ai" as const;
+export const SPEECH_TO_TEXT = "speech-to-text" as const;
+export const FILE_NAME_GUESSER = "file-nam-guesser" as const;
 
 export const AI_CHAT_PROMPT_SLUG = "social-media-post-ideas-assistant";
 
@@ -69,6 +71,24 @@ export const USED_PROMPTS = [
     prompt: DOCUMENT_CHAT,
     title: "documentChatPromptTitle",
     description: "documentChatPromptDescription",
+    defaultLength: 300,
+    image: false,
+  },
+  {
+    id: SPEECH_TO_TEXT,
+    prompt: SPEECH_TO_TEXT,
+    hide: true,
+    title: "documentChatPromptTitle",
+    description: "documentChatPromptDescription",
+    defaultLength: 300,
+    image: false,
+  },
+  {
+    id: FILE_NAME_GUESSER,
+    prompt: FILE_NAME_GUESSER,
+    hide: true,
+    title: "fileNameGuesserPromptTitle",
+    description: "fileNameGuesserPromptDescription",
     defaultLength: 300,
     image: false,
   },
