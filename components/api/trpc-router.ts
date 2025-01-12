@@ -608,7 +608,7 @@ export async function transcribeAudio(
     supabase: SupabaseClient<Database>;
     locale?: string;
     createFileOnEnd?: boolean;
-    commonFileUuid: string;
+    commonFileUuid?: string;
     dontRetry?: boolean;
   },
 ) {
@@ -697,7 +697,7 @@ export async function transcribeAudio(
       })
       .eq("id", chunkId);
 
-    if (ctx.createFileOnEnd) {
+    if (ctx.createFileOnEnd && ctx.commonFileUuid) {
       console.log("creating file on transcription end", ctx.commonFileUuid);
       waitUntil(
         handleCompleteAudio(ctx.commonFileUuid, {
@@ -718,6 +718,7 @@ export async function transcribeAudio(
       });
     }
 
+    console.error("error file", chunkId);
     console.error("error transcribing audio", err);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

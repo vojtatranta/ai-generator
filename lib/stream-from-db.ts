@@ -39,8 +39,6 @@ export const getBlobFromDBChunk = async (
     type: chunk?.mime ?? context.expectedMime ?? "audio/mpeg",
   });
 
-  console.log("blob size", blob.size);
-
   return blobToFileLike(
     blob,
     String(chunk.id),

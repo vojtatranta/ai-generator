@@ -21,6 +21,7 @@ import PageContainer from "@/components/layout/page-container";
 import { uploadFileAction } from "@/lib/upload-file-action";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { Else, If, Then } from "@/components/ui/condition";
+import { SimpleFileUpload } from "@/components/ui/simple-file-upload";
 
 const QueryFormSchema = z.object({
   message: z.string(),
@@ -58,7 +59,7 @@ export async function chunkBlob(
   blob: Blob,
   chunkSizeMB: number = 3,
 ): Promise<Blob[]> {
-  const minChunkSizeBytes = 150 * 1024; // Minimum chunk size of 100kB
+  const minChunkSizeBytes = 1200 * 1024; // Minimum chunk size of 100kB
   const maxChunkSizeBytes = chunkSizeMB * 1024 * 1024; // Convert MB to bytes
   const chunkSizeBytes =
     blob.size > maxChunkSizeBytes
@@ -218,12 +219,71 @@ export const PromptSpeechPage = ({
       setCurrentTranscription(completedTranscriptionQuery.data?.text ?? "");
       setCompletedTranscriptionCommonFileUuid(null);
       setMakingTranscription(false);
+      if (transcriptionTimeoutRef.current) {
+        clearTimeout(transcriptionTimeoutRef.current);
+      }
     }
   }, [
     setCurrentTranscription,
     completeAudioMutation,
     completedTranscriptionQuery.data,
   ]);
+
+  const handleAudioBlob = async (
+    completeBlob: Blob,
+    {
+      currentRecordingRefId,
+      endRecordingResolve,
+    }: {
+      currentRecordingRefId: string;
+      endRecordingResolve?: (() => void) | null;
+    },
+  ) => {
+    // saveBlob(completeBlob, "recording.mp3");
+    const chunkedBlobs = await chunkBlob(completeBlob, 2);
+
+    if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
+      recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
+    }
+
+    chunkedBlobs.forEach((blob, index) => {
+      recordingBlobsPromisesRef.current.get(currentRecordingRefId)?.push(
+        new Promise<string>((resolve) => {
+          const fileReader = new FileReader();
+          fileReader.onload = () => {
+            const blobBase64 = fileReader.result as string;
+            resolve(blobBase64);
+          };
+
+          fileReader.readAsDataURL(blob);
+        }).then(async (blobBase64) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(
+                audioUploadMutation.mutateAsync({
+                  chunkBase64: blobBase64,
+                  commonFileUuid: currentRecordingRefId,
+                  mime: AUDIO_MIME_TYPE,
+                  transcribe: true,
+                  locale,
+                  order: index,
+                  final: index === chunkedBlobs.length - 1,
+                }),
+              );
+            }, 10000 * Math.random());
+          });
+        }),
+      );
+    });
+
+    Promise.all(
+      Array.from(
+        recordingBlobsPromisesRef.current.get(currentRecordingRefId) ?? [],
+      ),
+    ).then(() => {
+      endRecordingResolve?.();
+    });
+  };
 
   const startRecording = async () => {
     if (recordingIdRef.current) {
@@ -245,50 +305,9 @@ export const PromptSpeechPage = ({
             type: AUDIO_MIME_TYPE,
           });
 
-          // saveBlob(completeBlob, "recording.mp3");
-          const chunkedBlobs = await chunkBlob(completeBlob, 1.25);
-
-          if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
-            recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
-          }
-
-          chunkedBlobs.forEach((blob, index) => {
-            recordingBlobsPromisesRef.current.get(currentRecordingRefId)?.push(
-              new Promise<string>((resolve) => {
-                const fileReader = new FileReader();
-                fileReader.onload = () => {
-                  const blobBase64 = fileReader.result as string;
-                  resolve(blobBase64);
-                };
-
-                fileReader.readAsDataURL(blob);
-              }).then(async (blobBase64) => {
-                return new Promise((resolve) => {
-                  setTimeout(() => {
-                    resolve(
-                      audioUploadMutation.mutateAsync({
-                        chunkBase64: blobBase64,
-                        commonFileUuid: currentRecordingRefId,
-                        mime: AUDIO_MIME_TYPE,
-                        transcribe: true,
-                        locale,
-                        order: index,
-                        final: index === chunkedBlobs.length - 1,
-                      }),
-                    );
-                  }, 1000 * Math.random());
-                });
-              }),
-            );
-          });
-
-          Promise.all(
-            Array.from(
-              recordingBlobsPromisesRef.current.get(currentRecordingRefId) ??
-                [],
-            ),
-          ).then(() => {
-            endRecordingResolve?.();
+          await handleAudioBlob(completeBlob, {
+            currentRecordingRefId: recordingIdRef.current ?? "",
+            endRecordingResolve,
           });
         }
       };
@@ -343,12 +362,20 @@ export const PromptSpeechPage = ({
           //   commonFileUuid: currentRecordingRefId,
           // });
 
-          setCompletedTranscriptionCommonFileUuid(currentRecordingRefId);
-          transcriptionTimeoutRef.current = setTimeout(() => {
-            setCompletedTranscriptionCommonFileUuid(null);
-            toast.error(t("prompt.transcriptionTimeout"));
-            setMakingTranscription(false);
-          }, 30000);
+          const setTimeoutOfTheTranscription = (localRecordingId: string) => {
+            setCompletedTranscriptionCommonFileUuid(localRecordingId);
+            transcriptionTimeoutRef.current = setTimeout(() => {
+              setCompletedTranscriptionCommonFileUuid(null);
+              toast.error(t("prompt.transcriptionTimeout"), {
+                onDismiss: () => {
+                  setCompletedTranscriptionCommonFileUuid(localRecordingId);
+                },
+              });
+              setMakingTranscription(false);
+            }, 50000);
+          };
+
+          setTimeoutOfTheTranscription(currentRecordingRefId);
 
           recordingBlobsPromisesRef.current.delete(currentRecordingRefId);
         } catch (error) {
@@ -481,6 +508,88 @@ export const PromptSpeechPage = ({
               <div className="text-center text-sm font-medium">
                 {formatEllapsedTime(ellapsedTime ?? 0)}
               </div>
+            </div>
+            <div>
+              <SimpleFileUpload
+                accept=".mp3"
+                onFile={async (file) => {
+                  setCompletedTranscriptionCommonFileUuid(null);
+                  const currentRecordingRefId = uuidv4();
+                  setCurrentTranscription("");
+                  recordingIdRef.current = currentRecordingRefId;
+                  setElapsedTime(0);
+                  await handleAudioBlob(file, {
+                    currentRecordingRefId,
+                    endRecordingResolve: null,
+                  });
+                  setIsRecording(false);
+                  setMediaRecorder(null);
+                  setMakingTranscription(true);
+                  setElapsedTime(0);
+                  const recordingLength = recordingStartTimeRef.current
+                    ? Math.round(
+                        (Date.now() - recordingStartTimeRef.current) / 1000,
+                      )
+                    : 0;
+
+                  // Add new recording to the list
+                  setRecordings((prev) => [
+                    ...prev,
+                    {
+                      id: currentRecordingRefId,
+                      timestamp: Date.now(),
+                      length: recordingLength,
+                    },
+                  ]);
+
+                  try {
+                    await Promise.all([
+                      ...Array.from(
+                        recordingBlobsPromisesRef.current.get(
+                          currentRecordingRefId,
+                        ) ?? [],
+                      ),
+                      recordingPromiseRef.current,
+                    ]);
+
+                    recordingPromiseRef.current = null;
+
+                    setRecordings((prev) =>
+                      prev.map((rec) => {
+                        if (rec.id === currentRecordingRefId) {
+                          return {
+                            ...rec,
+                            streamableUrl: `${getAudioUploadStreamLink(
+                              currentRecordingRefId,
+                            )}`,
+                          };
+                        }
+                        return rec;
+                      }),
+                    );
+
+                    //   Complete transcript by creating a new file completely
+                    // await saveCompletedAudio.mutateAsync({
+                    //   commonFileUuid: currentRecordingRefId,
+                    // });
+
+                    setCompletedTranscriptionCommonFileUuid(
+                      currentRecordingRefId,
+                    );
+                    transcriptionTimeoutRef.current = setTimeout(() => {
+                      setCompletedTranscriptionCommonFileUuid(null);
+                      toast.error(t("prompt.transcriptionTimeout"));
+                      setMakingTranscription(false);
+                    }, 30000);
+                  } catch (error) {
+                    console.error("Error uploading audio:", error);
+                    toast.error(t("prompt.audioUploadError"));
+                  } finally {
+                    recordingIdRef.current = null;
+                    recordingStartTimeRef.current = null;
+                  }
+                }}
+              />
             </div>
 
             <div className="mt-8">

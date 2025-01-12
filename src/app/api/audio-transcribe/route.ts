@@ -24,27 +24,18 @@ export async function GET(req: NextRequest) {
   const supabase = await createSupabaseServerClient();
 
   try {
-    const { data: chunk } = await supabase
-      .from("file_chunks")
-      .select("*")
-      .eq("id", chunkId)
-      .single();
-
-    if (!chunk) {
-      return new NextResponse("No audio chunks found", { status: 404 });
-    }
-
     // Create a ReadableStream that will yield audio chunks
 
     return NextResponse.json(
       await transcribeAudio(Number(chunkId), user.id, {
         supabase,
         locale,
-        commonFileUuid: chunk.common_file_uuid,
       }),
     );
   } catch (error) {
-    console.error("Error streaming audio:", error);
-    return new NextResponse(`Error streaming audio ${error}`, { status: 500 });
+    console.error("Error transcribing audio:", error);
+    return new NextResponse(`Error transcribing audio ${error}`, {
+      status: 500,
+    });
   }
 }
