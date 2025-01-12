@@ -211,7 +211,7 @@ export const PromptSpeechPage = ({
           });
 
           // saveBlob(completeBlob, "recording.mp3");
-          const chunkedBlobs = await chunkBlob(completeBlob, 2);
+          const chunkedBlobs = await chunkBlob(completeBlob, 1);
           console.log("chunkedBlobs", chunkedBlobs);
 
           if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
@@ -241,7 +241,7 @@ export const PromptSpeechPage = ({
                         order: index,
                       }),
                     );
-                  }, 500);
+                  }, 1000 * Math.random());
                 });
               }),
             );
