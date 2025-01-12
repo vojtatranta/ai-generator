@@ -247,9 +247,11 @@
     "transcriptionWillAppearHere": "Zde se objeví váš přepis",
     "transcriptionSuccess": "Přepis byl úspěšně dokončen",
     "transcriptionInProgress": "Probíhá přepis...",
+    "transcriptionCompleted": "Přepis dokončen",
     "audioUploadSuccess": "Audio bylo úspěšně nahráno",
     "audioUploadError": "Chyba při nahrávání audia",
-    "microphoneAccessError": "Chyba při přístupu k mikrofonu"
+    "microphoneAccessError": "Chyba při přístupu k mikrofonu",
+    "noTranscriptionYet": "Zatím žádný přepis"
   },
   "generateArticleSummaryPromptTitle": "Shrnutí článku pomocí AI",
   "generateArticleSummaryPromptDescription": "Nechte si shrnout jakýkoliv článek pomocí umělé inteligence. Stačí vložit text článku a AI vám vytvoří jeho shrnutí.",

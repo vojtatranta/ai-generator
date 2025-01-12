@@ -74,6 +74,7 @@
     "date-fns": "^4.1.0",
     "eslint-config-next": "^15.1.0",
     "kbar": "0.1.0-beta.45",
+    "lamejs": "^1.2.1",
     "langtail": "^0.13.9",
     "lucide-react": "^0.468.0",
     "match-sorter": "^8.0.0",

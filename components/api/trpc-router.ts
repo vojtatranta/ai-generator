@@ -305,7 +305,7 @@ export const langtailRouter = router({
       const embeddingsText = `
       Source file: ${input.filename}
       Following is the chunks from the file:
-        ${rawEmbeddings.join("...").substring(0, 1000) ?? ""}
+        ${rawEmbeddings.join("...").substring(0, 2000) ?? ""}
       `;
 
       const { data: file } = await filePromise;
@@ -602,6 +602,7 @@ export async function transcribeAudio(
   userId: string,
   ctx: {
     supabase: SupabaseClient<Database>;
+    locale?: string;
   },
 ) {
   const openai = new OpenAI({
@@ -637,6 +638,7 @@ export async function transcribeAudio(
         expectedMime: "audio/mpeg",
       }),
       model: "whisper-1",
+      language: ctx.locale ?? "cs",
     });
 
     // Save transcription to the documents table
@@ -761,6 +763,8 @@ const filesRouter = router({
         commonFileUuid: z.string(),
         mime: z.string(),
         transcribe: z.boolean().optional().default(false),
+        locale: z.string().optional(),
+        order: z.number().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -771,6 +775,7 @@ const filesRouter = router({
           base64: input.chunkBase64,
           common_file_uuid: input.commonFileUuid,
           mime: input.mime,
+          order: input.order ?? null,
         })
         .select("*")
         .single();
@@ -788,6 +793,7 @@ const filesRouter = router({
           ? ((
               await transcribeAudio(data.id, ctx.user.id, {
                 supabase: ctx.supabase,
+                locale: input.locale,
               })
             )?.transcription ?? "")
           : "",
@@ -864,7 +870,8 @@ const speechToTextRouter = router({
         .from("file_chunks")
         .select("text")
         .eq("common_file_uuid", input.commonFileUuid)
-        .eq("user_id", ctx.user.id);
+        .eq("user_id", ctx.user.id)
+        .order("order", { ascending: true });
 
       if (!chunks) {
         throw new TRPCError({
@@ -875,7 +882,7 @@ const speechToTextRouter = router({
 
       const transcription = chunks?.map(({ text }) => text).join("") || "";
 
-      const shortenedTranscript = transcription.substring(0, 200);
+      const shortenedTranscript = transcription.substring(0, 400);
 
       const fileNameGuesserPromise = langtail.prompts.invoke({
         prompt: FILE_NAME_GUESSER,
@@ -890,7 +897,7 @@ const speechToTextRouter = router({
 
       const [fileNameGuesser] = await Promise.all([fileNameGuesserPromise]);
 
-      return handleUploadedFileContent(
+      const result = await handleUploadedFileContent(
         null,
         (await fileNameGuesser.choices?.[0]?.message.content) ??
           `Audio from ${new Date().toISOString()}.mp3`,
@@ -904,30 +911,16 @@ const speechToTextRouter = router({
             "A transcription of the audio recording",
         },
       );
-    }),
 
-  getTranscription: protectedProcedure
-    .input(
-      z.object({
-        commonFileUuid: z.string(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const { data: document, error } = await ctx.supabase
-        .from("documents")
-        .select("*")
-        .eq("file", input.commonFileUuid)
-        .eq("embedding_type", "whisper-1")
-        .single();
+      await ctx.supabase
+        .from("file_chunks")
+        .update({
+          file_id: result.addedFile.id,
+        })
+        .eq("common_file_uuid", input.commonFileUuid)
+        .eq("user_id", ctx.user.id);
 
-      if (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error.message,
-        });
-      }
-
-      return document;
+      return result;
     }),
 });
 

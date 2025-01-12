@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
       .from("file_chunks")
       .select("*")
       .eq("common_file_uuid", commonFileUuid)
-      .order("created_at", { ascending: true });
+      .order("order", { ascending: true });
 
     if (!chunks || chunks.length === 0) {
       return new NextResponse("No audio chunks found", { status: 404 });

@@ -116,6 +116,7 @@ export type Database = {
       file_chunks: {
         Row: {
           base64: string;
+          bytes: string | null;
           common_file_uuid: string;
           created_at: string;
           file_id: number | null;
@@ -127,6 +128,7 @@ export type Database = {
         };
         Insert: {
           base64: string;
+          bytes?: string | null;
           common_file_uuid: string;
           created_at?: string;
           file_id?: number | null;
@@ -138,6 +140,7 @@ export type Database = {
         };
         Update: {
           base64?: string;
+          bytes?: string | null;
           common_file_uuid?: string;
           created_at?: string;
           file_id?: number | null;

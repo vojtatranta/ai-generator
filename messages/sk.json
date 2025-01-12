@@ -281,9 +281,11 @@
     "transcriptionWillAppearHere": "Tu sa objaví váš prepis",
     "transcriptionSuccess": "Prepis bol úspešne dokončený",
     "transcriptionInProgress": "Prebieha prepis...",
+    "transcriptionCompleted": "Prepis dokončený",
     "audioUploadSuccess": "Audio bolo úspešne nahrané",
     "audioUploadError": "Chyba pri nahrávaní audia",
-    "microphoneAccessError": "Chyba pri prístupe k mikrofónu"
+    "microphoneAccessError": "Chyba pri prístupe k mikrofónu",
+    "noTranscriptionYet": "Zatiaľ žiadny prepis"
   },
   "documentChatPromptTitle": "Chat s dokumentom",
   "documentChatPromptDescription": "Nahrajte svoj dokument a pýtajte sa na jeho obsah. AI vám pomôže porozumieť textu a nájsť odpovede na vaše otázky.",

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Square, Play, Trash2 } from "lucide-react";
+import { Mic, Square, Play, Trash2, Loader2, Pause } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
@@ -20,6 +20,7 @@ import { UsedPromptType } from "@/constants/data";
 import PageContainer from "@/components/layout/page-container";
 import { uploadFileAction } from "@/lib/upload-file-action";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
+import { Else, If, Then } from "@/components/ui/condition";
 
 const QueryFormSchema = z.object({
   message: z.string(),
@@ -36,19 +37,65 @@ function formatEllapsedTime(seconds: number) {
   }${Math.floor(remainingSeconds2)}`;
 }
 
-function chunkBlob(blob: Blob, chunkSizeMB = 3) {
-  const chunkSize = chunkSizeMB * 1024 * 1024; // Convert MB to bytes
-  const chunks = [];
-  let start = 0;
+function saveBlob(blob: Blob, fileName: string): void {
+  const url = URL.createObjectURL(blob); // Create a URL for the blob
+  const a = document.createElement("a"); // Create an anchor element
+  a.href = url;
+  a.download = fileName; // Set the file name
+  document.body.appendChild(a);
+  a.click(); // Trigger the download
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url); // Revoke the URL to free up memory
+}
 
-  while (start < blob.size) {
-    const end = Math.min(start + chunkSize, blob.size); // Calculate chunk size
-    const chunk = blob.slice(start, end); // Create a slice of the blob
-    chunks.push(chunk);
-    start = end;
+/**
+ * Chunks a blob by the specified size (in MB) while ensuring headers are preserved.
+ * @param blob - The input audio blob.
+ * @param chunkSizeMB - The maximum size (in MB) for each chunk.
+ * @returns Array of properly chunked blobs.
+ */
+export async function chunkBlob(
+  blob: Blob,
+  chunkSizeMB: number = 3,
+): Promise<Blob[]> {
+  const minChunkSizeBytes = 500 * 1024; // Minimum chunk size of 500kB
+  const chunkSizeBytes = Math.max(minChunkSizeBytes, chunkSizeMB * 1024 * 1024); // Convert MB to bytes
+  const headerBlob = await getFirstBlobHeader(blob); // Extract the header (first bytes)
+  const chunks: Blob[] = [];
+
+  let offset = headerBlob.size; // Start after the header
+  while (offset < blob.size) {
+    const end =
+      offset + chunkSizeBytes > blob.size
+        ? blob.size
+        : offset + Math.max(minChunkSizeBytes, chunkSizeBytes);
+    const chunkData = blob.slice(offset, end); // Slice the audio data
+
+    // Create a new blob with the header + actual audio data
+    const chunkWithHeader = new Blob([headerBlob, chunkData], {
+      type: blob.type,
+    });
+    chunks.push(chunkWithHeader);
+
+    offset = end; // Move to the next offset
   }
 
-  return chunks; // Return an array of blob chunks
+  return chunks;
+}
+
+/**
+ * Extracts the first few bytes of the blob that contain the audio headers.
+ * @param blob - The audio blob.
+ * @returns A blob containing just the header bytes.
+ */
+async function getFirstBlobHeader(blob: Blob): Promise<Blob> {
+  const arrayBuffer = await blob.arrayBuffer();
+  const audioContext = new AudioContext();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+  // Re-encode the buffer into a small blob to preserve header bytes
+  const wavHeader = audioBuffer.length > 0 ? blob.slice(0, 1024) : blob; // Example: use the first 1 KB
+  return wavHeader; // Return a header blob
 }
 
 const AUDIO_MIME_TYPE = "audio/mpeg";
@@ -106,8 +153,10 @@ export const PromptSpeechPage = ({
   const [currentTranscription, setCurrentTranscription] = useState<string>("");
   const recordingStartTimeRef = useRef<number | null>(null);
   const recordingIdRef = useRef<string | null>(null);
+  const [makingTranscription, setMakingTranscription] = useState(false);
   const locale = useLocale();
   const [ellapsedTime, setElapsedTime] = useState(0);
+  const recordingPromiseRef = useRef<Promise<void> | null>(null);
 
   const timerIdRef = useRef<NodeJS.Timer | null>(null);
 
@@ -119,16 +168,16 @@ export const PromptSpeechPage = ({
     }
   };
 
-  const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({
-    onSuccess: (data) => {
-      setCurrentTranscription((prev) => prev + data.transcription);
-    },
-  });
+  const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({});
   const saveCompletedAudio =
     trpcApi.speechToText.saveTheCompletedAudio.useMutation({
       onSuccess: (data) => {
         toast.success(t("prompt.transcriptionCompleted"));
         toast.success(data.addedFile.filename);
+        setCurrentTranscription(
+          data.documents.reduce((acc, doc) => acc + doc.chunk, ""),
+        );
+        setMakingTranscription(false);
       },
       onError: (error) => {
         toast.error(error.message);
@@ -145,33 +194,31 @@ export const PromptSpeechPage = ({
       return;
     }
 
-    const currentRecordingRefId = uuidv4();
-    setCurrentTranscription("");
-    recordingIdRef.current = currentRecordingRefId;
-    setElapsedTime(0);
-    const nowStarte = Date.now();
-    recordingStartTimeRef.current = nowStarte;
-    timerIdRef.current = setInterval(() => {
-      updateEllapsed(nowStarte);
-    }, 300);
+    let endRecordingResolve: (() => void) | null = null;
+    recordingPromiseRef.current = new Promise<void>(async (resolve) => {
+      endRecordingResolve = resolve;
+    });
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
       const recorder = new MediaRecorder(stream);
 
-      recorder.ondataavailable = (e) => {
+      recorder.ondataavailable = async (e) => {
         console.log("e.,dat", e.data);
         if (e.data.size > 0) {
-          const chunkedBlobs = chunkBlob(
-            new Blob([e.data], {
-              type: AUDIO_MIME_TYPE,
-            }),
-          );
+          const completeBlob = new Blob([e.data], {
+            type: AUDIO_MIME_TYPE,
+          });
+
+          // saveBlob(completeBlob, "recording.mp3");
+          const chunkedBlobs = await chunkBlob(completeBlob, 2);
+          console.log("chunkedBlobs", chunkedBlobs);
 
           if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
             recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
           }
 
-          chunkedBlobs.forEach((blob) => {
+          chunkedBlobs.forEach((blob, index) => {
             recordingBlobsPromisesRef.current.get(currentRecordingRefId)?.push(
               new Promise<string>((resolve) => {
                 const fileReader = new FileReader();
@@ -181,15 +228,26 @@ export const PromptSpeechPage = ({
                 };
 
                 fileReader.readAsDataURL(blob);
-              }).then((blobBase64) => {
+              }).then(async (blobBase64) => {
                 return audioUploadMutation.mutateAsync({
                   chunkBase64: blobBase64,
                   commonFileUuid: currentRecordingRefId,
                   mime: AUDIO_MIME_TYPE,
                   transcribe: true,
+                  locale,
+                  order: index,
                 });
               }),
             );
+          });
+
+          Promise.all(
+            Array.from(
+              recordingBlobsPromisesRef.current.get(currentRecordingRefId) ??
+                [],
+            ),
+          ).then(() => {
+            endRecordingResolve?.();
           });
         }
       };
@@ -215,12 +273,15 @@ export const PromptSpeechPage = ({
         ]);
 
         try {
-          await Promise.all(
-            Array.from(
+          await Promise.all([
+            ...Array.from(
               recordingBlobsPromisesRef.current.get(currentRecordingRefId) ??
                 [],
             ),
-          );
+            recordingPromiseRef.current,
+          ]);
+
+          recordingPromiseRef.current = null;
 
           setRecordings((prev) =>
             prev.map((rec) => {
@@ -254,6 +315,16 @@ export const PromptSpeechPage = ({
 
       setMediaRecorder(recorder);
       recorder.start();
+
+      const currentRecordingRefId = uuidv4();
+      setCurrentTranscription("");
+      recordingIdRef.current = currentRecordingRefId;
+      setElapsedTime(0);
+      const nowStarte = Date.now();
+      recordingStartTimeRef.current = nowStarte;
+      timerIdRef.current = setInterval(() => {
+        updateEllapsed(nowStarte);
+      }, 300);
       setIsRecording(true);
     } catch (error) {
       console.error("Error accessing microphone:", error);
@@ -269,6 +340,7 @@ export const PromptSpeechPage = ({
       mediaRecorder.stream.getTracks().forEach((track) => track.stop());
       setIsRecording(false);
       setMediaRecorder(null);
+      setMakingTranscription(true);
     }
 
     const timerId = timerIdRef.current;
@@ -381,7 +453,14 @@ export const PromptSpeechPage = ({
                         disabled={!recording.streamableUrl}
                         onClick={() => playRecording(recording)}
                       >
-                        <Play className="h-4 w-4" />
+                        <If condition={currentlyPlaying === recording.id}>
+                          <Then>
+                            <Pause className="h-4 w-4" />
+                          </Then>
+                          <Else>
+                            <Play className="h-4 w-4" />
+                          </Else>
+                        </If>
                       </Button>
                       <span className="text-sm">
                         {formatEllapsedTime(recording.length)}{" "}
@@ -416,9 +495,18 @@ export const PromptSpeechPage = ({
           <CardContent>
             <ScrollArea className="h-[350px] w-full rounded-md border p-4">
               {!currentTranscription ? (
-                <p className="text-sm text-muted-foreground">
-                  {t("prompt.transcriptionWillAppearHere")}
-                </p>
+                <If condition={makingTranscription}>
+                  <Then>
+                    <div className="flex flex-col items-center justify-center h-full">
+                      <Loader2 className="h-4 w-4 my-2 animate-spin" />
+                    </div>
+                  </Then>
+                  <Else>
+                    <p className="text-sm text-muted-foreground">
+                      {t("prompt.transcriptionWillAppearHere")}
+                    </p>
+                  </Else>
+                </If>
               ) : (
                 <p className="text-sm">{currentTranscription}</p>
               )}
