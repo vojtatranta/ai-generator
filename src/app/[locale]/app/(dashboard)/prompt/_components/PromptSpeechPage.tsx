@@ -246,8 +246,7 @@ export const PromptSpeechPage = ({
           });
 
           // saveBlob(completeBlob, "recording.mp3");
-          const chunkedBlobs = await chunkBlob(completeBlob, 1.5);
-          console.log("chunkedBlobs", chunkedBlobs);
+          const chunkedBlobs = await chunkBlob(completeBlob, 1.25);
 
           if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
             recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
@@ -505,7 +504,11 @@ export const PromptSpeechPage = ({
                         disabled={!recording.streamableUrl}
                         onClick={() => playRecording(recording)}
                       >
-                        <If condition={currentlyPlaying === recording.id}>
+                        <If
+                          condition={
+                            currentlyPlaying === recording.streamableUrl
+                          }
+                        >
                           <Then>
                             <Pause className="h-4 w-4" />
                           </Then>
