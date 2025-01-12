@@ -58,7 +58,7 @@ export async function chunkBlob(
   blob: Blob,
   chunkSizeMB: number = 3,
 ): Promise<Blob[]> {
-  const minChunkSizeBytes = 500 * 1024; // Minimum chunk size of 500kB
+  const minChunkSizeBytes = 100 * 1024; // Minimum chunk size of 500kB
   const chunkSizeBytes = Math.max(minChunkSizeBytes, chunkSizeMB * 1024 * 1024); // Convert MB to bytes
   const headerBlob = await getFirstBlobHeader(blob); // Extract the header (first bytes)
   const chunks: Blob[] = [];
@@ -211,7 +211,7 @@ export const PromptSpeechPage = ({
           });
 
           // saveBlob(completeBlob, "recording.mp3");
-          const chunkedBlobs = await chunkBlob(completeBlob, 1);
+          const chunkedBlobs = await chunkBlob(completeBlob, 0.2);
           console.log("chunkedBlobs", chunkedBlobs);
 
           if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
