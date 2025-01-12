@@ -229,13 +229,19 @@ export const PromptSpeechPage = ({
 
                 fileReader.readAsDataURL(blob);
               }).then(async (blobBase64) => {
-                return audioUploadMutation.mutateAsync({
-                  chunkBase64: blobBase64,
-                  commonFileUuid: currentRecordingRefId,
-                  mime: AUDIO_MIME_TYPE,
-                  transcribe: true,
-                  locale,
-                  order: index,
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    resolve(
+                      audioUploadMutation.mutateAsync({
+                        chunkBase64: blobBase64,
+                        commonFileUuid: currentRecordingRefId,
+                        mime: AUDIO_MIME_TYPE,
+                        transcribe: true,
+                        locale,
+                        order: index,
+                      }),
+                    );
+                  }, 500);
                 });
               }),
             );
