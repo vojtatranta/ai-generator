@@ -205,13 +205,25 @@ export const PromptSpeechPage = ({
 
   const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({});
 
+  const completeAudioMutation =
+    trpcApi.speechToText.completeAudioProcess.useMutation();
+
   useEffect(() => {
     if (completedTranscriptionQuery.data?.finished) {
+      if (completedTranscriptionCommonFileUuid) {
+        completeAudioMutation.mutateAsync({
+          commonFileUuid: completedTranscriptionCommonFileUuid,
+        });
+      }
       setCurrentTranscription(completedTranscriptionQuery.data?.text ?? "");
       setCompletedTranscriptionCommonFileUuid(null);
       setMakingTranscription(false);
     }
-  }, [setCurrentTranscription, completedTranscriptionQuery.data]);
+  }, [
+    setCurrentTranscription,
+    completeAudioMutation,
+    completedTranscriptionQuery.data,
+  ]);
 
   const startRecording = async () => {
     if (recordingIdRef.current) {

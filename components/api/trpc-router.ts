@@ -524,6 +524,7 @@ export async function handleUploadedFileContent(
     locale?: string;
     type?: string;
     additionalContextForSummarizer?: string;
+    commonFileUuid?: string;
   } = {},
 ) {
   const user = await getUser();
@@ -551,6 +552,7 @@ export async function handleUploadedFileContent(
         local_file_path: filePath ?? null,
         file_summary: result.choices?.[0]?.message?.content ?? null,
         type: options.type ?? null,
+        common_file_uuid: options.commonFileUuid ?? null,
       },
     ])
     .select("id, uuid, filename, url, type")
@@ -843,25 +845,16 @@ const filesRouter = router({
         .from("file_chunks")
         .select("id, text")
         .eq("common_file_uuid", input.commonFileUuid)
-        .not("text", "is", null)
         .order("order", { ascending: true });
 
-      if (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error.message,
-        });
-      }
-
-      if (chunks.length === 0) {
+      if (!chunks || error) {
         return {
           finished: false,
           text: "",
         };
       }
 
-      const lastChunk = chunks[chunks.length - 1];
-      if (lastChunk.text === null) {
+      if (chunks.some((chunk) => chunk.text === null)) {
         return {
           finished: false,
           text: "",
@@ -979,13 +972,26 @@ const filesRouter = router({
 });
 
 const speechToTextRouter = router({
-  saveCompletedAudio: protectedProcedure
+  completeAudioProcess: protectedProcedure
     .input(
       z.object({
         commonFileUuid: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const { data: file } = await ctx.supabase
+        .from("files")
+        .select("id")
+        .eq("common_file_uuid", input.commonFileUuid)
+        .single();
+
+      if (file) {
+        return {
+          addedFile: file,
+          documents: [],
+        };
+      }
+
       return handleCompleteAudio(input.commonFileUuid, {
         supabase: ctx.supabase,
         userId: ctx.user.id,
