@@ -36,6 +36,7 @@ import {
 } from "@/lib/stream-from-db";
 import { BlobLike, FileLike } from "openai/uploads.mjs";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
+import { waitUntil } from "@vercel/functions";
 
 // Create context type
 type Context = {
@@ -549,9 +550,10 @@ export async function handleUploadedFileContent(
         url: options.fileUrl ?? null,
         local_file_path: filePath ?? null,
         file_summary: result.choices?.[0]?.message?.content ?? null,
+        type: options.type ?? null,
       },
     ])
-    .select("*")
+    .select("id, uuid, filename, url, type")
     .single();
 
   if (!addedFile) {
@@ -603,6 +605,8 @@ export async function transcribeAudio(
   ctx: {
     supabase: SupabaseClient<Database>;
     locale?: string;
+    createFileOnEnd?: boolean;
+    commonFileUuid: string;
   },
 ) {
   const openai = new OpenAI({
@@ -683,16 +687,25 @@ export async function transcribeAudio(
     //   fileSummaryPromise,
     // ]);
 
-    const fileChunkSave = await ctx.supabase
+    await ctx.supabase
       .from("file_chunks")
-      .update({ text: transcription.text })
-      .eq("id", chunkId)
-      .select("*")
-      .single();
+      .update({
+        text: transcription.text,
+      })
+      .eq("id", chunkId);
+
+    if (ctx.createFileOnEnd) {
+      console.log("creating file on transcription end", ctx.commonFileUuid);
+      waitUntil(
+        handleCompleteAudio(ctx.commonFileUuid, {
+          supabase: ctx.supabase,
+          userId,
+        }),
+      );
+    }
 
     return {
       transcription: transcription.text,
-      fileChunk: fileChunkSave.data,
     };
   } catch (err) {
     console.error("error transcribing audio", err);
@@ -701,6 +714,69 @@ export async function transcribeAudio(
       message: String(err),
     });
   }
+}
+
+async function handleCompleteAudio(
+  commonFileUuid: string,
+  ctx: {
+    supabase: SupabaseClient<Database>;
+    userId: string;
+  },
+) {
+  const { data: chunks } = await ctx.supabase
+    .from("file_chunks")
+    .select("text")
+    .eq("common_file_uuid", commonFileUuid)
+    .eq("user_id", ctx.userId)
+    .order("order", { ascending: true });
+
+  if (!chunks) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "No chunks found",
+    });
+  }
+
+  const transcription = chunks?.map(({ text }) => text?.trim()).join("") || "";
+
+  const shortenedTranscript = transcription.substring(0, 400);
+
+  const fileNameGuesserPromise = langtail.prompts.invoke({
+    prompt: FILE_NAME_GUESSER,
+    user: ctx.userId,
+    messages: [
+      {
+        role: "user",
+        content: shortenedTranscript,
+      },
+    ],
+  });
+
+  const [fileNameGuesser] = await Promise.all([fileNameGuesserPromise]);
+
+  const result = await handleUploadedFileContent(
+    null,
+    (await fileNameGuesser.choices?.[0]?.message.content) ??
+      `Audio from ${new Date().toISOString()}.mp3`,
+
+    transcription,
+    ctx.supabase,
+    {
+      fileUrl: getAudioUploadStreamLink(commonFileUuid),
+      type: "audio",
+      additionalContextForSummarizer: "A transcription of the audio recording",
+    },
+  );
+
+  await ctx.supabase
+    .from("file_chunks")
+    .update({
+      file_id: result.addedFile.id,
+    })
+    .eq("common_file_uuid", commonFileUuid)
+    .eq("user_id", ctx.userId);
+
+  return result;
 }
 
 export async function handleUploadedFile(
@@ -756,6 +832,48 @@ export async function handleUploadedFile(
 }
 
 const filesRouter = router({
+  getCompletedTranscription: protectedProcedure
+    .input(
+      z.object({
+        commonFileUuid: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { data: chunks, error } = await ctx.supabase
+        .from("file_chunks")
+        .select("id, text")
+        .eq("common_file_uuid", input.commonFileUuid)
+        .not("text", "is", null)
+        .order("order", { ascending: true });
+
+      if (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+
+      if (chunks.length === 0) {
+        return {
+          finished: false,
+          text: "",
+        };
+      }
+
+      const lastChunk = chunks[chunks.length - 1];
+      if (lastChunk.text === null) {
+        return {
+          finished: false,
+          text: "",
+        };
+      }
+
+      return {
+        finished: true,
+        text: chunks.map((chunk) => chunk.text).join(""),
+      };
+    }),
+
   saveFileChunk: protectedProcedure
     .input(
       z.object({
@@ -765,6 +883,7 @@ const filesRouter = router({
         transcribe: z.boolean().optional().default(false),
         locale: z.string().optional(),
         order: z.number().optional(),
+        final: z.boolean().optional().default(false),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -777,7 +896,7 @@ const filesRouter = router({
           mime: input.mime,
           order: input.order ?? null,
         })
-        .select("*")
+        .select(`id, mime, common_file_uuid, order`)
         .single();
 
       if (!data || error) {
@@ -787,17 +906,18 @@ const filesRouter = router({
         });
       }
 
-      return {
-        ...data,
-        transcription: input.transcribe
-          ? ((
-              await transcribeAudio(data.id, ctx.user.id, {
-                supabase: ctx.supabase,
-                locale: input.locale,
-              })
-            )?.transcription ?? "")
-          : "",
-      };
+      if (input.transcribe) {
+        waitUntil(
+          transcribeAudio(data.id, ctx.user.id, {
+            supabase: ctx.supabase,
+            locale: input.locale,
+            createFileOnEnd: input.final,
+            commonFileUuid: input.commonFileUuid,
+          }),
+        );
+      }
+
+      return data;
     }),
   uploadText: protectedProcedure
     .input(
@@ -859,68 +979,17 @@ const filesRouter = router({
 });
 
 const speechToTextRouter = router({
-  saveTheCompletedAudio: protectedProcedure
+  saveCompletedAudio: protectedProcedure
     .input(
       z.object({
         commonFileUuid: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { data: chunks } = await ctx.supabase
-        .from("file_chunks")
-        .select("text")
-        .eq("common_file_uuid", input.commonFileUuid)
-        .eq("user_id", ctx.user.id)
-        .order("order", { ascending: true });
-
-      if (!chunks) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "No chunks found",
-        });
-      }
-
-      const transcription = chunks?.map(({ text }) => text).join("") || "";
-
-      const shortenedTranscript = transcription.substring(0, 400);
-
-      const fileNameGuesserPromise = langtail.prompts.invoke({
-        prompt: FILE_NAME_GUESSER,
-        user: ctx.user.id,
-        messages: [
-          {
-            role: "user",
-            content: shortenedTranscript,
-          },
-        ],
+      return handleCompleteAudio(input.commonFileUuid, {
+        supabase: ctx.supabase,
+        userId: ctx.user.id,
       });
-
-      const [fileNameGuesser] = await Promise.all([fileNameGuesserPromise]);
-
-      const result = await handleUploadedFileContent(
-        null,
-        (await fileNameGuesser.choices?.[0]?.message.content) ??
-          `Audio from ${new Date().toISOString()}.mp3`,
-
-        transcription,
-        ctx.supabase,
-        {
-          fileUrl: getAudioUploadStreamLink(input.commonFileUuid),
-          type: "audio",
-          additionalContextForSummarizer:
-            "A transcription of the audio recording",
-        },
-      );
-
-      await ctx.supabase
-        .from("file_chunks")
-        .update({
-          file_id: result.addedFile.id,
-        })
-        .eq("common_file_uuid", input.commonFileUuid)
-        .eq("user_id", ctx.user.id);
-
-      return result;
     }),
 });
 

@@ -37,7 +37,11 @@ export async function GET(req: NextRequest) {
     // Create a ReadableStream that will yield audio chunks
 
     return NextResponse.json(
-      await transcribeAudio(Number(chunkId), user.id, { supabase, locale }),
+      await transcribeAudio(Number(chunkId), user.id, {
+        supabase,
+        locale,
+        commonFileUuid: chunk.common_file_uuid,
+      }),
     );
   } catch (error) {
     console.error("Error streaming audio:", error);

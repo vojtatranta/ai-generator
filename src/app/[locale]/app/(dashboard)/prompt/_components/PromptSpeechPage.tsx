@@ -58,8 +58,15 @@ export async function chunkBlob(
   blob: Blob,
   chunkSizeMB: number = 3,
 ): Promise<Blob[]> {
-  const minChunkSizeBytes = 100 * 1024; // Minimum chunk size of 500kB
-  const chunkSizeBytes = Math.max(minChunkSizeBytes, chunkSizeMB * 1024 * 1024); // Convert MB to bytes
+  const minChunkSizeBytes = 150 * 1024; // Minimum chunk size of 100kB
+  const maxChunkSizeBytes = chunkSizeMB * 1024 * 1024; // Convert MB to bytes
+  const chunkSizeBytes =
+    blob.size > maxChunkSizeBytes
+      ? maxChunkSizeBytes
+      : Math.max(
+          minChunkSizeBytes,
+          Math.floor(blob.size / Math.ceil(blob.size / maxChunkSizeBytes)),
+        ); // Calculate the chunk size sensibly so that you are as close to max chunkSize as to minimum
   const headerBlob = await getFirstBlobHeader(blob); // Extract the header (first bytes)
   const chunks: Blob[] = [];
 
@@ -71,11 +78,20 @@ export async function chunkBlob(
         : offset + Math.max(minChunkSizeBytes, chunkSizeBytes);
     const chunkData = blob.slice(offset, end); // Slice the audio data
 
-    // Create a new blob with the header + actual audio data
-    const chunkWithHeader = new Blob([headerBlob, chunkData], {
-      type: blob.type,
-    });
-    chunks.push(chunkWithHeader);
+    // If the last chunk is too small, add empty data to it to fill up the minimum
+    if (chunkData.size < minChunkSizeBytes) {
+      const emptyData = new Uint8Array(minChunkSizeBytes - chunkData.size);
+      const chunkWithHeader = new Blob([headerBlob, chunkData, emptyData], {
+        type: blob.type,
+      });
+      chunks.push(chunkWithHeader);
+    } else {
+      // Create a new blob with the header + actual audio data
+      const chunkWithHeader = new Blob([headerBlob, chunkData], {
+        type: blob.type,
+      });
+      chunks.push(chunkWithHeader);
+    }
 
     offset = end; // Move to the next offset
   }
@@ -143,6 +159,11 @@ export const PromptSpeechPage = ({
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null,
   );
+  const [
+    completedTranscriptionCommonFileUuid,
+    setCompletedTranscriptionCommonFileUuid,
+  ] = useState<string | null>(null);
+
   const chunksRef = useRef<Blob[]>([]);
   const [recordings, setRecordings] = useState<RecordedAudio[]>([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
@@ -150,6 +171,7 @@ export const PromptSpeechPage = ({
   const recordingBlobsPromisesRef = useRef<Map<string, Promise<any>[]>>(
     new Map(),
   );
+  const transcriptionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [currentTranscription, setCurrentTranscription] = useState<string>("");
   const recordingStartTimeRef = useRef<number | null>(null);
   const recordingIdRef = useRef<string | null>(null);
@@ -163,31 +185,33 @@ export const PromptSpeechPage = ({
   const updateEllapsed = (started: number) => {
     if (timerIdRef.current) {
       const diff = (Date.now() - started) / 1000;
-      console.log("diff", diff);
       setElapsedTime(diff);
     }
   };
 
-  const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({});
-  const saveCompletedAudio =
-    trpcApi.speechToText.saveTheCompletedAudio.useMutation({
-      onSuccess: (data) => {
-        toast.success(t("prompt.transcriptionCompleted"));
-        toast.success(data.addedFile.filename);
-        setCurrentTranscription(
-          data.documents.reduce((acc, doc) => acc + doc.chunk, ""),
-        );
-        setMakingTranscription(false);
+  const completedTranscriptionQuery =
+    trpcApi.filesRouter.getCompletedTranscription.useQuery(
+      {
+        commonFileUuid: completedTranscriptionCommonFileUuid ?? "",
       },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
 
-  const form = useForm<QueryFormType>({
-    resolver: zodResolver(QueryFormSchema),
-    defaultValues: getDefaultValues(t, randomNumberFromTopics, prompt, locale),
-  });
+      {
+        enabled: Boolean(
+          completedTranscriptionCommonFileUuid && !currentTranscription,
+        ),
+        refetchInterval: 1000,
+      },
+    );
+
+  const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({});
+
+  useEffect(() => {
+    if (completedTranscriptionQuery.data?.finished) {
+      setCurrentTranscription(completedTranscriptionQuery.data?.text ?? "");
+      setCompletedTranscriptionCommonFileUuid(null);
+      setMakingTranscription(false);
+    }
+  }, [setCurrentTranscription, completedTranscriptionQuery.data]);
 
   const startRecording = async () => {
     if (recordingIdRef.current) {
@@ -204,14 +228,13 @@ export const PromptSpeechPage = ({
       const recorder = new MediaRecorder(stream);
 
       recorder.ondataavailable = async (e) => {
-        console.log("e.,dat", e.data);
         if (e.data.size > 0) {
           const completeBlob = new Blob([e.data], {
             type: AUDIO_MIME_TYPE,
           });
 
           // saveBlob(completeBlob, "recording.mp3");
-          const chunkedBlobs = await chunkBlob(completeBlob, 0.2);
+          const chunkedBlobs = await chunkBlob(completeBlob, 1.5);
           console.log("chunkedBlobs", chunkedBlobs);
 
           if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
@@ -239,6 +262,7 @@ export const PromptSpeechPage = ({
                         transcribe: true,
                         locale,
                         order: index,
+                        final: index === chunkedBlobs.length - 1,
                       }),
                     );
                   }, 1000 * Math.random());
@@ -304,12 +328,22 @@ export const PromptSpeechPage = ({
           );
 
           //   Complete transcript by creating a new file completely
-          await saveCompletedAudio.mutateAsync({
-            commonFileUuid: currentRecordingRefId,
-          });
+          // await saveCompletedAudio.mutateAsync({
+          //   commonFileUuid: currentRecordingRefId,
+          // });
+
+          setCompletedTranscriptionCommonFileUuid(currentRecordingRefId);
+          transcriptionTimeoutRef.current = setTimeout(() => {
+            if (!recordingIdRef.current) {
+              return;
+            }
+
+            setCompletedTranscriptionCommonFileUuid(null);
+            toast.error(t("prompt.transcriptionTimeout"));
+            setMakingTranscription(false);
+          }, 30000);
 
           recordingBlobsPromisesRef.current.delete(currentRecordingRefId);
-          toast.success(t("prompt.audioUploadSuccess"));
         } catch (error) {
           console.error("Error uploading audio:", error);
           toast.error(t("prompt.audioUploadError"));
@@ -322,6 +356,7 @@ export const PromptSpeechPage = ({
       setMediaRecorder(recorder);
       recorder.start();
 
+      setCompletedTranscriptionCommonFileUuid(null);
       const currentRecordingRefId = uuidv4();
       setCurrentTranscription("");
       recordingIdRef.current = currentRecordingRefId;
@@ -347,6 +382,7 @@ export const PromptSpeechPage = ({
       setIsRecording(false);
       setMediaRecorder(null);
       setMakingTranscription(true);
+      setElapsedTime(0);
     }
 
     const timerId = timerIdRef.current;
@@ -435,11 +471,9 @@ export const PromptSpeechPage = ({
                 : t("prompt.clickToStartRecording")}
             </div>
             <div>
-              {isRecording && (
-                <div className="text-center text-sm font-medium">
-                  {formatEllapsedTime(ellapsedTime)}
-                </div>
-              )}
+              <div className="text-center text-sm font-medium">
+                {formatEllapsedTime(ellapsedTime ?? 0)}
+              </div>
             </div>
 
             <div className="mt-8">

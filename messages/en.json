@@ -245,7 +245,8 @@
     "transcriptionSuccess": "Transcription completed successfully",
     "transcriptionInProgress": "Transcription in progress...",
     "noTranscriptionYet": "No transcription yet",
-    "transcriptionCompleted": "Transcription completed"
+    "transcriptionCompleted": "Transcription completed",
+    "transcriptionTimeout": "Transcription timed out. Please try again."
   },
   "generateArticleSummaryPromptTitle": "Summarize articles with AI",
   "generateArticleSummaryPromptDescription": "Let AI summarize any article for you. We have prepared an example in the Message field.",

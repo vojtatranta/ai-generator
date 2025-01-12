@@ -285,7 +285,8 @@
     "audioUploadSuccess": "Audio bolo úspešne nahrané",
     "audioUploadError": "Chyba pri nahrávaní audia",
     "microphoneAccessError": "Chyba pri prístupe k mikrofónu",
-    "noTranscriptionYet": "Zatiaľ žiadny prepis"
+    "noTranscriptionYet": "Zatiaľ žiadny prepis",
+    "transcriptionTimeout": "Vypršal časový limit prepisu. Prosím skúste to znova."
   },
   "documentChatPromptTitle": "Chat s dokumentom",
   "documentChatPromptDescription": "Nahrajte svoj dokument a pýtajte sa na jeho obsah. AI vám pomôže porozumieť textu a nájsť odpovede na vaše otázky.",

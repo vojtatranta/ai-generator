@@ -116,37 +116,40 @@ export type Database = {
       file_chunks: {
         Row: {
           base64: string;
-          bytes: string | null;
           common_file_uuid: string;
           created_at: string;
           file_id: number | null;
           id: number;
           mime: string;
+          order: number | null;
           text: string | null;
+          transcribe: boolean;
           user_id: string;
           uuid: string;
         };
         Insert: {
           base64: string;
-          bytes?: string | null;
           common_file_uuid: string;
           created_at?: string;
           file_id?: number | null;
           id?: number;
           mime: string;
+          order?: number | null;
           text?: string | null;
+          transcribe?: boolean;
           user_id: string;
           uuid?: string;
         };
         Update: {
           base64?: string;
-          bytes?: string | null;
           common_file_uuid?: string;
           created_at?: string;
           file_id?: number | null;
           id?: number;
           mime?: string;
+          order?: number | null;
           text?: string | null;
+          transcribe?: boolean;
           user_id?: string;
           uuid?: string;
         };
