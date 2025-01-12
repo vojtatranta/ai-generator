@@ -345,10 +345,6 @@ export const PromptSpeechPage = ({
 
           setCompletedTranscriptionCommonFileUuid(currentRecordingRefId);
           transcriptionTimeoutRef.current = setTimeout(() => {
-            if (!recordingIdRef.current) {
-              return;
-            }
-
             setCompletedTranscriptionCommonFileUuid(null);
             toast.error(t("prompt.transcriptionTimeout"));
             setMakingTranscription(false);

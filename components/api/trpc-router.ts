@@ -609,6 +609,7 @@ export async function transcribeAudio(
     locale?: string;
     createFileOnEnd?: boolean;
     commonFileUuid: string;
+    dontRetry?: boolean;
   },
 ) {
   const openai = new OpenAI({
@@ -710,6 +711,13 @@ export async function transcribeAudio(
       transcription: transcription.text,
     };
   } catch (err) {
+    if (!ctx.dontRetry) {
+      return transcribeAudio(chunkId, userId, {
+        ...ctx,
+        dontRetry: true,
+      });
+    }
+
     console.error("error transcribing audio", err);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
