@@ -3,7 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { NextRequest } from "next/server";
 import { Langtail } from "langtail";
-import { pc, PINECODE_EMBEDDINGS_MODEL } from "@/lib/pinecode";
+import { getPC, PINECODE_EMBEDDINGS_MODEL } from "@/lib/pinecode";
 import {
   createSupabaseServerClient,
   getMaybeUserWithClient,
@@ -243,7 +243,7 @@ export const langtailRouter = router({
       //   ],
       // });
 
-      const embeddingPromise = pc.inference.embed(
+      const embeddingPromise = getPC().inference.embed(
         PINECODE_EMBEDDINGS_MODEL,
         [input.message],
         {
@@ -582,7 +582,7 @@ export async function handleUploadedFileContent(
       chunk: chunk,
       file: addedFile.id,
       embeddings: `[${(
-        await pc.inference.embed(PINECODE_EMBEDDINGS_MODEL, [chunk], {
+        await getPC().inference.embed(PINECODE_EMBEDDINGS_MODEL, [chunk], {
           inputType: "passage",
           truncate: "END",
         })

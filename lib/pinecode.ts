@@ -1,8 +1,9 @@
 import { Pinecone } from "@pinecone-database/pinecone";
 
-export const pc = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY!,
-});
+export const getPC = () =>
+  new Pinecone({
+    apiKey: process.env.PINECONE_API_KEY!,
+  });
 
 export const PINECODE_EMBEDDINGS_MODEL = "multilingual-e5-large";
 
