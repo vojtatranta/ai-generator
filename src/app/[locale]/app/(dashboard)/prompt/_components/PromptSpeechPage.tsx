@@ -294,6 +294,7 @@ export const PromptSpeechPage = ({
     recordingPromiseRef.current = new Promise<void>(async (resolve) => {
       endRecordingResolve = resolve;
     });
+    const currentRecordingRefId = uuidv4();
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -306,7 +307,7 @@ export const PromptSpeechPage = ({
           });
 
           await handleAudioBlob(completeBlob, {
-            currentRecordingRefId: recordingIdRef.current ?? "",
+            currentRecordingRefId,
             endRecordingResolve,
           });
         }
@@ -391,7 +392,6 @@ export const PromptSpeechPage = ({
       recorder.start();
 
       setCompletedTranscriptionCommonFileUuid(null);
-      const currentRecordingRefId = uuidv4();
       setCurrentTranscription("");
       recordingIdRef.current = currentRecordingRefId;
       setElapsedTime(0);

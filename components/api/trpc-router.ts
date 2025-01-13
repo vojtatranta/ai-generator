@@ -558,6 +558,14 @@ export async function handleUploadedFileContent(
     .select("id, uuid, filename, url, type")
     .single();
 
+  if (options.commonFileUuid) {
+    // NOTE: delete the chunks that were proccessed to the complete file and indexed
+    await supabase
+      .from("file_chunks")
+      .delete()
+      .eq("common_file_uuid", options.commonFileUuid);
+  }
+
   if (!addedFile) {
     console.warn("file addition error:", fileError);
     throw new TRPCError({

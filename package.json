@@ -13,7 +13,9 @@
     "tsc": "tsc --noEmit",
     "lint": "next lint",
     "format": "prettier . --write",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docker:build": "docker build -t aistein-docker .",
+    "docker:run": "docker run --env-file ./.env.local -p 127.0.0.1:3000:3000 aistein-docker"
   },
   "lint-staged": {
     "**/*": [
