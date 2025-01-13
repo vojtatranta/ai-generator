@@ -13,7 +13,6 @@
     "tsc": "tsc --noEmit",
     "lint": "next lint",
     "format": "prettier . --write",
-    "prepare": "husky",
     "docker:build": "docker build -t aistein-docker . && docker tag aistein-docker europe-west3-docker.pkg.dev/plugs-map/aistein/aistein-docker:latest",
     "docker:run": "docker run --env-file ./.env.local -p 127.0.0.1:3000:3000 aistein-docker",
     "docker:deploy": "docker push europe-west3-docker.pkg.dev/plugs-map/aistein/aistein-docker:latest",
