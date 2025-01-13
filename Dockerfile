@@ -54,8 +54,6 @@ ENV OPENAI_API_KEY=$OPENAI_API_KEY
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN echo "LANGTAIL_API_KEY during langtail_build build: $LANGTAIL_API_KEY"
-
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \

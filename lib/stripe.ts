@@ -23,7 +23,7 @@ import { Maybe } from "actual-maybe";
 const stripe: typeof Stripe | null = null;
 
 export const getStripe = (): Stripe => {
-  return stripe ?? new Stripe(process.env.STRIPE_API_KEY!);
+  return stripe ?? new Stripe(process.env.STRIPE_SECRET_KEY!);
 };
 
 export type PlanWithProduct = Stripe.Plan & {
