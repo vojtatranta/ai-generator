@@ -25,7 +25,7 @@ export default async function PromptTemplatesListingPage({}: TSocketsListingPage
     ...(search && { search }),
   };
   const promptTemplates = USED_PROMPTS.filter(
-    (p) => "hide" in p && !p.hide,
+    (p) => !("hide" in p) || !p.hide,
   ).filter((p) => {
     if (filters.search) {
       return (
