@@ -4,7 +4,7 @@ import { createSupabaseServerClient, getMaybeUser } from "./supabase-server";
 import { v4 as uuidv4 } from "uuid";
 import { handleUploadedFile } from "@/components/api/trpc-router";
 
-export async function uploadFileAction(formData: FormData) {
+async function uploadFileAction(formData: FormData) {
   "use server";
   const file = formData.get("file") as File;
 
@@ -32,3 +32,5 @@ export async function uploadFileAction(formData: FormData) {
 
   return handleUploadedFile(arrayBuffer, completeFilePath, file.name, supabase);
 }
+
+export default uploadFileAction;

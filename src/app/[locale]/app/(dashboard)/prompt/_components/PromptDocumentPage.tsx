@@ -41,7 +41,7 @@ import { AIResult } from "@/lib/supabase-server";
 import { InvokeOutput, ResultType } from "./PromptResultHistory";
 import { SelectedFilesDisplay } from "@/src/components/SelectedFilesDisplay";
 import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
-import type { uploadFileAction } from "@/lib/upload-file-action";
+import type uploadFileAction from "@/lib/upload-file-action";
 import { DocumentFileList } from "./DocumentFileList";
 
 const DEFAULT_LENGTH = 200;

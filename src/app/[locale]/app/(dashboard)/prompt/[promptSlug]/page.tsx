@@ -16,7 +16,7 @@ import { PromptImageQueryPage } from "../_components/PromptImageQueryPage";
 import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
 import { PromptArticleSummarizerPage } from "../_components/PromptArticleSummarizerPage";
 import { PromptDocumentPage } from "../_components/PromptDocumentPage";
-import { uploadFileAction } from "@/lib/upload-file-action";
+import uploadFileAction from "@/lib/upload-file-action";
 import { PromptSpeechPage } from "../_components/PromptSpeechPage";
 
 type pageProps = {

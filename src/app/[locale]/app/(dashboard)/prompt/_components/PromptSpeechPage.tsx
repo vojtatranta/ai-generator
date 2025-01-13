@@ -18,7 +18,7 @@ import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
 import { AIResult } from "@/lib/supabase-server";
 import { UsedPromptType } from "@/constants/data";
 import PageContainer from "@/components/layout/page-container";
-import { uploadFileAction } from "@/lib/upload-file-action";
+import uploadFileAction from "@/lib/upload-file-action";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { Else, If, Then } from "@/components/ui/condition";
 import { SimpleFileUpload } from "@/components/ui/simple-file-upload";
