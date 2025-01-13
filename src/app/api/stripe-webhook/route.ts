@@ -1,6 +1,6 @@
 import { createSupabaseServerClient, getUser } from "@/web/lib/supabase-server";
 import { NextRequest, NextResponse } from "next/server";
-import { getAvailableProductPlans, stripe } from "@/lib/stripe";
+import { getAvailableProductPlans, getStripe } from "@/lib/stripe";
 import { getSubscriptionLink } from "@/lib/private-links";
 
 export async function GET(req: NextRequest) {
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   }
 
   const [stripeSession, availableProductPlans] = await Promise.all([
-    stripe.checkout.sessions.retrieve(stripeCheckoutId),
+    getStripe().checkout.sessions.retrieve(stripeCheckoutId),
     getAvailableProductPlans(),
   ]);
 
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
   let stripUnsubscribeError: Error | null = null;
   try {
     if (prevSubscription?.stripe_subscription_id) {
-      await stripe.subscriptions.cancel(
+      await getStripe().subscriptions.cancel(
         prevSubscription.stripe_subscription_id,
       );
     }

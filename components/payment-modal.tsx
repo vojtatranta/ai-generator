@@ -1,26 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/web/components/ui/button";
 import { Modal } from "@/web/components/ui/modal";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { User } from "@/lib/supabase-server";
-import { trpcApi } from "@/components/providers/TRPCProvider";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { stripe } from "@/lib/stripe";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export type StripeKeyObject = {
   clientSessionSecret: string;

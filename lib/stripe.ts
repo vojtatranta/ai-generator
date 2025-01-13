@@ -20,7 +20,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { addDays } from "date-fns";
 import { Maybe } from "actual-maybe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe: typeof Stripe | null = null;
+
+export const getStripe = (): Stripe => {
+  return stripe ?? new Stripe(process.env.STRIPE_API_KEY!);
+};
 
 export type PlanWithProduct = Stripe.Plan & {
   product: Stripe.Product;
@@ -249,6 +253,7 @@ export const getAvailableProductPlans = async () => {
     return planDescriptor.plans_json as unknown as PlanWithProduct[];
   }
 
+  const stripe = getStripe();
   const [plans, products] = await Promise.all([
     stripe.plans.list(),
     stripe.products.list(),

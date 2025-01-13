@@ -12,7 +12,7 @@ import {
 import {
   createUserDefaultSubscription,
   getUserPlan,
-  stripe,
+  getStripe,
 } from "@/lib/stripe";
 import z from "zod";
 import {
@@ -87,7 +87,7 @@ export const subscriptionRouter = router({
       const { planIdToSubscribe } = input;
 
       try {
-        return await stripe.subscriptions.update(planIdToSubscribe, {
+        return await getStripe().subscriptions.update(planIdToSubscribe, {
           metadata: {
             user: ctx.user.email ?? ctx.user.id,
           },
@@ -129,7 +129,7 @@ export const subscriptionRouter = router({
       }
 
       try {
-        await stripe.subscriptions.cancel(
+        await getStripe().subscriptions.cancel(
           databaseSubscription.stripe_subscription_id,
         );
 
@@ -169,7 +169,7 @@ export const subscriptionRouter = router({
       const { planIdToSubscribe, currentDomain } = input;
 
       try {
-        const result = await stripe.checkout.sessions.create({
+        const result = await getStripe().checkout.sessions.create({
           // @ts-expect-error: strinage error likely due to typing
           return_url: `${currentDomain}/api/stripe-webhook?checkoutId={CHECKOUT_SESSION_ID}&planId=${planIdToSubscribe}&userId=${ctx.user.id}&subscriptionId=${input.subscriptionId}`,
           payment_method_types: ["card"],
