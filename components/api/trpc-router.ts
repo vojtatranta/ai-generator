@@ -205,9 +205,10 @@ export const subscriptionRouter = router({
     }),
 });
 
-const langtail = new Langtail({
-  apiKey: process.env.LANGTAIL_API_KEY!,
-});
+const getLangtail = () =>
+  new Langtail({
+    apiKey: process.env.LANGTAIL_API_KEY!,
+  });
 
 export const langtailRouter = router({
   askDocument: protectedProcedure
@@ -309,6 +310,7 @@ export const langtailRouter = router({
         ${rawEmbeddings.join("...").substring(0, 2000) ?? ""}
       `;
 
+      const langtail = getLangtail();
       const { data: file } = await filePromise;
       const result = await langtail.prompts.invoke({
         prompt: PROMPTS.TEXT_DATA_FINDER,
@@ -356,6 +358,7 @@ export const langtailRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const langtail = getLangtail();
       const response = await langtail.prompts.invoke({
         prompt: input.prompt,
         user: ctx.user.id,
@@ -530,6 +533,7 @@ export async function handleUploadedFileContent(
   const user = await getUser();
   const textBegging = fileContent.substring(0, 500);
 
+  const langtail = getLangtail();
   const result = await langtail.prompts.invoke({
     prompt: EMBEDDINGS_SUMMARIZER,
     user: user.id,
@@ -760,6 +764,7 @@ async function handleCompleteAudio(
 
   const shortenedTranscript = transcription.substring(0, 400);
 
+  const langtail = getLangtail();
   const fileNameGuesserPromise = langtail.prompts.invoke({
     prompt: FILE_NAME_GUESSER,
     user: ctx.userId,
