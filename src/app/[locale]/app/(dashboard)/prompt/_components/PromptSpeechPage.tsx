@@ -26,7 +26,7 @@ import { MemoizedLangtailMarkdownBlock } from "@/components/Markdown";
 import { AIResult } from "@/lib/supabase-server";
 import { UsedPromptType } from "@/constants/data";
 import PageContainer from "@/components/layout/page-container";
-import uploadFileAction from "@/lib/upload-file-action";
+import uploadAudioAction from "@/lib/upload-audio-action";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { Else, If, Then } from "@/components/ui/condition";
 import { SimpleFileUpload } from "@/components/ui/simple-file-upload";
@@ -153,16 +153,16 @@ interface Props {
   aiResults: AIResult[];
   prompt: UsedPromptType;
   randomNumberFromTopics: number;
-  onUploadFileAction: (
+  onUploadAudioAction: (
     formData: FormData,
-  ) => ReturnType<typeof uploadFileAction>;
+  ) => ReturnType<typeof uploadAudioAction>;
 }
 
 export const PromptSpeechPage = ({
   aiResults,
   prompt,
   randomNumberFromTopics,
-  onUploadFileAction,
+  onUploadAudioAction,
 }: Props) => {
   const t = useTranslations();
   const [isRecording, setIsRecording] = useState(false);
@@ -249,40 +249,46 @@ export const PromptSpeechPage = ({
     },
   ) => {
     // saveBlob(completeBlob, "recording.mp3");
-    const chunkedBlobs = await chunkBlob(completeBlob, 1.7);
+    // const chunkedBlobs = await chunkBlob(completeBlob, 1.7);
 
     if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
       recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
     }
 
     let finalPromise: Promise<any> = Promise.resolve();
-    chunkedBlobs.forEach((blob, index) => {
-      finalPromise = finalPromise.then(() => {
-        return new Promise<string>((resolve) => {
-          const fileReader = new FileReader();
-          fileReader.onload = () => {
-            const blobBase64 = fileReader.result as string;
-            resolve(blobBase64);
-          };
+    // chunkedBlobs.forEach((blob, index) => {
+    //   finalPromise = finalPromise.then(() => {
+    //     return new Promise<string>((resolve) => {
+    //       const fileReader = new FileReader();
+    //       fileReader.onload = () => {
+    //         const blobBase64 = fileReader.result as string;
+    //         resolve(blobBase64);
+    //       };
 
-          fileReader.readAsDataURL(blob);
-        }).then(async (blobBase64) => {
-          return audioUploadMutation.mutateAsync({
-            chunkBase64: blobBase64,
-            commonFileUuid: currentRecordingRefId,
-            mime: AUDIO_MIME_TYPE,
-            transcribe: true,
-            locale,
-            order: index,
-            final: index === chunkedBlobs.length - 1,
-          });
-        });
-      });
-    });
+    //       fileReader.readAsDataURL(blob);
+    //     }).then(async (blobBase64) => {
+    //       return audioUploadMutation.mutateAsync({
+    //         chunkBase64: blobBase64,
+    //         commonFileUuid: currentRecordingRefId,
+    //         mime: AUDIO_MIME_TYPE,
+    //         transcribe: true,
+    //         locale,
+    //         order: index,
+    //         final: index === chunkedBlobs.length - 1,
+    //       });
+    //     });
+    //   });
+    // });
+
+    const formData = new FormData();
+    formData.append("file", completeBlob);
+    formData.append("commonFileUuid", currentRecordingRefId);
+    formData.append("mime", AUDIO_MIME_TYPE);
+    formData.append("transcribe", "1");
 
     recordingBlobsPromisesRef.current
       .get(currentRecordingRefId)
-      ?.push(finalPromise);
+      ?.push(onUploadAudioAction(formData));
 
     Promise.all(
       Array.from(

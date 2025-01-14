@@ -735,7 +735,7 @@ export async function transcribeAudio(
   }
 }
 
-async function handleCompleteAudio(
+export async function handleCompleteAudio(
   commonFileUuid: string,
   ctx: {
     supabase: SupabaseClient<Database>;

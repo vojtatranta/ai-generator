@@ -8,7 +8,7 @@ const nextConfig = withNextIntl({
   experimental: {
     reactCompiler: true,
     serverActions: {
-      bodySizeLimit: "20mb",
+      bodySizeLimit: "200mb",
     },
   },
   env: {

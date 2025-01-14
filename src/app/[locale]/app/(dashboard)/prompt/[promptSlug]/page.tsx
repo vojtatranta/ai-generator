@@ -17,6 +17,7 @@ import { createSupabaseServerClient, getUser } from "@/lib/supabase-server";
 import { PromptArticleSummarizerPage } from "../_components/PromptArticleSummarizerPage";
 import { PromptDocumentPage } from "../_components/PromptDocumentPage";
 import uploadFileAction from "@/lib/upload-file-action";
+import uploadAudioAction from "@/lib/upload-audio-action";
 import { PromptSpeechPage } from "../_components/PromptSpeechPage";
 
 type pageProps = {
@@ -97,7 +98,7 @@ export default async function Page({ searchParams, params }: pageProps) {
         aiResults={lastResults ?? []}
         prompt={usedPrompt}
         randomNumberFromTopics={0}
-        onUploadFileAction={uploadFileAction}
+        onUploadAudioAction={uploadAudioAction}
       />
     );
   }
