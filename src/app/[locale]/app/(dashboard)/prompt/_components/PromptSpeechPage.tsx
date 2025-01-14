@@ -249,15 +249,16 @@ export const PromptSpeechPage = ({
     },
   ) => {
     // saveBlob(completeBlob, "recording.mp3");
-    const chunkedBlobs = await chunkBlob(completeBlob, 2);
+    const chunkedBlobs = await chunkBlob(completeBlob, 1.7);
 
     if (!recordingBlobsPromisesRef.current.has(currentRecordingRefId)) {
       recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
     }
 
+    let finalPromise: Promise<any> = Promise.resolve();
     chunkedBlobs.forEach((blob, index) => {
-      recordingBlobsPromisesRef.current.get(currentRecordingRefId)?.push(
-        new Promise<string>((resolve) => {
+      finalPromise = finalPromise.then(() => {
+        return new Promise<string>((resolve) => {
           const fileReader = new FileReader();
           fileReader.onload = () => {
             const blobBase64 = fileReader.result as string;
@@ -266,24 +267,22 @@ export const PromptSpeechPage = ({
 
           fileReader.readAsDataURL(blob);
         }).then(async (blobBase64) => {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(
-                audioUploadMutation.mutateAsync({
-                  chunkBase64: blobBase64,
-                  commonFileUuid: currentRecordingRefId,
-                  mime: AUDIO_MIME_TYPE,
-                  transcribe: true,
-                  locale,
-                  order: index,
-                  final: index === chunkedBlobs.length - 1,
-                }),
-              );
-            }, 10000 * Math.random());
+          return audioUploadMutation.mutateAsync({
+            chunkBase64: blobBase64,
+            commonFileUuid: currentRecordingRefId,
+            mime: AUDIO_MIME_TYPE,
+            transcribe: true,
+            locale,
+            order: index,
+            final: index === chunkedBlobs.length - 1,
           });
-        }),
-      );
+        });
+      });
     });
+
+    recordingBlobsPromisesRef.current
+      .get(currentRecordingRefId)
+      ?.push(finalPromise);
 
     Promise.all(
       Array.from(
@@ -384,7 +383,7 @@ export const PromptSpeechPage = ({
                 },
               });
               setMakingTranscription(false);
-            }, 50000);
+            }, 60000);
           };
 
           setTimeoutOfTheTranscription(currentRecordingRefId);
@@ -706,6 +705,14 @@ export const PromptSpeechPage = ({
                   <Then>
                     <div className="flex flex-col items-center justify-center h-full">
                       <Loader2 className="h-4 w-4 my-2 animate-spin" />
+                      {completedTranscriptionQuery.data && (
+                        <p className="text-sm">
+                          {completedTranscriptionQuery.data.allChunksCount -
+                            completedTranscriptionQuery.data
+                              .remainingChunksCount}{" "}
+                          / {completedTranscriptionQuery.data.allChunksCount}
+                        </p>
+                      )}
                     </div>
                   </Then>
                   <Else>

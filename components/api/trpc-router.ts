@@ -868,19 +868,31 @@ const filesRouter = router({
         return {
           finished: false,
           text: "",
+          allChunksCount: 0,
+          remainingChunksCount: 0,
         };
       }
 
-      if (chunks.some((chunk) => chunk.text === null)) {
+      const nullishTranscription = chunks.filter(
+        (chunk) => chunk.text === null,
+      );
+      const allChunksCount = chunks.length;
+      const remainingChunksCount = nullishTranscription.length;
+
+      if (remainingChunksCount > 0) {
         return {
           finished: false,
           text: "",
+          allChunksCount,
+          remainingChunksCount,
         };
       }
 
       return {
         finished: true,
         text: chunks.map((chunk) => chunk.text).join(""),
+        allChunksCount,
+        remainingChunksCount,
       };
     }),
 
@@ -912,7 +924,7 @@ const filesRouter = router({
       if (!data || error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: error?.message,
+          message: `Error saving file chunk: ${error?.message}`,
         });
       }
 
