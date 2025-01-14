@@ -787,11 +787,10 @@ export async function handleCompleteAudio(
     },
   );
 
+  // NOTE: delete the oustading chunks as they take a lot of space
   await ctx.supabase
     .from("file_chunks")
-    .update({
-      file_id: result.addedFile.id,
-    })
+    .delete()
     .eq("common_file_uuid", commonFileUuid)
     .eq("user_id", ctx.userId);
 
