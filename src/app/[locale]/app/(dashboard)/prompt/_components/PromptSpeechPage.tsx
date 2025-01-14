@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Square, Play, Trash2, Loader2, Pause } from "lucide-react";
+import {
+  Mic,
+  Square,
+  Play,
+  Trash2,
+  Loader2,
+  Pause,
+  Download,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
@@ -22,6 +30,7 @@ import uploadFileAction from "@/lib/upload-file-action";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { Else, If, Then } from "@/components/ui/condition";
 import { SimpleFileUpload } from "@/components/ui/simple-file-upload";
+import Link from "next/link";
 
 const QueryFormSchema = z.object({
   message: z.string(),
@@ -165,7 +174,7 @@ export const PromptSpeechPage = ({
     setCompletedTranscriptionCommonFileUuid,
   ] = useState<string | null>(null);
 
-  const chunksRef = useRef<Blob[]>([]);
+  const lastRecordingBlobRef = useRef<Blob | null>(null);
   const [recordings, setRecordings] = useState<RecordedAudio[]>([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -305,6 +314,8 @@ export const PromptSpeechPage = ({
           const completeBlob = new Blob([e.data], {
             type: AUDIO_MIME_TYPE,
           });
+
+          lastRecordingBlobRef.current = completeBlob;
 
           await handleAudioBlob(completeBlob, {
             currentRecordingRefId,
@@ -596,8 +607,27 @@ export const PromptSpeechPage = ({
               <h3 className="text-sm font-medium mb-4">
                 {t("prompt.recordings")}
               </h3>
+              <div className="my-2">
+                <Button
+                  disabled={!lastRecordingBlobRef.current}
+                  size="sm"
+                  variant="secondary"
+                  type="button"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    if (lastRecordingBlobRef.current) {
+                      saveBlob(
+                        lastRecordingBlobRef.current,
+                        "last-recording.mp3",
+                      );
+                    }
+                  }}
+                >
+                  {t("prompt.attemptDownloadLastRecording")}
+                </Button>
+              </div>
               <div className="space-y-2">
-                {recordings.map((recording) => (
+                {[...recordings].reverse().map((recording) => (
                   <div
                     key={recording.timestamp}
                     className="flex items-center justify-between p-2 bg-muted rounded-md"
@@ -627,13 +657,30 @@ export const PromptSpeechPage = ({
                         {/* {new Date(recording.timestamp).toLocaleTimeString()} */}
                       </span>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => deleteRecording(recording.timestamp)}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    <div>
+                      <Button
+                        disabled={!recording.streamableUrl}
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                      >
+                        <Link
+                          download
+                          className="flex items-center gap-2"
+                          href={recording.streamableUrl ?? ""}
+                        >
+                          <Download className="h-4 w-4" />
+                          {t("overview.download")}
+                        </Link>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => deleteRecording(recording.timestamp)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
                 <audio

@@ -164,6 +164,7 @@
   "prompt": {
     "title": "Generovat obsah",
     "message": "Zpráva",
+    "attemptDownloadLastRecording": "Stáhnout poslední nahrávku",
     "cantGenerateImagePostTryAgain": "Nepodařilo se vytvořit příspěvek s obrázkem, zkuste to znovu.",
     "articleToSummarize": "Článek k shrnutí",
     "documentChatNoFilesEmpty": "Zatím nebyly nahrány žádné dokumenty. Nahrajte dokument pro zahájení chatu.",
