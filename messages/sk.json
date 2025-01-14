@@ -206,6 +206,7 @@
   "prompt": {
     "title": "Generovať obsah",
     "message": "Správa",
+    "attemptDownloadLastRecording": "Stiahnuť poslednú nahrávku",
     "postGenerationResultsEmptyStateText": "Tu sa zobrazia výsledky predchádzajúceho generovania, aby ste si mohli vybrať príspevok, ktorý je pre vás najlepší.",
     "postGenerationCurrentResulsEmptyStateText": "Výsledok generovania AI bude zobrazený tu.",
     "resultLength": "Dĺžka výsledku",
@@ -289,7 +290,7 @@
     "transcriptionTimeout": "Vypršal časový limit prepisu. Prosím skúste to znova."
   },
   "documentChatPromptTitle": "Chat s dokumentom",
-  "documentChatPromptDescription": "Nahrajte svoj dokument a pýtajte sa na jeho obsah. AI vám pomôže porozumieť textu a nájsť odpovede na vaše otázky.",
+  "documentChatPromptDescription": "Nahrajte dokument a pýtajte sa na jeho obsah pomocou umelej inteligencie",
   "image": {
     "placeholder": "Presuňte sem obrázok alebo kliknite pre nahratie",
     "urlPlaceholder": "Alebo vložte URL obrázku"

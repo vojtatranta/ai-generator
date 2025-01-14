@@ -166,6 +166,7 @@
   "prompt": {
     "title": "Generate content",
     "message": "Message",
+    "attemptDownloadLastRecording": "Download last recording",
     "postGenerationResultsEmptyStateText": "The results of the previous generation will be displayed here so you can choose the post that works best for you.",
     "postGenerationCurrentResulsEmptyStateText": "The result of the AI generation will be displayed here.",
     "resultLength": "Result length",
@@ -574,5 +575,7 @@
         "contact": "Contact"
       }
     }
-  }
+  },
+  "documentChatPromptTitle": "Chat with Document",
+  "documentChatPromptDescription": "Upload a document and ask questions about its content using artificial intelligence"
 }
