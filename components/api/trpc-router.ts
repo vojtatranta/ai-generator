@@ -216,7 +216,7 @@ export const langtailRouter = router({
         message: z.string(),
         filename: z.string(),
         locale: z.string(),
-        length: z.number(),
+        length: z.number().optional(),
         fileIds: z.array(z.number()).min(1),
       }),
     )
@@ -253,24 +253,14 @@ export const langtailRouter = router({
       );
 
       const embedding = (await embeddingPromise).data[0]?.values ?? [];
-      performance.mark("embeddings");
-      performance.measure("embeddings", "start", "embeddings");
-      const measure = performance.getEntriesByName("embeddings")[0];
-      console.log(`embeddings: ${measure.duration.toFixed(2)} ms`);
 
       const { data: embeddings, error: embeddingsError } =
         await ctx.supabase.rpc("match_documents2", {
           query_embedding: `[${embedding.join(",")}]`, // Pass the query embeddingembedding, // Pass the embedding you want to compare
           match_threshold: 0.8, // Choose an appropriate threshold for your data
-          match_count: 10, // Choose the number of matches
+          match_count: 6, // Choose the number of matches
           file_ids: input.fileIds, // Pass the file_id you want to compare
         });
-
-      performance.mark("match_query");
-      performance.measure("matchquery", "embeddings", "match_query");
-      console.log(
-        `matchquery: ${performance.getEntriesByName("matchquery")[0].duration.toFixed(2)} ms`,
-      );
 
       if (embeddingsError) {
         console.warn("embeddings error", embeddingsError);
@@ -290,7 +280,7 @@ export const langtailRouter = router({
           .eq("user_id", ctx.user.id)
           .not("chunk", "is", null)
           .in("file", input.fileIds)
-          .limit(5);
+          .limit(7);
 
         if (!chunks || !chunks.length) {
           throw new TRPCError({
@@ -306,7 +296,12 @@ export const langtailRouter = router({
       const embeddingsText = `
       Source file: ${input.filename}
       Following is the chunks from the file:
-        ${rawEmbeddings.join("...").substring(0, 2000) ?? ""}
+      ${rawEmbeddings.reduce(
+        (str, chunk, index) => `${str}
+      --------
+      ${index + 1}: ${chunk}\n`,
+        "",
+      )}
       `;
 
       const { data: file } = await filePromise;
@@ -326,12 +321,6 @@ export const langtailRouter = router({
           },
         ],
       });
-
-      performance.mark("prompt");
-      performance.measure("prompt", "match_query", "prompt");
-      console.log(
-        `prompt: ${performance.getEntriesByName("prompt")[0].duration.toFixed(2)} ms`,
-      );
 
       return result;
     }),
@@ -353,6 +342,7 @@ export const langtailRouter = router({
         length: z.number().optional(),
         image: z.string().optional(),
         stream: z.boolean().default(false),
+        additionalVariables: z.record(z.string(), z.string()).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -383,6 +373,7 @@ export const langtailRouter = router({
         variables: {
           ...(input.locale ? { language: input.locale } : {}),
           ...(input.length ? { length: String(input.length) } : {}),
+          ...(input.additionalVariables ?? {}),
         },
       });
 
@@ -993,7 +984,8 @@ const filesRouter = router({
     const { data: files } = await ctx.supabase
       .from("files")
       .select("*")
-      .eq("user_id", ctx.user.id);
+      .eq("user_id", ctx.user.id)
+      .order("created_at", { ascending: false });
 
     return files;
   }),

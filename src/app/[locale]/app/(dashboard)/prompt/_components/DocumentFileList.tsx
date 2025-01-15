@@ -36,7 +36,7 @@ export const DocumentFileList = memo(function DocumentFileList({
 
   return (
     <ScrollArea className="h-[200px] w-full rounded-md border px-2">
-      {[...(fileList ?? [])].reverse().map((file) => (
+      {[...(fileList ?? [])].map((file) => (
         <div key={file.id} className="flex items-center space-x-2">
           <Checkbox
             id={String(file.id)}

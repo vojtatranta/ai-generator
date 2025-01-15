@@ -112,7 +112,7 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
       !firstSelected.current
     ) {
       firstSelected.current = true;
-      Maybe.of(fileList?.at(-1)).andThen((file) =>
+      Maybe.fromFirst(fileList).andThen((file) =>
         setSelectedFiles(new Set([file.id])),
       );
     }
@@ -154,7 +154,13 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
       prompt: RAG_QUERY_IMPROVER,
       message: data.message,
       locale: data.locale,
-      length: Number(data.length || DEFAULT_LENGTH),
+      additionalVariables: {
+        summary:
+          fileList
+            ?.filter((f) => selectedFiles.has(f.id))
+            .map((f) => f.file_summary)
+            .join(",") ?? "",
+      },
       stream: false,
     });
 
@@ -168,7 +174,6 @@ export const PromptDocumentPage = memo(function PromptDocumentPage({
           ?.filter((f) => selectedFiles.has(f.id))
           .map((f) => f.filename)
           .join(",") ?? "",
-      length: Number(data.length || DEFAULT_LENGTH),
       fileIds: Array.from(selectedFiles.values()),
     });
   };

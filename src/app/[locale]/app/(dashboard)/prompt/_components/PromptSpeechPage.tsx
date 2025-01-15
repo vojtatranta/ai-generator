@@ -136,19 +136,6 @@ interface RecordedAudio {
   transcription?: string;
 }
 
-const getDefaultValues = (
-  t: (key: string) => string,
-  randomNumberFromTopics: number,
-  prompt: UsedPromptType,
-  locale: string,
-): QueryFormType => {
-  return {
-    message: "",
-    length: prompt.defaultLength ?? 200,
-    locale,
-  };
-};
-
 interface Props {
   aiResults: AIResult[];
   prompt: UsedPromptType;
@@ -389,7 +376,7 @@ export const PromptSpeechPage = ({
                 },
               });
               setMakingTranscription(false);
-            }, 60000);
+            }, 120 * 1000);
           };
 
           setTimeoutOfTheTranscription(currentRecordingRefId);
