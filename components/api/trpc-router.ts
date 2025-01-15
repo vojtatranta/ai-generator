@@ -860,16 +860,22 @@ const filesRouter = router({
       const file = storage.bucket(BUCKET_NAME).file(input.filePath);
       const response = await file.download();
 
-      const result = await handleGCPDownloadedFile(response, {
-        supabase: ctx.supabase,
-        userId: ctx.user.id,
-        commonFileUuid: input.commonFileUuid,
-        locale: input.locale,
-        mime: input.mime,
-        transcribe: true,
-      });
+      waitUntil(
+        handleGCPDownloadedFile(response, {
+          supabase: ctx.supabase,
+          userId: ctx.user.id,
+          commonFileUuid: input.commonFileUuid,
+          locale: input.locale,
+          mime: input.mime,
+          transcribe: true,
+        }),
+      );
 
-      return result;
+      return {
+        transcription: true,
+        status: "transcription started",
+        ...input,
+      };
     }),
 
   createUploadSignedURL: protectedProcedure

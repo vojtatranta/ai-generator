@@ -560,13 +560,13 @@ export const PromptSpeechPage = ({
                   setCurrentTranscription("");
                   recordingIdRef.current = currentRecordingRefId;
                   setElapsedTime(0);
+                  setMakingTranscription(true);
                   await handleAudioBlob(file, {
                     currentRecordingRefId,
                     endRecordingResolve: null,
                   });
                   setIsRecording(false);
                   setMediaRecorder(null);
-                  setMakingTranscription(true);
                   setElapsedTime(0);
                   const recordingLength = recordingStartTimeRef.current
                     ? Math.round(
