@@ -28,11 +28,13 @@ export class SimpleFileUploadEmitter
 
   emitComplete() {
     this.emit("complete");
+    this.removeAllListeners();
   }
 
   emitStart(opts: { totalSize: number }) {
     this.emit("start", opts);
   }
+
   onStart(cb: (opts: { totalSize: number }) => void) {
     this.on("start", cb);
   }
@@ -63,7 +65,7 @@ export const SimpleFileUpload = memo(function SimpleFileUpload({
   const t = useTranslations();
   const [state, setState] = useState<{
     total: number;
-    current: number;
+    progress: number;
   } | null>(null);
 
   return (
@@ -80,16 +82,21 @@ export const SimpleFileUpload = memo(function SimpleFileUpload({
                 emitter.onStart((opts) => {
                   setState({
                     total: opts.totalSize,
-                    current: 0,
+                    progress: 0,
                   });
                 });
 
                 emitter.onProgress((opts) => {
                   setState((prev) =>
-                    Maybe.of(prev)
+                    Maybe.of(
+                      prev ?? {
+                        total: 0,
+                        progress: 0,
+                      },
+                    )
                       .andThen((prev) => ({
                         ...prev,
-                        current: opts.progress,
+                        progress: opts.progress,
                       }))
                       .orNull(),
                   );
@@ -121,7 +128,7 @@ export const SimpleFileUpload = memo(function SimpleFileUpload({
           <div
             className="bg-primary/5 absolute inset-0"
             style={{
-              width: `${(state.current / state.total) * 100}%`,
+              width: `${state.progress}%`,
             }}
           />
         )}

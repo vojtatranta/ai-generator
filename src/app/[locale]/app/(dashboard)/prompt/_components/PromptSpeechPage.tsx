@@ -155,8 +155,8 @@ function uploadFileToGCS(
       });
     });
     xhr.onload = () => {
+      emitter.emitComplete();
       if (xhr.status >= 200 && xhr.status < 300) {
-        emitter.emitComplete();
         resolve(xhr.response);
       } else {
         reject(new Error(`File upload failed with status: ${xhr.statusText}`));
@@ -256,6 +256,7 @@ export const PromptSpeechPage = ({
 
   useEffect(() => {
     if (completedTranscriptionQuery.data?.finished) {
+      setMakingTranscription(false);
       if (completedTranscriptionCommonFileUuid) {
         completeAudioMutation.mutateAsync({
           commonFileUuid: completedTranscriptionCommonFileUuid,
@@ -440,7 +441,7 @@ export const PromptSpeechPage = ({
                 },
               });
               setMakingTranscription(false);
-            }, 120 * 1000);
+            }, 180 * 1000);
           };
 
           setTimeoutOfTheTranscription(currentRecordingRefId);
@@ -590,7 +591,6 @@ export const PromptSpeechPage = ({
                     currentRecordingRefId,
                     endRecordingResolve: null,
                   });
-                  console.log("emitter", emitter);
                   setIsRecording(false);
                   setMediaRecorder(null);
                   setElapsedTime(0);
@@ -610,53 +610,55 @@ export const PromptSpeechPage = ({
                     },
                   ]);
 
-                  try {
-                    await Promise.all([
-                      ...Array.from(
-                        recordingBlobsPromisesRef.current.get(
+                  Promise.all([
+                    ...Array.from(
+                      recordingBlobsPromisesRef.current.get(
+                        currentRecordingRefId,
+                      ) ?? [],
+                    ),
+                    recordingPromiseRef.current,
+                  ])
+                    .then(
+                      () => {
+                        recordingPromiseRef.current = null;
+
+                        setRecordings((prev) =>
+                          prev.map((rec) => {
+                            if (rec.id === currentRecordingRefId) {
+                              return {
+                                ...rec,
+                                streamableUrl: `${getAudioUploadStreamLink(
+                                  currentRecordingRefId,
+                                )}`,
+                              };
+                            }
+                            return rec;
+                          }),
+                        );
+
+                        //   Complete transcript by creating a new file completely
+                        // await saveCompletedAudio.mutateAsync({
+                        //   commonFileUuid: currentRecordingRefId,
+                        // });
+
+                        setCompletedTranscriptionCommonFileUuid(
                           currentRecordingRefId,
-                        ) ?? [],
-                      ),
-                      recordingPromiseRef.current,
-                    ]);
-
-                    recordingPromiseRef.current = null;
-
-                    setRecordings((prev) =>
-                      prev.map((rec) => {
-                        if (rec.id === currentRecordingRefId) {
-                          return {
-                            ...rec,
-                            streamableUrl: `${getAudioUploadStreamLink(
-                              currentRecordingRefId,
-                            )}`,
-                          };
-                        }
-                        return rec;
-                      }),
-                    );
-
-                    //   Complete transcript by creating a new file completely
-                    // await saveCompletedAudio.mutateAsync({
-                    //   commonFileUuid: currentRecordingRefId,
-                    // });
-
-                    setCompletedTranscriptionCommonFileUuid(
-                      currentRecordingRefId,
-                    );
-                    transcriptionTimeoutRef.current = setTimeout(() => {
-                      setCompletedTranscriptionCommonFileUuid(null);
-                      toast.error(t("prompt.transcriptionTimeout"));
-                      setMakingTranscription(false);
-                    }, 30000);
-                  } catch (error) {
-                    console.error("Error uploading audio:", error);
-                    toast.error(t("prompt.audioUploadError"));
-                  } finally {
-                    recordingIdRef.current = null;
-                    recordingStartTimeRef.current = null;
-                    setMakingTranscription(false);
-                  }
+                        );
+                        transcriptionTimeoutRef.current = setTimeout(() => {
+                          setCompletedTranscriptionCommonFileUuid(null);
+                          toast.error(t("prompt.transcriptionTimeout"));
+                          setMakingTranscription(false);
+                        }, 180 * 1000);
+                      },
+                      (error) => {
+                        console.error("Error uploading audio:", error);
+                        toast.error(t("prompt.audioUploadError"));
+                      },
+                    )
+                    .finally(() => {
+                      recordingIdRef.current = null;
+                      recordingStartTimeRef.current = null;
+                    });
 
                   return emitter;
                 }}
