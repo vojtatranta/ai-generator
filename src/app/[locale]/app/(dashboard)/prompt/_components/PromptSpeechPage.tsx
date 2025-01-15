@@ -29,7 +29,10 @@ import PageContainer from "@/components/layout/page-container";
 import uploadAudioAction from "@/lib/upload-audio-action";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { Else, If, Then } from "@/components/ui/condition";
-import { SimpleFileUpload } from "@/components/ui/simple-file-upload";
+import {
+  SimpleFileUpload,
+  SimpleFileUploadEmitter,
+} from "@/components/ui/simple-file-upload";
 import Link from "next/link";
 
 const QueryFormSchema = z.object({
@@ -126,29 +129,47 @@ async function getFirstBlobHeader(blob: Blob): Promise<Blob> {
 
 const AUDIO_MIME_TYPE = "audio/mpeg";
 
-type QueryFormType = z.infer<typeof QueryFormSchema>;
-
-async function uploadFileToGCS(
+function uploadFileToGCS(
   file: Blob,
   opts: {
     signedUrl: string;
   },
-): Promise<Response> {
-  const uploadResponse = await fetch(opts.signedUrl, {
-    method: "PUT",
-    headers: {
-      "Content-Type": file.type || "application/octet-stream",
-    },
-    body: file,
+): { promise: Promise<any>; emitter: SimpleFileUploadEmitter } {
+  const emitter = new SimpleFileUploadEmitter();
+
+  const promise = new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", opts.signedUrl);
+    xhr.setRequestHeader(
+      "Content-Type",
+      file.type || "application/octet-stream",
+    );
+    emitter.emitStart({
+      totalSize: file.size,
+    });
+    xhr.upload.addEventListener("progress", (event) => {
+      const progress = Math.round((event.loaded / event.total) * 100);
+      emitter.emitProgress({
+        progress,
+        totalSize: event.total,
+      });
+    });
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        emitter.emitComplete();
+        resolve(xhr.response);
+      } else {
+        reject(new Error(`File upload failed with status: ${xhr.statusText}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("File upload failed"));
+    xhr.send(file);
   });
 
-  if (!uploadResponse.ok) {
-    throw new Error(
-      `File upload failed with status: ${uploadResponse.statusText}`,
-    );
-  }
-
-  return uploadResponse;
+  return {
+    promise,
+    emitter,
+  };
 }
 
 interface RecordedAudio {
@@ -270,7 +291,7 @@ export const PromptSpeechPage = ({
       recordingBlobsPromisesRef.current.set(currentRecordingRefId, []);
     }
 
-    let finalPromise: Promise<any> = Promise.resolve();
+    // let finalPromise: Promise<any> = Promise.resolve();
     // chunkedBlobs.forEach((blob, index) => {
     //   finalPromise = finalPromise.then(() => {
     //     return new Promise<string>((resolve) => {
@@ -301,20 +322,22 @@ export const PromptSpeechPage = ({
       objectName: fileName,
     });
 
-    await uploadFileToGCS(completeBlob, {
+    const { promise, emitter } = uploadFileToGCS(completeBlob, {
       signedUrl,
     });
 
-    const finishResponsePromise = finishGCPUpload.mutateAsync({
-      filePath: path,
-      commonFileUuid: currentRecordingRefId,
-      mime: AUDIO_MIME_TYPE,
-      locale,
+    const donePromise = promise.then(() => {
+      return finishGCPUpload.mutateAsync({
+        filePath: path,
+        commonFileUuid: currentRecordingRefId,
+        mime: AUDIO_MIME_TYPE,
+        locale,
+      });
     });
 
     recordingBlobsPromisesRef.current
       .get(currentRecordingRefId)
-      ?.push(finishResponsePromise);
+      ?.push(Promise.all([donePromise]));
 
     Promise.all(
       Array.from(
@@ -323,6 +346,8 @@ export const PromptSpeechPage = ({
     ).then(() => {
       endRecordingResolve?.();
     });
+
+    return emitter;
   };
 
   const startRecording = async () => {
@@ -561,10 +586,11 @@ export const PromptSpeechPage = ({
                   recordingIdRef.current = currentRecordingRefId;
                   setElapsedTime(0);
                   setMakingTranscription(true);
-                  await handleAudioBlob(file, {
+                  const emitter = await handleAudioBlob(file, {
                     currentRecordingRefId,
                     endRecordingResolve: null,
                   });
+                  console.log("emitter", emitter);
                   setIsRecording(false);
                   setMediaRecorder(null);
                   setElapsedTime(0);
@@ -629,7 +655,10 @@ export const PromptSpeechPage = ({
                   } finally {
                     recordingIdRef.current = null;
                     recordingStartTimeRef.current = null;
+                    setMakingTranscription(false);
                   }
+
+                  return emitter;
                 }}
               />
             </div>
