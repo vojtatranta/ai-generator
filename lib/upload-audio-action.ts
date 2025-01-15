@@ -8,6 +8,8 @@ import {
   transcribeAudio,
 } from "@/components/api/trpc-router";
 import { waitUntil } from "@vercel/functions";
+import { Readable } from "stream";
+import { DownloadResponse } from "@google-cloud/storage";
 
 // export async function chunkBlob(
 //     blob: Blob,
@@ -119,6 +121,121 @@ function prependHeader(
   chunkWithHeader.set(header, 0); // Copy header
   chunkWithHeader.set(chunk, header.length); // Copy chunk
   return chunkWithHeader;
+}
+
+async function handleFileArrayBuffer(
+  fileBuffer: Uint8Array,
+  dataInfo: {
+    commonFileUuid: string;
+    mime: string;
+    locale: string;
+    transcribe: boolean;
+  },
+  context: {
+    supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
+    userId: string;
+  },
+) {
+  const fullFile = new Uint8Array(fileBuffer);
+  const { supabase, userId } = context;
+  let chunkIndex = 0;
+
+  const chunks = chunkMP3(fullFile);
+  let lastData = null;
+
+  console.log("processing file", dataInfo);
+  await chunks.reduce<Promise<void>>(
+    (promise, chunk) =>
+      promise.then(async () => {
+        const base64Chunk = `data:audio/mpeg;base64,${Buffer.from(chunk).toString("base64")}`;
+        console.log("saving chunk", chunkIndex);
+        const { data, error } = await supabase
+          .from("file_chunks")
+          .insert({
+            user_id: userId,
+            base64: base64Chunk,
+            common_file_uuid: dataInfo.commonFileUuid,
+            mime: dataInfo.mime,
+            order: chunkIndex,
+          })
+          .select("id, common_file_uuid, mime, order")
+          .single();
+
+        if (!data || error) {
+          console.error("save file error", error);
+          throw new Error(
+            `Audio upload error: ${error?.message || "Error saving chunk"}`,
+          );
+        }
+
+        lastData = data;
+
+        if (dataInfo.transcribe) {
+          console.log("transcribing chunk", data.id);
+          console.log("transcribing chunk index", chunkIndex);
+          waitUntil(
+            transcribeAudio(data.id, userId, {
+              supabase,
+              locale: dataInfo.locale,
+              createFileOnEnd: false,
+              commonFileUuid: dataInfo.commonFileUuid,
+            }),
+          );
+        }
+
+        chunkIndex++;
+      }),
+    Promise.resolve(),
+  );
+
+  if (lastData) {
+    console.log("creating file on transcription end", lastData);
+    waitUntil(
+      handleCompleteAudio(dataInfo.commonFileUuid, {
+        supabase: supabase,
+        userId: userId,
+      }),
+    );
+  }
+  console.log("Upload complete. Chunks received:", chunkIndex);
+
+  return {
+    commonFileUuid: dataInfo.commonFileUuid,
+    locale: dataInfo.locale,
+    lastChunkIndex: chunkIndex,
+  };
+}
+
+export async function handleGCPDownloadedFile(
+  downloadResponse: DownloadResponse,
+  context: {
+    supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
+    userId: string;
+    commonFileUuid: string;
+    locale: string;
+    mime: string;
+    transcribe: boolean;
+  },
+) {
+  const buffer = downloadResponse[0];
+  const arrayBuffer = new Uint8Array(buffer);
+
+  const result = await handleFileArrayBuffer(
+    arrayBuffer,
+    {
+      commonFileUuid: context.commonFileUuid,
+      mime: context.mime,
+      locale: context.locale,
+      transcribe: context.transcribe,
+    },
+    context,
+  );
+
+  return {
+    commonFileUuid: context.commonFileUuid,
+    locale: context.locale,
+    lastChunkIndex: result.lastChunkIndex,
+  };
 }
 
 async function uploadAudioAction(formData: FormData) {

@@ -37,6 +37,8 @@ import {
 import { BlobLike, FileLike } from "openai/uploads.mjs";
 import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { waitUntil } from "@vercel/functions";
+import { Storage } from "@google-cloud/storage";
+import { handleGCPDownloadedFile } from "@/lib/upload-audio-action";
 
 // Create context type
 type Context = {
@@ -840,7 +842,77 @@ export async function handleUploadedFile(
   return result;
 }
 
+const BUCKET_NAME = "aisteinfiiles" as const;
+const GOOGLE_PROJECT_ID = "plugs-map" as const;
+
 const filesRouter = router({
+  handleGCloudUploadedFile: protectedProcedure
+    .input(
+      z.object({
+        filePath: z.string(),
+        commonFileUuid: z.string(),
+        locale: z.string(),
+        mime: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const storage = new Storage();
+      const file = storage.bucket(BUCKET_NAME).file(input.filePath);
+      const response = await file.download();
+
+      const result = await handleGCPDownloadedFile(response, {
+        supabase: ctx.supabase,
+        userId: ctx.user.id,
+        commonFileUuid: input.commonFileUuid,
+        locale: input.locale,
+        mime: input.mime,
+        transcribe: true,
+      });
+
+      return result;
+    }),
+
+  createUploadSignedURL: protectedProcedure
+    .input(
+      z.object({
+        contentType: z.string(),
+        objectName: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Initialize Google Cloud Storage client
+      const storage = new Storage({
+        projectId: GOOGLE_PROJECT_ID,
+      });
+
+      const { objectName, contentType } = input;
+
+      try {
+        const bucket = storage.bucket(BUCKET_NAME);
+        const blob = bucket.file(objectName);
+
+        // Generate signed URL
+        const [signedUrl] = await blob.getSignedUrl({
+          version: "v4",
+          action: "write", // 'GET' for download, 'PUT' for upload
+          expires: Date.now() + 15 * 60 * 1000, // URL valid for 10 minutes
+          contentType,
+        });
+
+        return {
+          signedUrl,
+          bucketName: BUCKET_NAME,
+          objectName,
+          path: objectName,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Error generating signed URL: ${error}`,
+        });
+      }
+    }),
+
   getCompletedTranscription: protectedProcedure
     .input(
       z.object({

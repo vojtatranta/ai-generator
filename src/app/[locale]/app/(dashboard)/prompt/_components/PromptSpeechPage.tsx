@@ -128,6 +128,29 @@ const AUDIO_MIME_TYPE = "audio/mpeg";
 
 type QueryFormType = z.infer<typeof QueryFormSchema>;
 
+async function uploadFileToGCS(
+  file: Blob,
+  opts: {
+    signedUrl: string;
+  },
+): Promise<Response> {
+  const uploadResponse = await fetch(opts.signedUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type || "application/octet-stream",
+    },
+    body: file,
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error(
+      `File upload failed with status: ${uploadResponse.statusText}`,
+    );
+  }
+
+  return uploadResponse;
+}
+
 interface RecordedAudio {
   timestamp: number;
   length: number;
@@ -200,7 +223,12 @@ export const PromptSpeechPage = ({
       },
     );
 
+  const finishGCPUpload =
+    trpcApi.filesRouter.handleGCloudUploadedFile.useMutation({});
+
   const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({});
+  const createUploadSignedUrl =
+    trpcApi.filesRouter.createUploadSignedURL.useMutation({});
 
   const completeAudioMutation =
     trpcApi.speechToText.completeAudioProcess.useMutation();
@@ -267,15 +295,26 @@ export const PromptSpeechPage = ({
     //   });
     // });
 
-    const formData = new FormData();
-    formData.append("file", completeBlob);
-    formData.append("commonFileUuid", currentRecordingRefId);
-    formData.append("mime", AUDIO_MIME_TYPE);
-    formData.append("transcribe", "1");
+    const fileName = `${currentRecordingRefId}.mp3`;
+    const { signedUrl, path } = await createUploadSignedUrl.mutateAsync({
+      contentType: AUDIO_MIME_TYPE,
+      objectName: fileName,
+    });
+
+    await uploadFileToGCS(completeBlob, {
+      signedUrl,
+    });
+
+    const finishResponsePromise = finishGCPUpload.mutateAsync({
+      filePath: path,
+      commonFileUuid: currentRecordingRefId,
+      mime: AUDIO_MIME_TYPE,
+      locale,
+    });
 
     recordingBlobsPromisesRef.current
       .get(currentRecordingRefId)
-      ?.push(onUploadAudioAction(formData));
+      ?.push(finishResponsePromise);
 
     Promise.all(
       Array.from(
