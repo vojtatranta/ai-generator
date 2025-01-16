@@ -6,11 +6,12 @@ import { Loader2, Upload } from "lucide-react";
 import { memo, useState } from "react";
 import { useTranslations } from "next-intl";
 import EventEmitter from "events";
+import { If, Then } from "./condition";
 
 export interface ISimpleFileUploadEmitter {
   onStart: (cb: (opts: { totalSize: number }) => void) => void;
   onProgress: (
-    cb: (opts: { progress: number; totalSize: number }) => void,
+    cb: (opts: { progress: number; totalSize: number }) => void
   ) => void;
   emitProgress: (opts: { progress: number; totalSize: number }) => void;
   emitComplete: () => void;
@@ -59,7 +60,7 @@ export const SimpleFileUpload = memo(function SimpleFileUpload({
   accept?: string;
   className?: string;
   onFile: (
-    file: File,
+    file: File
   ) => undefined | SimpleFileUploadEmitter | Promise<ISimpleFileUploadEmitter>;
 }) {
   const t = useTranslations();
@@ -92,13 +93,13 @@ export const SimpleFileUpload = memo(function SimpleFileUpload({
                       prev ?? {
                         total: 0,
                         progress: 0,
-                      },
+                      }
                     )
                       .andThen((prev) => ({
                         ...prev,
                         progress: opts.progress,
                       }))
-                      .orNull(),
+                      .orNull()
                   );
                 });
 
@@ -123,7 +124,11 @@ export const SimpleFileUpload = memo(function SimpleFileUpload({
         {t("prompt.uploadFileInputLabel")}
       </Label>
       <div className="flex-1 bg-background py-2 px-3 text-sm border border-l-0 rounded-r-md relative">
-        {fileToUpload ? fileToUpload.name : t("prompt.noFileSelected")}
+        <If condition={!state}>
+          <Then>
+            {fileToUpload ? fileToUpload.name : t("prompt.noFileSelected")}
+          </Then>
+        </If>
         {state && (
           <div
             className="bg-primary/5 absolute inset-0"
