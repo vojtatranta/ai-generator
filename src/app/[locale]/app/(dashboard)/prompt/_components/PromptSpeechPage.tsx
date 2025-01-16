@@ -69,7 +69,7 @@ function saveBlob(blob: Blob, fileName: string): void {
  */
 export async function chunkBlob(
   blob: Blob,
-  chunkSizeMB: number = 3
+  chunkSizeMB: number = 3,
 ): Promise<Blob[]> {
   const minChunkSizeBytes = 1200 * 1024; // Minimum chunk size of 100kB
   const maxChunkSizeBytes = chunkSizeMB * 1024 * 1024; // Convert MB to bytes
@@ -78,7 +78,7 @@ export async function chunkBlob(
       ? maxChunkSizeBytes
       : Math.max(
           minChunkSizeBytes,
-          Math.floor(blob.size / Math.ceil(blob.size / maxChunkSizeBytes))
+          Math.floor(blob.size / Math.ceil(blob.size / maxChunkSizeBytes)),
         ); // Calculate the chunk size sensibly so that you are as close to max chunkSize as to minimum
   const headerBlob = await getFirstBlobHeader(blob); // Extract the header (first bytes)
   const chunks: Blob[] = [];
@@ -134,7 +134,7 @@ function uploadFileToGCS(
   opts: {
     signedUrl: string;
     mime: string;
-  }
+  },
 ): { promise: Promise<any>; emitter: SimpleFileUploadEmitter } {
   const emitter = new SimpleFileUploadEmitter();
 
@@ -143,7 +143,7 @@ function uploadFileToGCS(
     xhr.open("PUT", opts.signedUrl);
     xhr.setRequestHeader(
       "Content-Type",
-      opts.mime || file.type || "application/octet-stream"
+      opts.mime || file.type || "application/octet-stream",
     );
     emitter.emitStart({
       totalSize: file.size,
@@ -186,7 +186,7 @@ interface Props {
   prompt: UsedPromptType;
   randomNumberFromTopics: number;
   onUploadAudioAction: (
-    formData: FormData
+    formData: FormData,
   ) => ReturnType<typeof uploadAudioAction>;
 }
 
@@ -199,7 +199,7 @@ export const PromptSpeechPage = ({
   const t = useTranslations();
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
-    null
+    null,
   );
   const [
     completedTranscriptionCommonFileUuid,
@@ -211,7 +211,7 @@ export const PromptSpeechPage = ({
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordingBlobsPromisesRef = useRef<Map<string, Promise<any>[]>>(
-    new Map()
+    new Map(),
   );
   const transcriptionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [currentTranscription, setCurrentTranscription] = useState<string>("");
@@ -239,16 +239,15 @@ export const PromptSpeechPage = ({
 
       {
         enabled: Boolean(
-          completedTranscriptionCommonFileUuid && !currentTranscription
+          completedTranscriptionCommonFileUuid && !currentTranscription,
         ),
-        refetchInterval: 1000,
-      }
+        refetchInterval: 3000,
+      },
     );
 
   const finishGCPUpload =
     trpcApi.filesRouter.handleGCloudUploadedFile.useMutation({});
 
-  const audioUploadMutation = trpcApi.filesRouter.saveFileChunk.useMutation({});
   const createUploadSignedUrl =
     trpcApi.filesRouter.createUploadSignedURL.useMutation({});
 
@@ -258,11 +257,6 @@ export const PromptSpeechPage = ({
   useEffect(() => {
     if (completedTranscriptionQuery.data?.finished) {
       setMakingTranscription(false);
-      if (completedTranscriptionCommonFileUuid) {
-        completeAudioMutation.mutateAsync({
-          commonFileUuid: completedTranscriptionCommonFileUuid,
-        });
-      }
       setCurrentTranscription(completedTranscriptionQuery.data?.text ?? "");
       setCompletedTranscriptionCommonFileUuid(null);
       setMakingTranscription(false);
@@ -284,7 +278,7 @@ export const PromptSpeechPage = ({
     }: {
       currentRecordingRefId: string;
       endRecordingResolve?: (() => void) | null;
-    }
+    },
   ) => {
     // saveBlob(completeBlob, "recording.mp3");
     // const chunkedBlobs = await chunkBlob(completeBlob, 1.7);
@@ -344,8 +338,8 @@ export const PromptSpeechPage = ({
 
     Promise.all(
       Array.from(
-        recordingBlobsPromisesRef.current.get(currentRecordingRefId) ?? []
-      )
+        recordingBlobsPromisesRef.current.get(currentRecordingRefId) ?? [],
+      ),
     ).then(() => {
       endRecordingResolve?.();
     });
@@ -387,7 +381,7 @@ export const PromptSpeechPage = ({
         // Calculate recording length
         console.log(
           "recordingStartTimeRef.current",
-          recordingStartTimeRef.current
+          recordingStartTimeRef.current,
         );
         const recordingLength = recordingStartTimeRef.current
           ? Math.round((Date.now() - recordingStartTimeRef.current) / 1000)
@@ -406,7 +400,8 @@ export const PromptSpeechPage = ({
         try {
           await Promise.all([
             ...Array.from(
-              recordingBlobsPromisesRef.current.get(currentRecordingRefId) ?? []
+              recordingBlobsPromisesRef.current.get(currentRecordingRefId) ??
+                [],
             ),
             recordingPromiseRef.current,
           ]);
@@ -419,12 +414,12 @@ export const PromptSpeechPage = ({
                 return {
                   ...rec,
                   streamableUrl: `${getAudioUploadStreamLink(
-                    currentRecordingRefId
+                    currentRecordingRefId,
                   )}`,
                 };
               }
               return rec;
-            })
+            }),
           );
 
           //   Complete transcript by creating a new file completely
@@ -598,7 +593,7 @@ export const PromptSpeechPage = ({
                   setElapsedTime(0);
                   const recordingLength = recordingStartTimeRef.current
                     ? Math.round(
-                        (Date.now() - recordingStartTimeRef.current) / 1000
+                        (Date.now() - recordingStartTimeRef.current) / 1000,
                       )
                     : 0;
 
@@ -615,8 +610,8 @@ export const PromptSpeechPage = ({
                   Promise.all([
                     ...Array.from(
                       recordingBlobsPromisesRef.current.get(
-                        currentRecordingRefId
-                      ) ?? []
+                        currentRecordingRefId,
+                      ) ?? [],
                     ),
                     recordingPromiseRef.current,
                   ])
@@ -630,12 +625,12 @@ export const PromptSpeechPage = ({
                               return {
                                 ...rec,
                                 streamableUrl: `${getAudioUploadStreamLink(
-                                  currentRecordingRefId
+                                  currentRecordingRefId,
                                 )}`,
                               };
                             }
                             return rec;
-                          })
+                          }),
                         );
 
                         //   Complete transcript by creating a new file completely
@@ -644,7 +639,7 @@ export const PromptSpeechPage = ({
                         // });
 
                         setCompletedTranscriptionCommonFileUuid(
-                          currentRecordingRefId
+                          currentRecordingRefId,
                         );
                         transcriptionTimeoutRef.current = setTimeout(() => {
                           setCompletedTranscriptionCommonFileUuid(null);
@@ -656,7 +651,7 @@ export const PromptSpeechPage = ({
                         console.error("Error uploading audio:", error);
                         toast.error(t("prompt.audioUploadError"));
                         setMakingTranscription(false);
-                      }
+                      },
                     )
                     .finally(() => {
                       recordingIdRef.current = null;
@@ -683,7 +678,7 @@ export const PromptSpeechPage = ({
                     if (lastRecordingBlobRef.current) {
                       saveBlob(
                         lastRecordingBlobRef.current,
-                        "last-recording.mp3"
+                        "last-recording.mp3",
                       );
                     }
                   }}

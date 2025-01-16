@@ -9,7 +9,7 @@ export const PINECODE_EMBEDDINGS_MODEL = "multilingual-e5-large";
 
 export const textChunker = (
   text: string,
-  chunkSize: number = 400,
+  chunkSize: number = 550,
   overlap: number = 100
 ): string[] => {
   const chunks: string[] = [];

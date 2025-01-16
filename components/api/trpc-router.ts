@@ -39,6 +39,7 @@ import { getAudioUploadStreamLink } from "@/lib/public-links";
 import { waitUntil } from "@vercel/functions";
 import { Storage } from "@google-cloud/storage";
 import { handleGCPDownloadedFile } from "@/lib/upload-audio-action";
+import { error } from "console";
 
 // Create context type
 type Context = {
@@ -551,12 +552,19 @@ export async function handleUploadedFileContent(
     .select("id, uuid, filename, url, type")
     .single();
 
-  if (options.commonFileUuid) {
+  if (options.commonFileUuid && addedFile) {
     // NOTE: delete the chunks that were proccessed to the complete file and indexed
-    await supabase
-      .from("file_chunks")
-      .delete()
-      .eq("common_file_uuid", options.commonFileUuid);
+    await Promise.all([
+      supabase
+        .from("file_chunks")
+        .delete()
+        .eq("common_file_uuid", options.commonFileUuid),
+
+      supabase
+        .from("files")
+        .update({ common_file_uuid: options.commonFileUuid })
+        .eq("id", addedFile.id),
+    ]);
   }
 
   if (!addedFile) {
@@ -712,6 +720,14 @@ export async function transcribeAudio(
       transcription: transcription.text,
     };
   } catch (err) {
+    if (
+      err instanceof Error &&
+      String(err).includes("inimum audio length is 0.1 second")
+    ) {
+      // NOTE: when chunk is too small, delete it
+      await ctx.supabase.from("file_chunks").delete().eq("id", chunkId);
+    }
+
     if (!ctx.dontRetry) {
       return transcribeAudio(chunkId, userId, {
         ...ctx,
@@ -860,16 +876,21 @@ const filesRouter = router({
       const file = storage.bucket(BUCKET_NAME).file(input.filePath);
       const response = await file.download();
 
-      waitUntil(
-        handleGCPDownloadedFile(response, {
+      const { completePromise, firstChunkPromise } = handleGCPDownloadedFile(
+        response,
+        {
           supabase: ctx.supabase,
           userId: ctx.user.id,
           commonFileUuid: input.commonFileUuid,
           locale: input.locale,
           mime: input.mime,
           transcribe: true,
-        })
+        }
       );
+
+      waitUntil(completePromise);
+
+      await firstChunkPromise;
 
       return {
         transcription: true,
@@ -887,7 +908,15 @@ const filesRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       // Initialize Google Cloud Storage client
-      const storage = new Storage();
+      const storage = new Storage({
+        projectId: GOOGLE_PROJECT_ID,
+        keyFilename:
+          process.env.NODE_ENV === "production"
+            ? undefined
+            : path.join(
+                "/Users/vojtatranta/.config/gcloud/application_default_credentials.json"
+              ),
+      });
 
       const { objectName, contentType } = input;
 
@@ -930,12 +959,19 @@ const filesRouter = router({
         .eq("common_file_uuid", input.commonFileUuid)
         .order("order", { ascending: true });
 
-      if (!chunks || error) {
+      if (!chunks || error || !chunks.length) {
+        const { data: documents } = await ctx.supabase
+          .from("documents")
+          .select("id, chunk")
+          .eq("common_file_uuid", input.commonFileUuid)
+          .order("id", { ascending: true });
+
         return {
-          finished: false,
-          text: "",
+          finished: (documents?.length ?? 0) > 0,
+          text: documents?.map(({ chunk }) => chunk).join("") ?? "",
           allChunksCount: 0,
           remainingChunksCount: 0,
+          commonFileUuid: input.commonFileUuid,
         };
       }
 
@@ -951,13 +987,28 @@ const filesRouter = router({
           text: "",
           allChunksCount,
           remainingChunksCount,
+          commonFileUuid: input.commonFileUuid,
         };
       }
+
+      const { data: file } = await ctx.supabase
+        .from("files")
+        .select("id")
+        .eq("common_file_uuid", input.commonFileUuid)
+        .single();
+
+      waitUntil(
+        handleCompleteAudio(input.commonFileUuid, {
+          supabase: ctx.supabase,
+          userId: ctx.user.id,
+        })
+      );
 
       return {
         finished: true,
         text: chunks.map((chunk) => chunk.text).join(""),
         allChunksCount,
+        commonFileUuid: input.commonFileUuid,
         remainingChunksCount,
       };
     }),

@@ -88,7 +88,7 @@ function chunkMP3(mp3Array: Uint8Array, bitrate: number = 128): Uint8Array[] {
     // Calculate chunk size (ensure it's between 5 seconds and 5 MB)
     const chunkSize = Math.min(
       maxChunkSize,
-      Math.max(minChunkBytes + headerSize, remainingBytes),
+      Math.max(minChunkBytes + headerSize, remainingBytes)
     );
 
     const end = Math.min(offset + chunkSize, mp3Array.length);
@@ -113,7 +113,7 @@ function chunkMP3(mp3Array: Uint8Array, bitrate: number = 128): Uint8Array[] {
  */
 function prependHeader(
   chunk: Uint8Array,
-  originalArray: Uint8Array,
+  originalArray: Uint8Array
 ): Uint8Array {
   // Assume the header is in the first 192 bytes of the original MP3
   const header = originalArray.slice(0, 192);
@@ -123,7 +123,7 @@ function prependHeader(
   return chunkWithHeader;
 }
 
-async function handleFileArrayBuffer(
+function handleFileArrayBuffer(
   fileBuffer: Uint8Array,
   dataInfo: {
     commonFileUuid: string;
@@ -134,8 +134,15 @@ async function handleFileArrayBuffer(
   context: {
     supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
     userId: string;
-  },
-) {
+  }
+): {
+  firstChunkPromise: Promise<void>;
+  completePromise: Promise<{
+    commonFileUuid: string;
+    locale: string;
+    lastChunkIndex: number;
+  }>;
+} {
   const fullFile = new Uint8Array(fileBuffer);
   const { supabase, userId } = context;
   let chunkIndex = 0;
@@ -143,8 +150,14 @@ async function handleFileArrayBuffer(
   const chunks = chunkMP3(fullFile);
   let lastData = null;
 
+  let firstChunkPromiseResolve: (() => void) | null = null;
+  let firstChunkDone = false;
+  const firstChunkPromise = new Promise<void>((resolve) => {
+    firstChunkPromiseResolve = resolve;
+  });
+
   console.log("processing file", dataInfo);
-  await chunks.reduce<Promise<void>>(
+  const completePromise = chunks.reduce<Promise<void>>(
     (promise, chunk) =>
       promise.then(async () => {
         const base64Chunk = `data:audio/mpeg;base64,${Buffer.from(chunk).toString("base64")}`;
@@ -161,10 +174,15 @@ async function handleFileArrayBuffer(
           .select("id, common_file_uuid, mime, order")
           .single();
 
+        if (!firstChunkDone) {
+          firstChunkDone = true;
+          firstChunkPromiseResolve?.();
+        }
+
         if (!data || error) {
           console.error("save file error", error);
           throw new Error(
-            `Audio upload error: ${error?.message || "Error saving chunk"}`,
+            `Audio upload error: ${error?.message || "Error saving chunk"}`
           );
         }
 
@@ -179,13 +197,13 @@ async function handleFileArrayBuffer(
               locale: dataInfo.locale,
               createFileOnEnd: false,
               commonFileUuid: dataInfo.commonFileUuid,
-            }),
+            })
           );
         }
 
         chunkIndex++;
       }),
-    Promise.resolve(),
+    Promise.resolve()
   );
 
   if (lastData) {
@@ -194,19 +212,22 @@ async function handleFileArrayBuffer(
       handleCompleteAudio(dataInfo.commonFileUuid, {
         supabase: supabase,
         userId: userId,
-      }),
+      })
     );
   }
   console.log("Upload complete. Chunks received:", chunkIndex);
 
   return {
-    commonFileUuid: dataInfo.commonFileUuid,
-    locale: dataInfo.locale,
-    lastChunkIndex: chunkIndex,
+    firstChunkPromise,
+    completePromise: completePromise.then(() => ({
+      commonFileUuid: dataInfo.commonFileUuid,
+      locale: dataInfo.locale,
+      lastChunkIndex: chunkIndex,
+    })),
   };
 }
 
-export async function handleGCPDownloadedFile(
+export function handleGCPDownloadedFile(
   downloadResponse: DownloadResponse,
   context: {
     supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
@@ -215,12 +236,12 @@ export async function handleGCPDownloadedFile(
     locale: string;
     mime: string;
     transcribe: boolean;
-  },
+  }
 ) {
   const buffer = downloadResponse[0];
   const arrayBuffer = new Uint8Array(buffer);
 
-  const result = await handleFileArrayBuffer(
+  return handleFileArrayBuffer(
     arrayBuffer,
     {
       commonFileUuid: context.commonFileUuid,
@@ -228,14 +249,8 @@ export async function handleGCPDownloadedFile(
       locale: context.locale,
       transcribe: context.transcribe,
     },
-    context,
+    context
   );
-
-  return {
-    commonFileUuid: context.commonFileUuid,
-    locale: context.locale,
-    lastChunkIndex: result.lastChunkIndex,
-  };
 }
 
 async function uploadAudioAction(formData: FormData) {
@@ -260,9 +275,10 @@ async function uploadAudioAction(formData: FormData) {
   let chunkIndex = 0;
 
   const chunks = chunkMP3(fullFile);
+
   let lastData = null;
 
-  await chunks.reduce<Promise<void>>(
+  await chunks.reduce<Promise<void | void[]>>(
     (promise, chunk) =>
       promise.then(async () => {
         const base64Chunk = `data:audio/mpeg;base64,${Buffer.from(chunk).toString("base64")}`;
@@ -282,7 +298,7 @@ async function uploadAudioAction(formData: FormData) {
         if (!data || error) {
           console.error("save file error", error);
           throw new Error(
-            `Audio upload error: ${error?.message || "Error saving chunk"}`,
+            `Audio upload error: ${error?.message || "Error saving chunk"}`
           );
         }
 
@@ -297,13 +313,13 @@ async function uploadAudioAction(formData: FormData) {
               locale: dataInfo.locale,
               createFileOnEnd: false,
               commonFileUuid: dataInfo.commonFileUuid,
-            }),
+            })
           );
         }
 
         chunkIndex++;
       }),
-    Promise.resolve(),
+    Promise.resolve()
   );
 
   if (lastData) {
@@ -312,7 +328,7 @@ async function uploadAudioAction(formData: FormData) {
       handleCompleteAudio(dataInfo.commonFileUuid, {
         supabase: supabase,
         userId: user.id,
-      }),
+      })
     );
   }
   console.log("Upload complete. Chunks received:", chunkIndex);
