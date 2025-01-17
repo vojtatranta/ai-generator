@@ -1,6 +1,7 @@
 import { Database } from "@/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { FileLike } from "openai/uploads.mjs";
+import { FileChunk } from "./supabase-server";
 
 export const blobToFileLike = (
   blob: Blob,
@@ -19,7 +20,7 @@ export const getBlobFromDBChunk = async (
   chunkId: number,
   userId: string,
   context: { supabaseClient: SupabaseClient<Database>; expectedMime?: string },
-): Promise<FileLike> => {
+): Promise<{ chunk: FileChunk | null; fileLike: FileLike }> => {
   const { data: chunk } = await context.supabaseClient
     .from("file_chunks")
     .select("*")
@@ -28,22 +29,28 @@ export const getBlobFromDBChunk = async (
     .single();
 
   if (!chunk) {
-    return blobToFileLike(
-      new Blob([], { type: context.expectedMime ?? "audio/mpeg" }),
-      String(chunkId),
-      new Date().toISOString(),
-    );
+    return {
+      chunk: null,
+      fileLike: blobToFileLike(
+        new Blob([], { type: context.expectedMime ?? "audio/mpeg" }),
+        String(chunkId),
+        new Date().toISOString(),
+      ),
+    };
   }
   const base64String = chunk?.base64.split(",")[1] ?? "";
   const blob = new Blob([Buffer.from(base64String, "base64")], {
     type: chunk?.mime ?? context.expectedMime ?? "audio/mpeg",
   });
 
-  return blobToFileLike(
-    blob,
-    String(chunk.id),
-    chunk?.created_at ?? new Date().toISOString(),
-  );
+  return {
+    chunk,
+    fileLike: blobToFileLike(
+      blob,
+      String(chunk.id),
+      chunk?.created_at ?? new Date().toISOString(),
+    ),
+  };
 };
 
 export const concatenateAudioChunksToBlob = async (

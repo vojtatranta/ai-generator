@@ -16,8 +16,10 @@ import {
 } from "@/lib/stripe";
 import z from "zod";
 import {
+  BUCKET_NAME,
   EMBEDDINGS_SUMMARIZER,
   FILE_NAME_GUESSER,
+  GOOGLE_PROJECT_ID,
   PROMPTS,
   RAG_QUERY_IMPROVER,
   SPEECH_TO_TEXT,
@@ -49,7 +51,7 @@ type Context = {
 
 // Context creator
 export const createTRPCContext = async (
-  opts: FetchCreateContextFnOptions
+  opts: FetchCreateContextFnOptions,
 ): Promise<Omit<Context, "user">> => {
   const req = opts.req as NextRequest;
   const supabase = await createSupabaseServerClient();
@@ -84,7 +86,7 @@ export const subscriptionRouter = router({
     .input(
       z.object({
         planIdToSubscribe: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { planIdToSubscribe } = input;
@@ -107,7 +109,7 @@ export const subscriptionRouter = router({
     .input(
       z.object({
         subscriptionId: z.number(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { subscriptionId } = input;
@@ -133,7 +135,7 @@ export const subscriptionRouter = router({
 
       try {
         await getStripe().subscriptions.cancel(
-          databaseSubscription.stripe_subscription_id
+          databaseSubscription.stripe_subscription_id,
         );
 
         await ctx.supabase
@@ -166,7 +168,7 @@ export const subscriptionRouter = router({
         planIdToSubscribe: z.string(),
         currentDomain: z.string(),
         locale: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { planIdToSubscribe, currentDomain } = input;
@@ -221,7 +223,7 @@ export const langtailRouter = router({
         locale: z.string(),
         length: z.number().optional(),
         fileIds: z.array(z.number()).min(1),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       performance.mark("start");
@@ -252,7 +254,7 @@ export const langtailRouter = router({
         {
           inputType: "passage",
           truncate: "END",
-        }
+        },
       );
 
       const embedding = (await embeddingPromise).data[0]?.values ?? [];
@@ -303,7 +305,7 @@ export const langtailRouter = router({
         (str, chunk, index) => `${str}
       --------
       ${index + 1}: ${chunk}\n`,
-        ""
+        "",
       )}
       `;
 
@@ -346,7 +348,7 @@ export const langtailRouter = router({
         image: z.string().optional(),
         stream: z.boolean().default(false),
         additionalVariables: z.record(z.string(), z.string()).optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const response = await langtail.prompts.invoke({
@@ -402,7 +404,7 @@ export const langtailRouter = router({
       z.object({
         aiResponseId: z.string(),
         imageUrl: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }): Promise<AIResult> => {
       const { data: aiResult } = await ctx.supabase
@@ -508,7 +510,7 @@ async function getFileContent(fileBuffer: Buffer, filePath: string) {
   }
 }
 
-export async function handleUploadedFileContent(
+async function handleUploadedFileContent(
   filePath: string | null,
   fileName: string,
   fileContent: string,
@@ -519,7 +521,8 @@ export async function handleUploadedFileContent(
     type?: string;
     additionalContextForSummarizer?: string;
     commonFileUuid?: string;
-  } = {}
+    cloudPath?: string | null;
+  } = {},
 ) {
   const user = await getUser();
   const textBegging = fileContent.substring(0, 500);
@@ -542,8 +545,8 @@ export async function handleUploadedFileContent(
       {
         user_id: user.id,
         filename: fileName,
-        url: options.fileUrl ?? null,
-        local_file_path: filePath ?? null,
+        url: options.fileUrl ?? options.cloudPath ?? null,
+        local_file_path: filePath ?? options.cloudPath ?? null,
         file_summary: result.choices?.[0]?.message?.content ?? null,
         type: options.type ?? null,
         common_file_uuid: options.commonFileUuid ?? null,
@@ -559,11 +562,6 @@ export async function handleUploadedFileContent(
         .from("file_chunks")
         .delete()
         .eq("common_file_uuid", options.commonFileUuid),
-
-      supabase
-        .from("files")
-        .update({ common_file_uuid: options.commonFileUuid })
-        .eq("id", addedFile.id),
     ]);
   }
 
@@ -591,7 +589,7 @@ export async function handleUploadedFileContent(
         .flatMap(({ values }) => values)
         .join(",")}]`,
       embedding_type: PINECODE_EMBEDDINGS_MODEL,
-    }))
+    })),
   );
 
   const { data: documents, error: documentError } = await supabase
@@ -619,7 +617,7 @@ export async function transcribeAudio(
     createFileOnEnd?: boolean;
     commonFileUuid?: string;
     dontRetry?: boolean;
-  }
+  },
 ) {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY!,
@@ -648,11 +646,13 @@ export async function transcribeAudio(
   // }
 
   try {
+    const { chunk, fileLike } = await getBlobFromDBChunk(chunkId, userId, {
+      supabaseClient: ctx.supabase,
+      expectedMime: "audio/mpeg",
+    });
+
     const transcription = await openai.audio.transcriptions.create({
-      file: await getBlobFromDBChunk(chunkId, userId, {
-        supabaseClient: ctx.supabase,
-        expectedMime: "audio/mpeg",
-      }),
+      file: fileLike,
       model: "whisper-1",
       language: ctx.locale ?? "cs",
     });
@@ -712,7 +712,8 @@ export async function transcribeAudio(
         handleCompleteAudio(ctx.commonFileUuid, {
           supabase: ctx.supabase,
           userId,
-        })
+          cloudFilePath: chunk?.cloud_path ?? null,
+        }),
       );
     }
 
@@ -749,11 +750,12 @@ export async function handleCompleteAudio(
   ctx: {
     supabase: SupabaseClient<Database>;
     userId: string;
-  }
+    cloudFilePath?: string | null;
+  },
 ) {
   const { data: chunks } = await ctx.supabase
     .from("file_chunks")
-    .select("text")
+    .select("text, cloud_path")
     .eq("common_file_uuid", commonFileUuid)
     .eq("user_id", ctx.userId)
     .order("order", { ascending: true });
@@ -791,9 +793,11 @@ export async function handleCompleteAudio(
     ctx.supabase,
     {
       fileUrl: getAudioUploadStreamLink(commonFileUuid),
+      cloudPath: chunks[0]?.cloud_path ?? ctx.cloudFilePath,
       type: "audio",
+      commonFileUuid,
       additionalContextForSummarizer: "A transcription of the audio recording",
-    }
+    },
   );
 
   // NOTE: delete the oustading chunks as they take a lot of space
@@ -813,7 +817,7 @@ export async function handleUploadedFile(
   supabase: SupabaseClient<Database>,
   options: {
     type?: string;
-  } = {}
+  } = {},
 ) {
   const { data: file, error } = await supabase.storage
     .from("documents")
@@ -850,17 +854,13 @@ export async function handleUploadedFile(
     {
       fileUrl: file.path,
       type: options.type,
-    }
+    },
   );
 
   console.log("upload file result", result);
 
   return result;
 }
-
-const BUCKET_NAME = "aisteinfiiles" as const;
-const GOOGLE_PROJECT_ID = "plugs-map" as const;
-
 const filesRouter = router({
   handleGCloudUploadedFile: protectedProcedure
     .input(
@@ -869,7 +869,7 @@ const filesRouter = router({
         commonFileUuid: z.string(),
         locale: z.string(),
         mime: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const storage = new Storage();
@@ -885,7 +885,8 @@ const filesRouter = router({
           locale: input.locale,
           mime: input.mime,
           transcribe: true,
-        }
+          filePath: input.filePath,
+        },
       );
 
       waitUntil(completePromise);
@@ -904,7 +905,7 @@ const filesRouter = router({
       z.object({
         contentType: z.string(),
         objectName: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       // Initialize Google Cloud Storage client
@@ -914,7 +915,7 @@ const filesRouter = router({
           process.env.NODE_ENV === "production"
             ? undefined
             : path.join(
-                "/Users/vojtatranta/.config/gcloud/application_default_credentials.json"
+                "/Users/vojtatranta/.config/gcloud/application_default_credentials.json",
               ),
       });
 
@@ -950,12 +951,12 @@ const filesRouter = router({
     .input(
       z.object({
         commonFileUuid: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { data: chunks, error } = await ctx.supabase
         .from("file_chunks")
-        .select("id, text")
+        .select("id, text, cloud_path")
         .eq("common_file_uuid", input.commonFileUuid)
         .order("order", { ascending: true });
 
@@ -976,7 +977,7 @@ const filesRouter = router({
       }
 
       const nullishTranscription = chunks.filter(
-        (chunk) => chunk.text === null
+        (chunk) => chunk.text === null,
       );
       const allChunksCount = chunks.length;
       const remainingChunksCount = nullishTranscription.length;
@@ -991,17 +992,12 @@ const filesRouter = router({
         };
       }
 
-      const { data: file } = await ctx.supabase
-        .from("files")
-        .select("id")
-        .eq("common_file_uuid", input.commonFileUuid)
-        .single();
-
       waitUntil(
         handleCompleteAudio(input.commonFileUuid, {
           supabase: ctx.supabase,
           userId: ctx.user.id,
-        })
+          cloudFilePath: chunks[0]?.cloud_path ?? null,
+        }),
       );
 
       return {
@@ -1023,7 +1019,7 @@ const filesRouter = router({
         locale: z.string().optional(),
         order: z.number().optional(),
         final: z.boolean().optional().default(false),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { data, error } = await ctx.supabase
@@ -1052,7 +1048,7 @@ const filesRouter = router({
             locale: input.locale,
             createFileOnEnd: input.final,
             commonFileUuid: input.commonFileUuid,
-          })
+          }),
         );
       }
 
@@ -1063,7 +1059,7 @@ const filesRouter = router({
       z.object({
         text: z.string(),
         name: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       return handleUploadedFileContent(
@@ -1073,7 +1069,7 @@ const filesRouter = router({
         ctx.supabase,
         {
           type: "text",
-        }
+        },
       );
     }),
 
@@ -1081,7 +1077,7 @@ const filesRouter = router({
     .input(
       z.object({
         id: z.number(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { error: documentError } = await ctx.supabase
@@ -1123,7 +1119,7 @@ const speechToTextRouter = router({
     .input(
       z.object({
         commonFileUuid: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { data: file } = await ctx.supabase

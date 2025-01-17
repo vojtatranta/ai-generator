@@ -88,7 +88,7 @@ function chunkMP3(mp3Array: Uint8Array, bitrate: number = 128): Uint8Array[] {
     // Calculate chunk size (ensure it's between 5 seconds and 5 MB)
     const chunkSize = Math.min(
       maxChunkSize,
-      Math.max(minChunkBytes + headerSize, remainingBytes)
+      Math.max(minChunkBytes + headerSize, remainingBytes),
     );
 
     const end = Math.min(offset + chunkSize, mp3Array.length);
@@ -113,7 +113,7 @@ function chunkMP3(mp3Array: Uint8Array, bitrate: number = 128): Uint8Array[] {
  */
 function prependHeader(
   chunk: Uint8Array,
-  originalArray: Uint8Array
+  originalArray: Uint8Array,
 ): Uint8Array {
   // Assume the header is in the first 192 bytes of the original MP3
   const header = originalArray.slice(0, 192);
@@ -130,11 +130,12 @@ function handleFileArrayBuffer(
     mime: string;
     locale: string;
     transcribe: boolean;
+    filePath: string;
   },
   context: {
     supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
     userId: string;
-  }
+  },
 ): {
   firstChunkPromise: Promise<void>;
   completePromise: Promise<{
@@ -170,6 +171,7 @@ function handleFileArrayBuffer(
             common_file_uuid: dataInfo.commonFileUuid,
             mime: dataInfo.mime,
             order: chunkIndex,
+            cloud_path: dataInfo.filePath,
           })
           .select("id, common_file_uuid, mime, order")
           .single();
@@ -182,7 +184,7 @@ function handleFileArrayBuffer(
         if (!data || error) {
           console.error("save file error", error);
           throw new Error(
-            `Audio upload error: ${error?.message || "Error saving chunk"}`
+            `Audio upload error: ${error?.message || "Error saving chunk"}`,
           );
         }
 
@@ -197,13 +199,13 @@ function handleFileArrayBuffer(
               locale: dataInfo.locale,
               createFileOnEnd: false,
               commonFileUuid: dataInfo.commonFileUuid,
-            })
+            }),
           );
         }
 
         chunkIndex++;
       }),
-    Promise.resolve()
+    Promise.resolve(),
   );
 
   if (lastData) {
@@ -212,7 +214,7 @@ function handleFileArrayBuffer(
       handleCompleteAudio(dataInfo.commonFileUuid, {
         supabase: supabase,
         userId: userId,
-      })
+      }),
     );
   }
   console.log("Upload complete. Chunks received:", chunkIndex);
@@ -236,7 +238,8 @@ export function handleGCPDownloadedFile(
     locale: string;
     mime: string;
     transcribe: boolean;
-  }
+    filePath: string;
+  },
 ) {
   const buffer = downloadResponse[0];
   const arrayBuffer = new Uint8Array(buffer);
@@ -248,8 +251,9 @@ export function handleGCPDownloadedFile(
       mime: context.mime,
       locale: context.locale,
       transcribe: context.transcribe,
+      filePath: context.filePath,
     },
-    context
+    context,
   );
 }
 
@@ -298,7 +302,7 @@ async function uploadAudioAction(formData: FormData) {
         if (!data || error) {
           console.error("save file error", error);
           throw new Error(
-            `Audio upload error: ${error?.message || "Error saving chunk"}`
+            `Audio upload error: ${error?.message || "Error saving chunk"}`,
           );
         }
 
@@ -313,13 +317,13 @@ async function uploadAudioAction(formData: FormData) {
               locale: dataInfo.locale,
               createFileOnEnd: false,
               commonFileUuid: dataInfo.commonFileUuid,
-            })
+            }),
           );
         }
 
         chunkIndex++;
       }),
-    Promise.resolve()
+    Promise.resolve(),
   );
 
   if (lastData) {
@@ -328,7 +332,7 @@ async function uploadAudioAction(formData: FormData) {
       handleCompleteAudio(dataInfo.commonFileUuid, {
         supabase: supabase,
         userId: user.id,
-      })
+      }),
     );
   }
   console.log("Upload complete. Chunks received:", chunkIndex);

@@ -261,3 +261,6 @@ export const CompanyInfo = {
   name: "AIstein",
   logo: icons.Atom,
 };
+
+export const BUCKET_NAME = "aisteinfiiles" as const;
+export const GOOGLE_PROJECT_ID = "plugs-map" as const;

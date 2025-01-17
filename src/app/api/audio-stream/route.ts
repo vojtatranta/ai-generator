@@ -1,26 +1,26 @@
+import { BUCKET_NAME } from "@/constants/data";
 import {
   createSupabaseServerClient,
   getMaybeUser,
+  FileType,
 } from "@/lib/supabase-server";
+import { Storage } from "@google-cloud/storage";
 import { NextRequest, NextResponse } from "next/server";
-import { Readable } from "stream";
 
-async function getAudioChunksFromDatabase() {
-  // Mock function to simulate database query returning Base64 chunks
-  return [
-    "UklGRoABAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YYAAAAD/",
-    "kjasbdiuyhadsbASDUIAUSDUIAsd98d9ausd...",
-    // Add more Base64 chunks
-  ];
-}
-
-function base64ToBuffer(base64String: string) {
-  const binaryString = atob(base64String); // Decode Base64 to binary
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return Buffer.from(bytes.buffer);
+async function handleCloudFileStreamResponse(gcpFilePath: string) {
+  return new Response(
+    new Storage()
+      .bucket(BUCKET_NAME)
+      .file(gcpFilePath)
+      .createReadStream() as unknown as ReadableStream,
+    {
+      headers: {
+        "Content-Type": "audio/mpeg",
+        "Accept-Ranges": "bytes",
+        "Cache-Control": "no-cache",
+      },
+    },
+  );
 }
 
 export async function GET(req: NextRequest) {
@@ -39,6 +39,17 @@ export async function GET(req: NextRequest) {
   const supabase = await createSupabaseServerClient();
 
   try {
+    const { data: file } = await supabase
+      .from("files")
+      .select("*")
+      .eq("common_file_uuid", commonFileUuid)
+      .eq("user_id", user.id)
+      .single();
+
+    if (file?.local_file_path) {
+      return handleCloudFileStreamResponse(file.local_file_path);
+    }
+
     const { data: chunks } = await supabase
       .from("file_chunks")
       .select("*")
