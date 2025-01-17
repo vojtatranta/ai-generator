@@ -10,6 +10,7 @@ import {
 import { waitUntil } from "@vercel/functions";
 import { Readable } from "stream";
 import { DownloadResponse } from "@google-cloud/storage";
+import { getLocale } from "next-intl/server";
 
 // export async function chunkBlob(
 //     blob: Blob,
@@ -135,6 +136,7 @@ function handleFileArrayBuffer(
   context: {
     supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
     userId: string;
+    locale: string;
   },
 ): {
   firstChunkPromise: Promise<void>;
@@ -214,6 +216,7 @@ function handleFileArrayBuffer(
       handleCompleteAudio(dataInfo.commonFileUuid, {
         supabase: supabase,
         userId: userId,
+        locale: context.locale,
       }),
     );
   }
@@ -272,6 +275,8 @@ async function uploadAudioAction(formData: FormData) {
 
   const user = await getMaybeUser();
   if (!user) return null;
+
+  const locale = await getLocale();
 
   const supabase = await createSupabaseServerClient();
   const fullFile = new Uint8Array(await file.arrayBuffer());
@@ -332,6 +337,7 @@ async function uploadAudioAction(formData: FormData) {
       handleCompleteAudio(dataInfo.commonFileUuid, {
         supabase: supabase,
         userId: user.id,
+        locale,
       }),
     );
   }
