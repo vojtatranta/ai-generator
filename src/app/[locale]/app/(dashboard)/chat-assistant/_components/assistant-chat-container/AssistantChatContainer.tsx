@@ -1,6 +1,6 @@
 "use client";
 import { memo, useState, type FC } from "react";
-import { useChatStream, type ChatMessage } from "langtail/react/useChatStream";
+import { type ChatMessage } from "langtail/react/useChatStream";
 import { readableStreamFromSSEResponse } from "langtail/stream";
 import { BugPlay, CircleAlert } from "lucide-react";
 import { type ChatCompletionChunk } from "openai/resources/chat/completions";
@@ -17,6 +17,7 @@ import {
 import { AssistantChatPromptForm } from "./AssistantChatForm";
 import { useTranslations } from "next-intl";
 import { If, Then } from "@/components/ui/condition";
+import { useChatStream } from "./use-chat-stream";
 
 export function renderMessageContent(
   message:
@@ -275,6 +276,7 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
   const [threadId, setThreadId] = useState<string | undefined>(undefined);
   const { abort, messages, isLoading, send } = useChatStream({
     fetcher: (sentMessages, _opts, abortController) => {
+      console.log("sent messages", sentMessages);
       return fetch(`/api/assistant-chat`, {
         method: "POST",
         headers: {
@@ -339,7 +341,6 @@ export const AssistantAIChatContainer = memo(function AssistantAIChatContainer({
         ...toolCalls,
         ...[message].filter((message) =>
           message.choices.some(
-            // @ts-expect-error: weirdo
             (choice) =>
               choice.delta?.role === "tool" || choice.delta?.tool_calls,
           ),
