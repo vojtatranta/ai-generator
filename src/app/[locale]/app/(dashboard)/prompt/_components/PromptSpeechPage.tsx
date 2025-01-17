@@ -235,6 +235,7 @@ export const PromptSpeechPage = ({
     trpcApi.filesRouter.getCompletedTranscription.useQuery(
       {
         commonFileUuid: completedTranscriptionCommonFileUuid ?? "",
+        locale,
       },
 
       {

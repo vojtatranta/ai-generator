@@ -713,6 +713,7 @@ export async function transcribeAudio(
           supabase: ctx.supabase,
           userId,
           cloudFilePath: chunk?.cloud_path ?? null,
+          locale: ctx.locale ?? "cs",
         }),
       );
     }
@@ -751,6 +752,7 @@ export async function handleCompleteAudio(
     supabase: SupabaseClient<Database>;
     userId: string;
     cloudFilePath?: string | null;
+    locale: string;
   },
 ) {
   const { data: chunks } = await ctx.supabase
@@ -780,6 +782,9 @@ export async function handleCompleteAudio(
         content: shortenedTranscript,
       },
     ],
+    variables: {
+      ...(ctx.locale && { language: ctx.locale }),
+    },
   });
 
   const [fileNameGuesser] = await Promise.all([fileNameGuesserPromise]);
@@ -951,6 +956,7 @@ const filesRouter = router({
     .input(
       z.object({
         commonFileUuid: z.string(),
+        locale: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -997,6 +1003,7 @@ const filesRouter = router({
           supabase: ctx.supabase,
           userId: ctx.user.id,
           cloudFilePath: chunks[0]?.cloud_path ?? null,
+          locale: input.locale,
         }),
       );
 
@@ -1119,6 +1126,7 @@ const speechToTextRouter = router({
     .input(
       z.object({
         commonFileUuid: z.string(),
+        locale: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -1138,6 +1146,7 @@ const speechToTextRouter = router({
       return handleCompleteAudio(input.commonFileUuid, {
         supabase: ctx.supabase,
         userId: ctx.user.id,
+        locale: input.locale,
       });
     }),
 });

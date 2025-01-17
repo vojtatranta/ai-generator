@@ -80,6 +80,7 @@
     "kbar": "0.1.0-beta.45",
     "lamejs": "^1.2.1",
     "langtail": "^0.13.9",
+    "lt-use-chat-stream": "^0.0.1",
     "lucide-react": "^0.468.0",
     "match-sorter": "^8.0.0",
     "next": "^15.1.0",
