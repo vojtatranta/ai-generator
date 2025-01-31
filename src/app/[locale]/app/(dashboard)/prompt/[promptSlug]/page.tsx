@@ -51,7 +51,7 @@ export default async function Page({ searchParams, params }: pageProps) {
     .eq("prompt_slug", slug)
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
-    .limit(30);
+    .limit(50);
 
   const randomNumberFromImageTopics = Math.floor(
     Math.random() * RANDOM_IMAGE_TOPICS(t).length,

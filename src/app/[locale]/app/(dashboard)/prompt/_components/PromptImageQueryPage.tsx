@@ -149,7 +149,7 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
         if (!last || last.result) {
           return prev;
         }
-        return [...prev.slice(-1), { ...(last ?? {}), result: data }];
+        return [...prev, { ...(last ?? {}), result: data }];
       });
 
       requestImageDownload(data);
