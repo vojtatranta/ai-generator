@@ -43,6 +43,7 @@ import {
 } from "./PromptResultHistory";
 import { AIGeneratedImage } from "@/components/AIGeneratedImage";
 import { FBShare } from "@/components/social";
+import { WrappableImagePreviewModal } from "./ImagePreviewModal";
 
 const DEFAULT_LENGTH = 200;
 
@@ -396,11 +397,16 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
                           )
                             .andThen((lastResult) => (
                               <div>
-                                {renderResult({
-                                  id: lastResult.id,
-                                  aiResponse: lastResult.result as InvokeOutput,
-                                  aiResult: lastResult.aiResult ?? null,
-                                })}
+                                <WrappableImagePreviewModal
+                                  src={lastResult.aiResult?.image_url}
+                                >
+                                  {renderResult({
+                                    id: lastResult.id,
+                                    aiResponse:
+                                      lastResult.result as InvokeOutput,
+                                    aiResult: lastResult.aiResult ?? null,
+                                  })}
+                                </WrappableImagePreviewModal>
                                 {Maybe.of(lastResult.aiResult?.image_url)
                                   .andThen((imageUrl) => (
                                     <div className="flex items-center justify-center mt-2">
