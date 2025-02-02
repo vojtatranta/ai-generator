@@ -32,12 +32,15 @@ export async function generateMetadata() {
   };
 }
 
+const PER_PAGE = 20;
+
 export default async function Page({ searchParams, params }: pageProps) {
   // Allow nested RSCs to access the search params (in a type-safe way)
   searchParamsCache.parse(await searchParams);
   const t = await getTranslations();
   const user = await getUser();
   const supabase = await createSupabaseServerClient();
+  const page = searchParamsCache.get("page");
 
   const slug = (await params).promptSlug;
   const usedPrompt = USED_PROMPTS.find((p) => p.prompt === slug);
@@ -45,13 +48,29 @@ export default async function Page({ searchParams, params }: pageProps) {
     notFound();
   }
 
-  const { data: lastResults } = await supabase
-    .from("ai_results")
-    .select("*")
-    .eq("prompt_slug", slug)
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(50);
+  const [{ data: lastResults }, { count: totalCount }] = await Promise.all([
+    supabase
+      .from("ai_results")
+      .select("*")
+      .eq("prompt_slug", slug)
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .range((page - 1) * PER_PAGE, page * PER_PAGE - 1),
+
+    supabase
+      .from("ai_results")
+      .select("*", { count: "exact" })
+      .eq("prompt_slug", slug)
+      .eq("user_id", user.id),
+  ]);
+
+  // const { data: lastResults } = await supabase
+  //   .from("ai_results")
+  //   .select("*")
+  //   .eq("prompt_slug", slug)
+  //   .eq("user_id", user.id)
+  //   .order("created_at", { ascending: false })
+  //   .range((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const randomNumberFromImageTopics = Math.floor(
     Math.random() * RANDOM_IMAGE_TOPICS(t).length,
@@ -63,6 +82,8 @@ export default async function Page({ searchParams, params }: pageProps) {
         aiResults={lastResults ?? []}
         prompt={usedPrompt}
         randomNumberFromImageTopics={randomNumberFromImageTopics}
+        perPage={PER_PAGE}
+        total={totalCount ?? 0}
       />
     );
   }
