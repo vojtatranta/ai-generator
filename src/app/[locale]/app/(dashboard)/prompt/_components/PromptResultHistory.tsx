@@ -4,11 +4,14 @@ import { Maybe } from "actual-maybe";
 import { Card, CardContent } from "@/components/ui/card";
 import { RouterOutput } from "@/components/providers/TRPCProvider";
 import { AIResult } from "@/lib/supabase-server";
+import { searchParams } from "@/web/lib/searchparams";
 import { FBShare } from "@/components/social";
 import {
   ImagePreviewModal,
   WrappableImagePreviewModal,
 } from "./ImagePreviewModal";
+import { Pagination } from "@/components/ui/table/data-table";
+import { useQueryState } from "nuqs";
 
 export type InvokeOutput = RouterOutput["langtail"]["invokePrompt"];
 
@@ -30,19 +33,26 @@ export const PromptResultHistory = memo(function PromptResultHistory({
   allResults,
   fbShare,
   renderResult,
+  pagination,
 }: {
   allResults: RenderResultType[];
   fbShare?: boolean;
+  pagination?: {
+    perPage: number;
+    total: number;
+  } | null;
   renderResult: (
     result: RenderResultType,
   ) => React.ReactNode | React.ReactElement | React.JSX.Element;
 }) {
   const t = useTranslations();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
-  const handleImageClick = (imageUrl: string) => {
-    setPreviewImage(imageUrl);
-  };
+  const [page, setPage] = useQueryState(
+    "page",
+    searchParams.page
+      .withOptions({ shallow: false, throttleMs: 1000 })
+      .withDefault(1),
+  );
 
   return (
     <>
@@ -69,7 +79,9 @@ export const PromptResultHistory = memo(function PromptResultHistory({
                       <div className="flex-1 w-full">
                         <div className="mb-1">
                           <div className="inline-block items-center justify-center w-6 h-6 mr-2 text-center bg-primary-foreground text-primary rounded-full">
-                            {index + 1}
+                            {((page ?? 1) - 1) * (pagination?.perPage ?? 0) +
+                              index +
+                              1}
                           </div>
                           {Maybe.of(result.prompt ?? result.aiResult?.prompt)
                             .andThen((userPrompt) => (
@@ -105,6 +117,23 @@ export const PromptResultHistory = memo(function PromptResultHistory({
                 </div>
               </div>,
             )}
+          {pagination && (
+            <Pagination
+              totalItems={pagination.total}
+              paginationState={{
+                pageSize: pagination.perPage,
+                pageIndex: page - 1,
+              }}
+              pageCount={Math.ceil(pagination.total / pagination.perPage)}
+              canGetNextPage={
+                Math.ceil(pagination.total / pagination.perPage) > page
+              }
+              canGetPreviousPage={page > 1}
+              onPageSet={setPage}
+              onPreviousPage={() => setPage((prev) => prev - 1)}
+              onNextPage={() => setPage((prev) => prev + 1)}
+            />
+          )}
         </CardContent>
       </Card>
     </>

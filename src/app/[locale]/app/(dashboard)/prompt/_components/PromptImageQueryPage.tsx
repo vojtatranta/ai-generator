@@ -44,6 +44,7 @@ import {
 import { AIGeneratedImage } from "@/components/AIGeneratedImage";
 import { FBShare } from "@/components/social";
 import { WrappableImagePreviewModal } from "./ImagePreviewModal";
+import { useQueryState } from "nuqs";
 
 const DEFAULT_LENGTH = 200;
 
@@ -121,10 +122,14 @@ const renderResult = (result: RenderResultType) => {
 export const PromptImageQueryPage = memo(function PromptQueryPage({
   aiResults,
   prompt,
+  perPage,
+  total,
   randomNumberFromImageTopics = 0,
 }: {
   aiResults: AIResult[];
   prompt: UsedPromptType;
+  perPage?: number;
+  total?: number;
   randomNumberFromImageTopics: number;
 }) {
   const t = useTranslations();
@@ -441,6 +446,14 @@ export const PromptImageQueryPage = memo(function PromptQueryPage({
             fbShare
             allResults={allResults}
             renderResult={renderResult}
+            pagination={
+              total && perPage
+                ? {
+                    perPage,
+                    total,
+                  }
+                : null
+            }
           />
         </form>
       </Form>

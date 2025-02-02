@@ -29,6 +29,7 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
+import { memo } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useTranslations } from "next-intl";
@@ -39,6 +40,84 @@ interface DataTableProps<TData, TValue> {
   totalItems: number;
   pageSizeOptions?: number[];
 }
+
+export const Pagination = memo(function Pagination({
+  totalItems,
+  paginationState,
+  pageCount,
+  onPageSet,
+  canGetNextPage,
+  onPreviousPage,
+  onNextPage,
+  canGetPreviousPage,
+}: {
+  totalItems: number;
+  paginationState: PaginationState;
+  pageCount: number;
+  canGetNextPage: boolean;
+  canGetPreviousPage: boolean;
+  onPageSet: (page: number) => void;
+  onPreviousPage?: () => void;
+  onNextPage?: () => void;
+}) {
+  const t = useTranslations();
+  return (
+    <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
+      <div className="flex w-[150px] items-center justify-center text-sm font-medium">
+        {totalItems > 0 ? (
+          <>
+            {t("common.table.page")} {paginationState.pageIndex + 1}{" "}
+            {t("common.table.of")} {pageCount}
+          </>
+        ) : (
+          t("common.table.noPages")
+        )}
+      </div>
+      <div className="flex items-center space-x-2">
+        <Button
+          aria-label={t("common.table.goToFirstPage")}
+          variant="outline"
+          className="hidden h-8 w-8 p-0 lg:flex"
+          onClick={() => onPageSet(1)}
+          type="button"
+          disabled={!canGetPreviousPage}
+        >
+          <DoubleArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
+        </Button>
+        <Button
+          aria-label={t("common.table.goToPreviousPage")}
+          variant="outline"
+          className="h-8 w-8 p-0"
+          type="button"
+          onClick={() => onPreviousPage?.()}
+          disabled={!canGetPreviousPage}
+        >
+          <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
+        </Button>
+        <Button
+          aria-label={t("common.table.goToNextPage")}
+          variant="outline"
+          className="h-8 w-8 p-0"
+          onClick={() => onNextPage?.()}
+          type="button"
+          disabled={!canGetNextPage}
+        >
+          <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
+        </Button>
+        <Button
+          aria-label={t("common.table.goToLastPage")}
+          variant="outline"
+          className="hidden h-8 w-8 p-0 lg:flex"
+          onClick={() => onPageSet(pageCount - 1)}
+          type="button"
+          disabled={!canGetNextPage}
+        >
+          <DoubleArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+        </Button>
+      </div>
+    </div>
+  );
+});
 
 export function DataTable<TData, TValue>({
   columns,
@@ -188,56 +267,14 @@ export function DataTable<TData, TValue>({
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
-          <div className="flex w-[150px] items-center justify-center text-sm font-medium">
-            {totalItems > 0 ? (
-              <>
-                {t("common.table.page")} {paginationState.pageIndex + 1}{" "}
-                {t("common.table.of")} {table.getPageCount()}
-              </>
-            ) : (
-              t("common.table.noPages")
-            )}
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              aria-label={t("common.table.goToFirstPage")}
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <DoubleArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
-            </Button>
-            <Button
-              aria-label={t("common.table.goToPreviousPage")}
-              variant="outline"
-              className="h-8 w-8 p-0"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
-            </Button>
-            <Button
-              aria-label={t("common.table.goToNextPage")}
-              variant="outline"
-              className="h-8 w-8 p-0"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
-            </Button>
-            <Button
-              aria-label={t("common.table.goToLastPage")}
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              <DoubleArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </Button>
-          </div>
-        </div>
+        <Pagination
+          totalItems={totalItems}
+          paginationState={paginationState}
+          pageCount={pageCount}
+          canGetNextPage={table.getCanNextPage()}
+          canGetPreviousPage={table.getCanPreviousPage()}
+          onPageSet={table.setPageIndex}
+        />
       </div>
     </div>
   );
