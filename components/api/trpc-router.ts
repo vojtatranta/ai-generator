@@ -434,7 +434,7 @@ export const langtailRouter = router({
       const imageBuffer = await response.blob();
       console.log("storage making");
       const image = await ctx.supabase.storage
-        .from("ai_generation_images")
+        .from(process.env.AI_GENERATION_BUCKET_NAME!)
         .upload(`${aiResult.uuid}.jpg`, imageBuffer, {
           cacheControl: "3600000000000",
           upsert: true,
@@ -452,7 +452,7 @@ export const langtailRouter = router({
       console.log("udpating");
 
       const { data: urlObject } = await ctx.supabase.storage
-        .from("ai_generation_images")
+        .from(process.env.AI_GENERATION_BUCKET_NAME!)
         .getPublicUrl(image.data.path);
 
       if (!urlObject) {
